@@ -22,8 +22,8 @@ class Event(TimestampedModel):
     category = models.ForeignKey(
         EventCategory, on_delete=models.SET_NULL, blank=True, null=True
     )
-    image_urls = ArrayField(models.URLField())
-    image_ids = ArrayField(models.CharField(max_length=100))
+    image_urls = ArrayField(models.URLField(), default=list, blank=True)
+    image_ids = ArrayField(models.CharField(max_length=100), default=list, blank=True)
     start_date_time = models.DateTimeField()
     end_date_time = models.DateTimeField()
     venue = models.CharField(max_length=255)
