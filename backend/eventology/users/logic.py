@@ -9,10 +9,10 @@ from .models import User
 def user_to_json(user: User) -> dict:
     return {
         ID: user.id,
-        NAME: user.name,
-        EMAIL: user.email,
         CREATED_AT: parse_datetime_to_ms_timestamp(user.created_at),
         UPDATED_AT: parse_datetime_to_ms_timestamp(user.updated_at),
+        NAME: user.name,
+        EMAIL: user.email,
     }
 
 

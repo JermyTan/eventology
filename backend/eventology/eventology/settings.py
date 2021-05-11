@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "eventology",
     "authentication",
     "users",
+    "events",
 ]
 
 if DEBUG:
