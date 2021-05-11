@@ -1,5 +1,5 @@
 from django.db import models
-from treeckle.common.models import TimestampedModel
+from eventology.common.models import TimestampedModel
 
 # Create your models here.
 class User(TimestampedModel):
