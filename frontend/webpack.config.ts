@@ -35,6 +35,25 @@ const config: Configuration = {
           "sass-loader",
         ],
       },
+      {
+        test: /\.css$/,
+        use: [
+          // fallback to style-loader in development
+          process.env.NODE_ENV !== "production"
+            ? "style-loader" // Creates `style` nodes from JS stringss
+            : MiniCssExtractPlugin.loader,
+          // Translates CSS into CommonJS
+          "css-loader",
+        ],
+      },
+      {
+        test: /\.(png|jpe?g|gif|woff|woff2|eot|ttf|svg)/i,
+        use: [
+          {
+            loader: "file-loader",
+          },
+        ],
+      },
     ],
   },
   resolve: {
@@ -45,11 +64,13 @@ const config: Configuration = {
     ],
   },
   output: {
+    publicPath: "/",
     path: path.join(__dirname, "build"),
     filename: "bundle.js",
   },
   devServer: {
     contentBase: path.join(__dirname, "build"),
+    historyApiFallback: true,
     compress: true,
     port: 3000,
   },
