@@ -1,5 +1,14 @@
+import { useEffect } from "react";
+import { Container, Segment } from "semantic-ui-react";
+
 function LoginPage() {
-  return <h1>This is the login page</h1>;
+  return (
+    <Container>
+      <Segment vertical padded="very">
+        <h1>Test</h1>
+      </Segment>
+    </Container>
+  );
 }
 
 export default LoginPage;
