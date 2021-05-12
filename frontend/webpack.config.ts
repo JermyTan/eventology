@@ -1,6 +1,7 @@
 import path from "path";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import Dotenv from "dotenv-webpack";
 import { Configuration as WebpackConfiguration } from "webpack";
 import { Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
 
@@ -19,13 +20,6 @@ const config: Configuration = {
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
-          options: {
-            presets: [
-              "@babel/preset-env",
-              "@babel/preset-react",
-              "@babel/preset-typescript",
-            ],
-          },
         },
       },
       {
@@ -44,6 +38,7 @@ const config: Configuration = {
     ],
   },
   resolve: {
+    extensions: [".ts", ".tsx", ".js", ".json"],
     modules: [
       path.join(__dirname, "src"),
       path.join(__dirname, "node_modules"),
@@ -68,6 +63,7 @@ const config: Configuration = {
       filename: "[name].css",
       chunkFilename: "[id].css",
     }),
+    new Dotenv(),
   ],
 };
 
