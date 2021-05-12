@@ -1,3 +1,5 @@
+from typing import Optional
+from datetime import datetime
 from django.db.models import QuerySet
 
 from eventology.common.constants import (
@@ -86,7 +88,7 @@ def event_to_json(
         UPDATED_AT: parse_datetime_to_ms_timestamp(event.updated_at),
         TITLE: event.title,
         CREATOR: user_to_json(event.creator),
-        CATEGORY: event.category.name,
+        CATEGORY: event.category.name if event.category is not None else None,
         IMAGES: event.image_urls,
         START_DATE_TIME: parse_datetime_to_ms_timestamp(event.start_date_time),
         END_DATE_TIME: parse_datetime_to_ms_timestamp(event.end_date_time),
@@ -117,3 +119,31 @@ def event_to_json(
         data.update(additional_data)
 
     return data
+
+
+def get_requested_events(
+    user_id: Optional[int],
+    category: Optional[str],
+    start_date_time: datetime,
+    end_date_time: datetime,
+    offset: int,
+    limit: Optional[int],
+) -> QuerySet[Event]:
+    filtered_events = (
+        get_events()
+        .exclude(end_date_time__lt=start_date_time)
+        .exclude(start_date_time__gt=end_date_time)
+    ).select_related("creator", "category")
+
+    if user_id is not None:
+        filtered_events = filtered_events.filter(creator_id=user_id)
+
+    if category is not None:
+        filtered_events = filtered_events.filter(category__name=category)
+
+    if limit is not None:
+        filtered_events = filtered_events[offset : offset + limit]
+    else:
+        filtered_events = filtered_events[offset:]
+
+    return filtered_events
