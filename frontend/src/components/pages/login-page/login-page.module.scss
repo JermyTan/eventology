@@ -35,11 +35,11 @@
               background-color: rgba(255, 255, 255, 0.2);
             }
 
-            &:-webkit-autofill {
+            &:-webkit-autofill,
+            &:-webkit-autofill:hover {
               -webkit-box-shadow: 0 0 0px 1000px rgb(133, 96, 169) inset !important;
             }
 
-            &:-webkit-autofill:hover,
             &:-webkit-autofill:focus {
               -webkit-box-shadow: 0 0 0px 1000px rgba(133, 96, 169, 0.75) inset !important;
             }
