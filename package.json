@@ -1,0 +1,14 @@
+{
+  "name": "eventology",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/JermyTan/eventology.git",
+  "author": "Jeremy Tan <jeremy.tankq@shopee.com>",
+  "license": "MIT",
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "husky": "^6.0.0"
+  }
+}

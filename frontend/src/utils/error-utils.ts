@@ -31,7 +31,7 @@ export function errorHandlerWrapper<T extends unknown[], R = unknown>(
     try {
       return (await f(...args)) as R;
     } catch (error) {
-      console.log(logMessageLabel + ":", args, error, error?.response);
+      console.log(`${logMessageLabel}:`, args, error, error?.response);
 
       if (error?.isAxiosError) {
         const axiosError = error as AxiosError;
