@@ -33,6 +33,7 @@ const config: Configuration = {
   mode: isDevelopment ? "development" : "production",
   entry: path.join(__dirname, "src", "index.tsx"),
   target: isDevelopment ? "web" : "browserslist",
+  devtool: "source-map",
   module: {
     rules: [
       {
