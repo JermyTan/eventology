@@ -7,13 +7,14 @@ import {
 } from "react";
 import { useLocalStorage } from "@rehooks/local-storage";
 import isEqual from "lodash.isequal";
+import { ACCESS, EMAIL, ID, NAME, REFRESH } from "../constants";
 
 export type User = {
-  id?: number;
-  name?: string;
-  email?: string;
-  accessToken?: string;
-  refreshToken?: string;
+  [ID]?: number;
+  [NAME]?: string;
+  [EMAIL]?: string;
+  [ACCESS]?: string;
+  [REFRESH]?: string;
 };
 
 type UserContextType = User & {
@@ -36,6 +37,7 @@ function UserProvider({ children }: Props) {
 
   const updateUser = useCallback(
     (updatedUser: User | null) => {
+      console.log(updatedUser);
       updatedUser ? setUser({ ..._user, ...updatedUser }) : deleteUser();
     },
     [_user, setUser, deleteUser],
@@ -49,11 +51,7 @@ function UserProvider({ children }: Props) {
   return (
     <UserContext.Provider
       value={{
-        id: _user?.id,
-        name: _user?.name,
-        email: _user?.email,
-        accessToken: _user?.accessToken,
-        refreshToken: _user?.refreshToken,
+        ..._user,
         updateUser,
       }}
     >

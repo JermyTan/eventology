@@ -19,17 +19,17 @@ import { UserContext } from "../context-providers";
 import ScrollToTopWrapper from "../components/scroll-to-top-wrapper";
 
 function routes() {
-  const { accessToken } = useContext(UserContext);
+  const { access } = useContext(UserContext);
 
   return (
     <Router>
       <ScrollToTopWrapper>
         <Switch>
           <Route path={LOGIN_PATH} exact>
-            {accessToken ? <Redirect to={EVENTS_PATH} /> : <LoginPage />}
+            {access ? <Redirect to={EVENTS_PATH} /> : <LoginPage />}
           </Route>
 
-          {!accessToken && (
+          {!access && (
             <Route>
               <Redirect to={LOGIN_PATH} />
             </Route>

@@ -14,9 +14,11 @@ import { toast } from "react-toastify";
 import FormField from "../../form-field";
 import { deepTrim } from "../../../utils/parser-utils";
 import { EMAIL, PASSWORD } from "../../../constants";
+import { UserContext } from "../../../context-providers";
+import { useCustomAuth } from "../../../custom-hooks/api/auth-api";
 import logoCat from "../../../assets/logo-cat-green.svg";
 import styles from "./login-page.module.scss";
-import { UserContext } from "../../../context-providers";
+import { resolveApiError } from "../../../utils/error-utils";
 
 const schema = yup.object().shape({
   [EMAIL]: yup
@@ -43,18 +45,27 @@ function LoginPage() {
     defaultValues: defaultFormProps,
   });
   const { handleSubmit } = methods;
-  const [isSubmitting, setSubmitting] = useState(false);
   const { updateUser } = useContext(UserContext);
+  const { login, isLoading } = useCustomAuth();
 
   useEffect(() => {
     updateUser(null);
   }, [updateUser]);
 
-  const onSubmit = useCallback(async (formData: LoginFormProps) => {
-    setSubmitting(true);
-    console.log(deepTrim(formData));
-    setTimeout(() => setSubmitting(false), 1000);
-  }, []);
+  const onSubmit = useCallback(
+    async (formData: LoginFormProps) => {
+      try {
+        const { id, name, email, access, refresh } = await login(
+          deepTrim(formData),
+        );
+        updateUser({ id, name, email, access, refresh });
+        toast.success("Signed in successfully.");
+      } catch (error) {
+        resolveApiError(error);
+      }
+    },
+    [login, updateUser],
+  );
 
   const onError = useCallback((error: DeepMap<LoginFormProps, FieldError>) => {
     const errorMsg = Object.values(error)
@@ -94,7 +105,7 @@ function LoginPage() {
                   icon={<Icon name="user circle" />}
                   iconPosition="left"
                   showError={false}
-                  disabled={isSubmitting}
+                  disabled={isLoading}
                 />
 
                 <FormField
@@ -106,7 +117,7 @@ function LoginPage() {
                   icon={<Icon name="lock" />}
                   iconPosition="left"
                   showError={false}
-                  disabled={isSubmitting}
+                  disabled={isLoading}
                 />
               </Segment>
             </Segment>
@@ -116,7 +127,7 @@ function LoginPage() {
             type="submit"
             fluid
             className={styles.button}
-            loading={isSubmitting}
+            loading={isLoading}
           >
             <h3>SIGN IN</h3>
           </Button>
