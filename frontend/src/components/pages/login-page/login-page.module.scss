@@ -1,63 +1,68 @@
 .loginPage {
-  display: flex;
-  flex-direction: column;
-  background-color: #8560a9;
+  height: 100vh;
 
-  .contentContainer {
+  .formContainer {
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: center;
+    background-color: #8560a9;
+    min-height: 100%;
 
-    .viewContainer {
-      color: #d5ef7f;
-      border-bottom: none;
-    }
-
-    .inputContainer {
+    .contentContainer {
       display: flex;
       flex-direction: column;
+      flex-grow: 1;
+      align-items: center;
+      justify-content: center;
 
-      .roundedInput {
-        color: white;
+      .viewContainer {
+        color: #d5ef7f;
+        border-bottom: none;
+      }
 
-        > input {
-          border-radius: 2rem;
-          border-color: rgba(255, 255, 255, 0.7);
-          background-color: transparent;
+      .inputContainer {
+        display: flex;
+        flex-direction: column;
 
-          &:focus {
-            background-color: rgba(255, 255, 255, 0.2);
+        .roundedInput {
+          color: white;
+
+          > input {
+            border-radius: 2rem;
+            border-color: rgba(255, 255, 255, 0.7);
+            background-color: transparent;
+
+            &:focus {
+              background-color: rgba(255, 255, 255, 0.2);
+            }
+
+            &:-webkit-autofill,
+            &:-webkit-autofill:hover,
+            &:-webkit-autofill:focus {
+              -webkit-box-shadow: 0 0 0px 1000px #8560a9 inset !important;
+            }
           }
 
-          &:-webkit-autofill,
-          &:-webkit-autofill:hover,
-          &:-webkit-autofill:focus {
-            -webkit-box-shadow: 0 0 0px 1000px #8560a9 inset !important;
+          ::placeholder {
+            color: rgba(255, 255, 255, 0.5);
           }
-        }
-
-        ::placeholder {
-          color: rgba(255, 255, 255, 0.5);
         }
       }
     }
-  }
 
-  .button {
-    background-color: #d5ef7f;
-    margin: 0;
-    border-radius: 0;
-    padding: 2rem 0;
+    .button {
+      background-color: #d5ef7f;
+      margin: 0;
+      border-radius: 0;
+      padding: 2rem 0;
 
-    &:hover,
-    &:focus {
-      background-color: #bbd172;
-    }
+      &:hover,
+      &:focus {
+        background-color: #bbd172;
+      }
 
-    &:after {
-      border-color: black transparent transparent !important;
+      &:after {
+        border-color: black transparent transparent !important;
+      }
     }
   }
 }
