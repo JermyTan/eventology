@@ -11,16 +11,22 @@
     "lint": "tsc --noEmit && eslint --ext .js,.jsx,.ts,.tsx ./src"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.4.0",
+    "@rehooks/local-storage": "^2.4.1",
     "axios": "^0.21.1",
     "axios-hooks": "^2.6.1",
+    "classnames": "^2.3.1",
+    "lodash.get": "^4.4.2",
     "lodash.isequal": "^4.5.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-hook-form": "^7.5.3",
     "react-router-dom": "^5.2.0",
     "react-toastify": "^7.0.4",
     "react-virtualized": "^9.22.3",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^2.0.3"
+    "semantic-ui-react": "^2.0.3",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@babel/core": "^7.14.0",
@@ -30,8 +36,8 @@
     "@babel/preset-typescript": "^7.13.0",
     "@babel/runtime": "^7.14.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
-    "@rehooks/local-storage": "^2.4.1",
     "@types/dotenv-webpack": "^7.0.2",
+    "@types/lodash.get": "^4.4.6",
     "@types/lodash.isequal": "^4.5.5",
     "@types/mini-css-extract-plugin": "^1.4.3",
     "@types/react": "^17.0.5",
@@ -65,6 +71,7 @@
     "ts-node": "^9.1.1",
     "type-fest": "^1.1.1",
     "typescript": "^4.2.4",
+    "typescript-plugin-css-modules": "^3.2.0",
     "webpack": "^5.36.2",
     "webpack-cli": "^4.7.0",
     "webpack-dev-server": "^3.11.2"
