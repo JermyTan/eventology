@@ -1,5 +1,5 @@
 import { ReactNode, useContext, useEffect, useState } from "react";
-import { Sidebar, Menu, Container } from "semantic-ui-react";
+import { Sidebar, Menu, Container, Segment } from "semantic-ui-react";
 import SearchTab from "../search-tab";
 import LogoTab from "../logo-tab";
 import UserTab from "../user-tab";
@@ -21,12 +21,14 @@ function NavigationContainer({ children }: Props) {
       {access ? (
         <Sidebar.Pushable className={styles.navigationContainer}>
           <Sidebar
-            as={Menu}
+            as={Segment}
             animation="push"
             onHide={() => setSidebarOpened(false)}
             vertical
             visible={isSidebarOpened}
-          />
+          >
+            <h1>This is the search bar</h1>
+          </Sidebar>
 
           <Sidebar.Pusher dimmed={isSidebarOpened}>
             <Menu className={styles.appBar} borderless size="huge" fixed="top">

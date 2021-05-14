@@ -88,7 +88,6 @@ def event_to_json(
         UPDATED_AT: parse_datetime_to_ms_timestamp(event.updated_at),
         TITLE: event.title,
         CREATOR: user_to_json(event.creator),
-        CATEGORY: event.category.name if event.category is not None else None,
         IMAGES: event.image_urls,
         START_DATE_TIME: parse_datetime_to_ms_timestamp(event.start_date_time),
         END_DATE_TIME: parse_datetime_to_ms_timestamp(event.end_date_time),
@@ -99,6 +98,9 @@ def event_to_json(
         HAS_SIGN_UPED: get_event_sign_ups(event=event, user=user).exists(),
         HAS_LIKED: get_event_likes(event=event, user=user).exists(),
     }
+
+    if event.category is not None:
+        data.update({CATEGORY: event.category.name})
 
     if include_additional_details:
         additional_data = {
