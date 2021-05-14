@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { Icon, Item } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
 import PullToRefresh from "react-simple-pull-to-refresh";
+import { useInView } from "react-intersection-observer";
 import { useGetEvents } from "../../../custom-hooks/api/events-api";
 import { EventData } from "../../../types/events";
 import PlaceholderWrapper from "../../placeholder-wrapper";
@@ -9,8 +10,9 @@ import styles from "./events-page.module.scss";
 
 function EventsPage() {
   const [events, setEvents] = useState<EventData[]>([]);
-  const { getEvents } = useGetEvents();
+  const { isLoading, getEvents } = useGetEvents();
   const [isInitialLoading, setInitialLoading] = useState(false);
+  const { ref, inView } = useInView();
 
   useEffect(() => {
     (async () => {
@@ -20,10 +22,20 @@ function EventsPage() {
     })();
   }, [getEvents]);
 
+  useEffect(() => {
+    if (!isLoading && inView) {
+      (async () => {
+        const moreEvents = await getEvents();
+        setEvents((events) => events.concat(moreEvents));
+      })();
+    }
+  }, [isLoading, inView, getEvents]);
+
   const refreshEvents = useCallback(async () => {
-    const result = await getEvents();
-    setEvents((events) => events.concat(result));
+    setEvents(await getEvents());
   }, [getEvents]);
+
+  console.log("rerender");
 
   return (
     <PlaceholderWrapper
@@ -56,6 +68,9 @@ function EventsPage() {
           {events.map((event, index) => (
             <EventSummaryCard key={index} {...event} />
           ))}
+          <PlaceholderWrapper isLoading={isLoading}>
+            <div ref={ref} />
+          </PlaceholderWrapper>
         </>
       </PullToRefresh>
     </PlaceholderWrapper>
