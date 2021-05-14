@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Media, UserContext } from "../../context-providers";
 import { PROFILE_PATH } from "../../routes/paths";
 import defaultAvatarImage from "../../assets/avatar.png";
+import styles from "./user-tab.module.scss";
 
 function UserTab() {
   const { name, updateUser } = useContext(UserContext);
@@ -19,7 +20,7 @@ function UserTab() {
   return (
     <Menu.Menu>
       <Media className="item" greaterThanOrEqual="computer">
-        <strong>{name}</strong>
+        <strong className={styles.nameLabel}>{name}</strong>
       </Media>
 
       <Dropdown

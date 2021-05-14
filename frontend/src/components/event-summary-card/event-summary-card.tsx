@@ -1,6 +1,7 @@
 import { Image, Label, Divider, Icon } from "semantic-ui-react";
 import { EventData } from "../../types/events";
 import { displayDateTime } from "../../utils/parser-utils";
+import LinkifyTextViewer from "../linkify-text-viewer";
 import defaultAvatarImage from "../../assets/avatar.png";
 import styles from "./event-summary-card.module.scss";
 
@@ -50,7 +51,9 @@ function EventSummaryCard({
           )}`}
         </div>
 
-        <div className={styles.description}>{description}</div>
+        <div className={styles.description}>
+          <LinkifyTextViewer>{description}</LinkifyTextViewer>
+        </div>
 
         <div className={styles.extra}>
           <div>
