@@ -24,3 +24,4 @@ export const COMMENTS = "comments";
 export const USER = "user";
 export const EVENT_ID = "eventId";
 export const CONTENT = "content";
+export const DATE_TIME_FORMAT = "d MMMM yyyy HH:mm";

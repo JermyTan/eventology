@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { Icon } from "semantic-ui-react";
+import { Icon, Item } from "semantic-ui-react";
 import PullToRefresh from "react-simple-pull-to-refresh";
 import { useGetEvents } from "../../../custom-hooks/api/events-api";
 import { EventData } from "../../../types/events";
 import PlaceholderWrapper from "../../placeholder-wrapper";
+import EventSummaryCard from "../../event-summary-card";
 import styles from "./events-page.module.scss";
 
 function EventsPage() {
@@ -52,8 +53,8 @@ function EventsPage() {
         maxPullDownDistance={120}
       >
         <>
-          {events.map((event) => (
-            <p>{JSON.stringify(event)}</p>
+          {events.map((event, index) => (
+            <EventSummaryCard key={index} {...event} />
           ))}
         </>
       </PullToRefresh>

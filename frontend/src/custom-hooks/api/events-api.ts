@@ -1,7 +1,7 @@
+import { useCallback, useState } from "react";
 import { useAxiosWithTokenRefresh } from "./auth-api";
 import { EventData } from "../../types/events";
 import { errorHandlerWrapper, resolveApiError } from "../../utils/error-utils";
-import { useCallback, useState } from "react";
 
 export function useGetEvents() {
   const [events, setEvents] = useState<EventData[]>([]);

@@ -1,2 +1,30 @@
 $primary-color: #8560a9;
 $secondary-color: #d5ef7f;
+
+@mixin horizontalSpaceMargin {
+  > * {
+    margin-right: 0.75rem;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+@mixin verticalSpaceMargin {
+  > * {
+    margin-bottom: 0.75rem;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

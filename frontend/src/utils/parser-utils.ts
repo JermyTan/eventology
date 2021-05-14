@@ -1,3 +1,6 @@
+import { format } from "date-fns";
+import { DATE_TIME_FORMAT } from "../constants";
+
 export function deepTrim<T>(value: T): T {
   const unknownValue = value as unknown;
 
@@ -17,4 +20,11 @@ export function deepTrim<T>(value: T): T {
   }
 
   return value;
+}
+
+export function displayDateTime(
+  dateTime: number | Date,
+  dateTimeFormat: string = DATE_TIME_FORMAT,
+): string {
+  return format(dateTime, dateTimeFormat);
 }
