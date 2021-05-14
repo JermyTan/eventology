@@ -1,0 +1,21 @@
+@use "../../base";
+
+.navigationContainer {
+  .appBar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: base.$primary-color;
+    padding: 0 0.5rem;
+
+    &:after {
+      content: none;
+    }
+  }
+
+  .pageContainer {
+    height: 100vh;
+    overflow: auto;
+    padding: 7rem 0;
+  }
+}

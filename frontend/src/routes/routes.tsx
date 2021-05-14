@@ -17,6 +17,7 @@ import {
 } from "./paths";
 import { UserContext } from "../context-providers";
 import ScrollToTopWrapper from "../components/scroll-to-top-wrapper";
+import NavigationContainer from "../components/navigation-container";
 
 function routes() {
   const { access } = useContext(UserContext);
@@ -24,33 +25,35 @@ function routes() {
   return (
     <Router>
       <ScrollToTopWrapper>
-        <Switch>
-          <Route path={LOGIN_PATH} exact>
-            {access ? <Redirect to={EVENTS_PATH} /> : <LoginPage />}
-          </Route>
+        <NavigationContainer>
+          <Switch>
+            <Route path={LOGIN_PATH} exact>
+              {access ? <Redirect to={EVENTS_PATH} /> : <LoginPage />}
+            </Route>
 
-          {!access && (
+            {!access && (
+              <Route>
+                <Redirect to={LOGIN_PATH} />
+              </Route>
+            )}
+
+            <Route path={EVENTS_PATH} exact strict>
+              <EventsPage />
+            </Route>
+
+            <Route path={EVENTS_SINGLE_VIEW_PATH} exact strict>
+              <EventsSingleViewPage />
+            </Route>
+
+            <Route path={PROFILE_PATH} exact strict>
+              <ProfilePage />
+            </Route>
+
             <Route>
               <Redirect to={LOGIN_PATH} />
             </Route>
-          )}
-
-          <Route path={EVENTS_PATH} exact strict>
-            <EventsPage />
-          </Route>
-
-          <Route path={EVENTS_SINGLE_VIEW_PATH} exact strict>
-            <EventsSingleViewPage />
-          </Route>
-
-          <Route path={PROFILE_PATH} exact strict>
-            <ProfilePage />
-          </Route>
-
-          <Route>
-            <Redirect to={LOGIN_PATH} />
-          </Route>
-        </Switch>
+          </Switch>
+        </NavigationContainer>
       </ScrollToTopWrapper>
     </Router>
   );

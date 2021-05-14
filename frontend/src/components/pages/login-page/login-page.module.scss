@@ -1,10 +1,12 @@
+@use "../../../base";
+
 .loginPage {
   height: 100vh;
 
   .formContainer {
     display: flex;
     flex-direction: column;
-    background-color: #8560a9;
+    background-color: base.$primary-color;
     min-height: 100%;
 
     .contentContainer {
@@ -15,7 +17,7 @@
       justify-content: center;
 
       .viewContainer {
-        color: #d5ef7f;
+        color: base.$secondary-color;
         border-bottom: none;
       }
 
@@ -28,32 +30,33 @@
 
           > input {
             border-radius: 2rem;
-            border-color: rgba(255, 255, 255, 0.7);
+            border-color: rgba(white, 0.7);
             background-color: transparent;
 
             &:focus {
-              background-color: rgba(255, 255, 255, 0.2);
+              background-color: rgba(white, 0.2);
             }
 
             &:-webkit-autofill,
             &:-webkit-autofill:hover {
-              -webkit-box-shadow: 0 0 0px 1000px rgb(133, 96, 169) inset !important;
+              -webkit-box-shadow: 0 0 0px 1000px base.$primary-color inset !important;
             }
 
             &:-webkit-autofill:focus {
-              -webkit-box-shadow: 0 0 0px 1000px rgba(133, 96, 169, 0.75) inset !important;
+              -webkit-box-shadow: 0 0 0px 1000px rgba(base.$primary-color, 0.75)
+                inset !important;
             }
           }
 
           ::placeholder {
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(white, 0.5);
           }
         }
       }
     }
 
     .button {
-      background-color: #d5ef7f;
+      background-color: base.$secondary-color;
       margin: 0;
       border-radius: 0;
       padding: 2rem 0;

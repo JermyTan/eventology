@@ -16,9 +16,9 @@ import { deepTrim } from "../../../utils/parser-utils";
 import { EMAIL, PASSWORD } from "../../../constants";
 import { UserContext } from "../../../context-providers";
 import { useCustomAuth } from "../../../custom-hooks/api/auth-api";
-import logoCat from "../../../assets/logo-cat-green.svg";
-import styles from "./login-page.module.scss";
 import { resolveApiError } from "../../../utils/error-utils";
+import catLogo from "../../../assets/logo-cat-green.svg";
+import styles from "./login-page.module.scss";
 
 const schema = yup.object().shape({
   [EMAIL]: yup
@@ -72,6 +72,10 @@ function LoginPage() {
       .flatMap((value) => (value?.message ? [value.message] : []))
       .join("\n");
 
+    if (!errorMsg) {
+      return;
+    }
+
     toast.error(errorMsg);
   }, []);
 
@@ -92,7 +96,7 @@ function LoginPage() {
               >
                 <h4>FIND THE MOST LOVED ACTIVITIES</h4>
                 <h1>BLACK CAT</h1>
-                <Image src={logoCat} size="tiny" wrapped />
+                <Image src={catLogo} size="tiny" wrapped />
               </Segment>
 
               <Segment vertical padded="very" className={styles.inputContainer}>
