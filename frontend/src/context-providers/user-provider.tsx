@@ -37,7 +37,6 @@ function UserProvider({ children }: Props) {
 
   const updateUser = useCallback(
     (updatedUser: User | null) => {
-      console.log(updatedUser);
       updatedUser ? setUser({ ..._user, ...updatedUser }) : deleteUser();
     },
     [_user, setUser, deleteUser],

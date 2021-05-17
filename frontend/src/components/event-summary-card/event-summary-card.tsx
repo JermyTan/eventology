@@ -54,9 +54,7 @@ function EventSummaryCard({
         </div>
 
         <div className={styles.description}>
-          <LinkifyTextViewer>
-            <LinesEllipsis maxLine={20} text={description} />
-          </LinkifyTextViewer>
+          <LinkifyTextViewer>{description}</LinkifyTextViewer>
         </div>
 
         <div className={styles.extra}>

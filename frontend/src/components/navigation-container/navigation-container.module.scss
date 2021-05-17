@@ -1,21 +1,32 @@
 @use "../../base";
 
 .navigationContainer {
-  .appBar {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    background-color: base.$primary-color;
-    padding: 0 0.5rem;
-
-    &:after {
-      content: none;
-    }
-  }
+  height: 100vh;
 
   .pageContainer {
-    height: 100vh;
-    overflow: auto;
-    padding: 6rem 0;
+    display: flex;
+    flex-direction: column;
+
+    .appBar {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      background-color: base.$primary-color;
+      padding: 0 0.5rem;
+      border-radius: 0;
+      margin: 0;
+
+      &:after {
+        content: none;
+      }
+    }
+
+    .bodyContainer {
+      display: flex;
+      flex-direction: column;
+      height: 0;
+      flex-grow: 1;
+      overflow-y: auto;
+    }
   }
 }

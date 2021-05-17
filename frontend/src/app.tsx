@@ -5,7 +5,11 @@ import "./app.scss";
 import { toast, Zoom } from "react-toastify";
 import axios from "axios";
 import { configure } from "axios-hooks";
-import { ResponsiveProvider, UserProvider } from "./context-providers";
+import {
+  PageBodyProvider,
+  ResponsiveProvider,
+  UserProvider,
+} from "./context-providers";
 import Routes from "./routes";
 
 toast.configure({
@@ -19,11 +23,13 @@ configure({ axios: axios.create({ baseURL: process.env.API_URL }) });
 
 function App() {
   return (
-    <ResponsiveProvider>
-      <UserProvider>
-        <Routes />
-      </UserProvider>
-    </ResponsiveProvider>
+    <PageBodyProvider>
+      <ResponsiveProvider>
+        <UserProvider>
+          <Routes />
+        </UserProvider>
+      </ResponsiveProvider>
+    </PageBodyProvider>
   );
 }
 
