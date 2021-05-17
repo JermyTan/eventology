@@ -1,4 +1,6 @@
 import { Image, Label, Divider, Icon } from "semantic-ui-react";
+// @ts-ignore
+import LinesEllipsis from "react-lines-ellipsis";
 import { EventData } from "../../types/events";
 import { displayDateTime } from "../../utils/parser-utils";
 import LinkifyTextViewer from "../linkify-text-viewer";
@@ -52,7 +54,9 @@ function EventSummaryCard({
         </div>
 
         <div className={styles.description}>
-          <LinkifyTextViewer>{description}</LinkifyTextViewer>
+          <LinkifyTextViewer>
+            <LinesEllipsis maxLine={20} text={description} />
+          </LinkifyTextViewer>
         </div>
 
         <div className={styles.extra}>

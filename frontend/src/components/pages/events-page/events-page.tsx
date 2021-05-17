@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Icon } from "semantic-ui-react";
 import PullToRefresh from "react-simple-pull-to-refresh";
 import { useInView } from "react-intersection-observer";
+import { AutoSizer, List } from "react-virtualized";
 import { useGetEvents } from "../../../custom-hooks/api/events-api";
 import { EventData } from "../../../types/events";
 import PlaceholderWrapper from "../../placeholder-wrapper";
@@ -22,6 +23,8 @@ function EventsPage() {
     })();
   }, [getEvents]);
 
+  console.log("test");
+
   useEffect(() => {
     if (!isLoading && inView) {
       (async () => {
@@ -34,8 +37,6 @@ function EventsPage() {
   const refreshEvents = useCallback(async () => {
     setEvents(await getEvents());
   }, [getEvents]);
-
-  console.log("rerender");
 
   return (
     <PlaceholderWrapper
@@ -68,6 +69,7 @@ function EventsPage() {
           {events.map((event, index) => (
             <EventSummaryCard key={index} {...event} />
           ))}
+
           <PlaceholderWrapper isLoading={isLoading}>
             <div ref={ref} />
           </PlaceholderWrapper>
