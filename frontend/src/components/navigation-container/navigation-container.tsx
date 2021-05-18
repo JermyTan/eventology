@@ -4,8 +4,7 @@ import SearchTab from "../search-tab";
 import LogoTab from "../logo-tab";
 import UserTab from "../user-tab";
 import styles from "./navigation-container.module.scss";
-import { UserContext } from "../../context-providers";
-import { PageBodyContext } from "../../context-providers";
+import { UserContext, PageBodyContext } from "../../context-providers";
 
 type Props = {
   children: ReactNode;
@@ -46,7 +45,7 @@ function NavigationContainer({ children }: Props) {
               ref={(pageBody) => setPageBody(pageBody ?? undefined)}
               className={styles.bodyContainer}
             >
-              <Segment vertical>
+              <Segment vertical className={styles.verticalPaddingContainer}>
                 <Container>{children}</Container>
               </Segment>
             </div>

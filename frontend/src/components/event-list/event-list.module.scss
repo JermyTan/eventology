@@ -1,0 +1,17 @@
+@use "../../base";
+
+.pullingContentContainer {
+  font-weight: normal;
+}
+
+.noEventContentContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .text {
+    margin-top: 1rem;
+    color: #bababa;
+    font-weight: normal;
+  }
+}

@@ -21,7 +21,7 @@ function PlaceholderWrapper({
   defaultContent,
   inverted = false,
   placeholder = false,
-  size = "massive",
+  size = "huge",
 }: Props) {
   return isLoading || showDefaultContent ? (
     <Segment
