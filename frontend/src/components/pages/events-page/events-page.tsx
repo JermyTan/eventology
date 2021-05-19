@@ -1,14 +1,32 @@
-import { ElementRef, useCallback, useContext, useRef, useState } from "react";
-import { PageBodyContext } from "../../../context-providers";
+import {
+  ElementRef,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { PageBodyContext, SearchContext } from "../../../context-providers";
 import { useGetEvents } from "../../../custom-hooks/api/events-api";
 import { EventData } from "../../../types/events";
 import EventList from "../../event-list";
 
 function EventsPage() {
   const { pageBody } = useContext(PageBodyContext);
+  const {
+    searchQuery: { category, startDateTime, endDateTime },
+  } = useContext(SearchContext);
   const [events, setEvents] = useState<EventData[]>([]);
   const { isLoading, getEvents } = useGetEvents();
   const eventListRef = useRef<ElementRef<typeof EventList>>(null);
+
+  useEffect(() => {
+    (async () => {
+      setEvents([]);
+      setEvents(await getEvents({ category, startDateTime, endDateTime }));
+      eventListRef.current?.reupdateList();
+    })();
+  }, [getEvents, category, startDateTime, endDateTime]);
 
   const refreshEvents = useCallback(async () => {
     setEvents((await getEvents()).reverse());

@@ -1,10 +1,14 @@
-import { ReactNode, useContext, useEffect, useState } from "react";
+import { ReactNode, useContext, useEffect } from "react";
 import { Sidebar, Menu, Container, Segment } from "semantic-ui-react";
 import SearchTab from "../search-tab";
 import LogoTab from "../logo-tab";
 import UserTab from "../user-tab";
 import SearchSidebar from "../search-sidebar";
-import { UserContext, PageBodyContext } from "../../context-providers";
+import {
+  UserContext,
+  PageBodyContext,
+  SearchContext,
+} from "../../context-providers";
 import styles from "./navigation-container.module.scss";
 
 type Props = {
@@ -14,20 +18,24 @@ type Props = {
 function NavigationContainer({ children }: Props) {
   const { access } = useContext(UserContext);
   const { setPageBody } = useContext(PageBodyContext);
-  const [isSidebarOpened, setSidebarOpened] = useState(false);
+  const { isSidebarOpened, setSidebarOpened } = useContext(SearchContext);
 
-  useEffect(() => setSidebarOpened(false), []);
+  useEffect(() => {
+    if (access === undefined) {
+      setSidebarOpened(false);
+    }
+  }, [setSidebarOpened, access]);
 
   return (
     <>
       {access ? (
         <Sidebar.Pushable className={styles.navigationContainer}>
-          <SearchSidebar
-            isSidebarOpened={isSidebarOpened}
-            setSidebarOpened={setSidebarOpened}
-          />
+          <SearchSidebar />
 
-          <Sidebar.Pusher className={styles.pageContainer}>
+          <Sidebar.Pusher
+            className={styles.pageContainer}
+            dimmed={isSidebarOpened}
+          >
             <Menu className={styles.appBar} borderless size="huge">
               <SearchTab onTabClick={() => setSidebarOpened(true)} />
               <LogoTab />

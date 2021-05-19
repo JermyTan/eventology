@@ -4,3 +4,4 @@ export {
   default as PageBodyProvider,
   PageBodyContext,
 } from "./page-body-provider";
+export { default as SearchProvider, SearchContext } from "./search-provider";

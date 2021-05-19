@@ -19,16 +19,24 @@ import {
   USER,
   EVENT_ID,
   CONTENT,
+  NAME,
+  USER_ID,
+  OFFSET,
+  LIMIT,
 } from "../constants";
 
-export type SignUpData = BaseData & {
+export type EventCategoryData = BaseData & {
+  [NAME]: string;
+};
+
+export type EventSignUpData = BaseData & {
   [USER]: UserData;
   [EVENT_ID]: number;
 };
 
-export type LikeData = SignUpData;
+export type EventLikeData = EventSignUpData;
 
-export type CommentData = SignUpData & {
+export type EventCommentData = EventSignUpData & {
   [CONTENT]: string;
 };
 
@@ -45,7 +53,16 @@ export type EventData = BaseData & {
   [HAS_SIGNED_UP]: boolean;
   [HAS_LIKED]: boolean;
   [CATEGORY]?: string;
-  [SIGN_UPS]?: SignUpData[];
-  [LIKES]?: LikeData[];
-  [COMMENTS]?: CommentData[];
+  [SIGN_UPS]?: EventSignUpData[];
+  [LIKES]?: EventLikeData[];
+  [COMMENTS]?: EventCommentData[];
+};
+
+export type EventGetQueryParams = {
+  [USER_ID]?: number | string | null;
+  [CATEGORY]?: string | null;
+  [START_DATE_TIME]?: number | string | null;
+  [END_DATE_TIME]?: number | string | null;
+  [OFFSET]?: number | string | null;
+  [LIMIT]?: number | string | null;
 };

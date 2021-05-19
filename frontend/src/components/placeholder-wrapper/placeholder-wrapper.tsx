@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Segment, Loader, StrictLoaderProps } from "semantic-ui-react";
+import { Segment, Loader, LoaderProps } from "semantic-ui-react";
 import styles from "./placeholder-wrapper.module.scss";
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
   defaultContent?: ReactNode;
   inverted?: boolean;
   placeholder?: boolean;
-  size?: StrictLoaderProps["size"];
+  size?: LoaderProps["size"];
 };
 
 function PlaceholderWrapper({

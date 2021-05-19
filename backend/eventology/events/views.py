@@ -9,10 +9,24 @@ from rest_framework.views import APIView
 from eventology.common.parsers import parse_ms_timestamp_to_datetime
 from users.permission_middlewares import check_access
 from users.models import User
-from .logic import get_events, event_to_json, get_requested_events
+from .logic import (
+    get_event_categories,
+    get_events,
+    event_category_to_json,
+    event_to_json,
+    get_requested_events,
+)
 from .serializers import GetEventSerializer
 
 # Create your views here.
+class EventCategoriesView(APIView):
+    @check_access
+    def get(self, request, requester: User):
+        data = [event_category_to_json(category) for category in get_event_categories()]
+
+        return Response(data, status=status.HTTP_200_OK)
+
+
 class EventsView(APIView):
     @check_access
     def get(self, request, requester: User):

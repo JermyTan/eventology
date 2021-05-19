@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { StringifiableRecord } from "query-string";
 import { DATE_TIME_FORMAT } from "../constants";
 
 export function deepTrim<T>(value: T): T {
@@ -27,4 +28,21 @@ export function displayDateTime(
   dateTimeFormat: string = DATE_TIME_FORMAT,
 ): string {
   return format(dateTime, dateTimeFormat);
+}
+
+export function changeKeyCase(
+  caseChanger: (input: string) => string,
+  object?: StringifiableRecord,
+) {
+  if (!object) {
+    return object;
+  }
+
+  const newObject: StringifiableRecord = {};
+
+  Object.entries(object).forEach(([key, value]) => {
+    newObject[caseChanger(key)] = value;
+  });
+
+  return newObject;
 }

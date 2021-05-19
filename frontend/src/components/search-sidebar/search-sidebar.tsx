@@ -1,25 +1,34 @@
-import { Dispatch, SetStateAction } from "react";
+import { useContext, useMemo } from "react";
 import classNames from "classnames";
 import { Sidebar, Segment, Icon, Divider } from "semantic-ui-react";
 import SearchDateSection from "../search-date-section";
 import styles from "./search-sidebar.module.scss";
+import { SearchContext } from "../../context-providers";
+import SearchCategorySection from "../search-category-section";
 
-type Props = {
-  isSidebarOpened: boolean;
-  setSidebarOpened: Dispatch<SetStateAction<boolean>>;
-};
+function SearchSidebar() {
+  const {
+    isSidebarOpened,
+    setSidebarOpened,
+    selectedDate,
+    selectedCategory,
+    onSearch,
+  } = useContext(SearchContext);
 
-function SearchSidebar({ isSidebarOpened, setSidebarOpened }: Props) {
+  const isValidSearch = useMemo(
+    () => selectedDate !== undefined && selectedCategory !== undefined,
+    [selectedDate, selectedCategory],
+  );
+
   return (
     <Sidebar
       className={styles.searchSidebar}
       animation="push"
       onHide={() => setSidebarOpened(false)}
-      vertical
       visible={isSidebarOpened}
     >
       <Segment vertical className={styles.bodyContainer}>
-        <div className={styles.dateSection}>
+        <div className={styles.searchInputSection}>
           <div className={styles.titleContainer}>
             <div className={styles.title}>
               DATE
@@ -30,19 +39,27 @@ function SearchSidebar({ isSidebarOpened, setSidebarOpened }: Props) {
           <SearchDateSection />
         </div>
 
-        <Divider hidden section />
+        <Divider hidden />
 
-        <div className={styles.dateSection}>
+        <div className={styles.searchInputSection}>
           <div className={styles.titleContainer}>
             <div className={styles.title}>
               CATEGORY
               <Divider className={styles.line} />
             </div>
           </div>
+
+          <SearchCategorySection />
         </div>
       </Segment>
 
-      <div className={classNames(styles.button, styles.enabled)}>
+      <div
+        className={classNames(
+          styles.button,
+          isValidSearch ? styles.enabled : styles.disabled,
+        )}
+        onClick={isValidSearch ? onSearch : undefined}
+      >
         <h4 className={styles.title}>
           <Icon name="search" />
           SEARCH

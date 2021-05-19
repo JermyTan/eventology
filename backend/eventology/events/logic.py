@@ -24,12 +24,17 @@ from eventology.common.constants import (
     USER,
     EVENT_ID,
     CONTENT,
+    NAME,
 )
 from eventology.common.parsers import parse_datetime_to_ms_timestamp
 from users.logic import user_to_json
 from users.models import User
 
-from .models import Event, EventSignUp, EventLike, EventComment
+from .models import EventCategory, Event, EventSignUp, EventLike, EventComment
+
+
+def get_event_categories(*args, **kwargs) -> QuerySet[EventCategory]:
+    return EventCategory.objects.filter(*args, **kwargs)
 
 
 def get_events(*args, **kwargs) -> QuerySet[Event]:
@@ -46,6 +51,15 @@ def get_event_likes(*args, **kwargs) -> QuerySet[EventLike]:
 
 def get_event_comments(*args, **kwargs) -> QuerySet[EventComment]:
     return EventComment.objects.filter(*args, **kwargs)
+
+
+def event_category_to_json(event_category: EventCategory) -> dict:
+    return {
+        ID: event_category.id,
+        CREATED_AT: parse_datetime_to_ms_timestamp(event_category.created_at),
+        UPDATED_AT: parse_datetime_to_ms_timestamp(event_category.updated_at),
+        NAME: event_category.name,
+    }
 
 
 def event_sign_up_to_json(event_sign_up: EventSignUp) -> dict:

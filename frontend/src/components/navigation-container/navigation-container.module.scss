@@ -7,6 +7,10 @@
     display: flex;
     flex-direction: column;
 
+    &:after {
+      background-color: transparent;
+    }
+
     .appBar {
       display: flex;
       flex-direction: row;

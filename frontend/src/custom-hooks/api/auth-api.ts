@@ -1,7 +1,7 @@
 import { useCallback, useContext, useState, useMemo } from "react";
 import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from "axios";
 import useAxios, { Options, RefetchOptions, ResponseValues } from "axios-hooks";
-import { UserContext } from "../../context-providers";
+import { UserContext } from "../../context-providers/user-provider";
 import { AuthenticationData, AuthenticationPostData } from "../../types/auth";
 import {
   errorHandlerWrapper,

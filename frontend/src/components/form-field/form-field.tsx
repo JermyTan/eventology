@@ -1,11 +1,6 @@
 import { ReactNode } from "react";
 import classNames from "classnames";
-import {
-  Form,
-  Label,
-  StrictFormFieldProps,
-  StrictInputProps,
-} from "semantic-ui-react";
+import { Form, Label, FormFieldProps, InputProps } from "semantic-ui-react";
 import get from "lodash.get";
 import { useFormContext } from "react-hook-form";
 
@@ -20,9 +15,9 @@ type Props = {
   defaultValue?: string;
   readOnly?: boolean;
   hidden?: boolean;
-  width?: StrictFormFieldProps["width"];
+  width?: FormFieldProps["width"];
   icon?: ReactNode;
-  iconPosition?: StrictInputProps["iconPosition"];
+  iconPosition?: InputProps["iconPosition"];
   showError?: boolean;
   disabled?: boolean;
 };

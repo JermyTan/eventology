@@ -1,0 +1,14 @@
+.searchCategorySection {
+  .label {
+    color: white;
+    background-color: transparent;
+    cursor: pointer;
+    border: 1px solid #d3c1e5;
+  }
+
+  .active {
+    color: #453257;
+    background-color: #e5f7a9;
+    border-color: #e5f7a9;
+  }
+}
