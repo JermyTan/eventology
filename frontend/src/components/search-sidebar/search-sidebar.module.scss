@@ -1,0 +1,76 @@
+@use "../../base";
+
+.searchSidebar {
+  display: flex;
+  flex-direction: column;
+
+  .bodyContainer {
+    color: white;
+    background-color: #453257 !important;
+    flex-grow: 1;
+    padding-left: 1em !important;
+    padding-right: 1em !important;
+
+    .dateSection {
+      display: flex;
+      flex-direction: column;
+
+      .titleContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .title {
+          color: #ac8ec9;
+
+          .line {
+            margin-top: 0.15rem;
+            border-color: base.$primary-color;
+            border-bottom: none;
+          }
+        }
+      }
+    }
+  }
+
+  .button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 5rem;
+
+    .title {
+      margin-bottom: 0.15rem;
+    }
+
+    .subtitle {
+      font-size: 0.75rem;
+    }
+  }
+
+  .disabled {
+    cursor: not-allowed;
+    background-color: #bababa;
+    color: #666666;
+  }
+
+  .enabled {
+    background-color: base.$secondary-color;
+    cursor: pointer;
+
+    .title {
+      color: #453257;
+    }
+
+    .subtitle {
+      color: base.$primary-color;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: #bbd172;
+    }
+  }
+}

@@ -3,8 +3,9 @@ import { Sidebar, Menu, Container, Segment } from "semantic-ui-react";
 import SearchTab from "../search-tab";
 import LogoTab from "../logo-tab";
 import UserTab from "../user-tab";
-import styles from "./navigation-container.module.scss";
+import SearchSidebar from "../search-sidebar";
 import { UserContext, PageBodyContext } from "../../context-providers";
+import styles from "./navigation-container.module.scss";
 
 type Props = {
   children: ReactNode;
@@ -21,20 +22,12 @@ function NavigationContainer({ children }: Props) {
     <>
       {access ? (
         <Sidebar.Pushable className={styles.navigationContainer}>
-          <Sidebar
-            as={Segment}
-            animation="push"
-            onHide={() => setSidebarOpened(false)}
-            vertical
-            visible={isSidebarOpened}
-          >
-            <h1>This is the search bar</h1>
-          </Sidebar>
+          <SearchSidebar
+            isSidebarOpened={isSidebarOpened}
+            setSidebarOpened={setSidebarOpened}
+          />
 
-          <Sidebar.Pusher
-            className={styles.pageContainer}
-            dimmed={isSidebarOpened}
-          >
+          <Sidebar.Pusher className={styles.pageContainer}>
             <Menu className={styles.appBar} borderless size="huge">
               <SearchTab onTabClick={() => setSidebarOpened(true)} />
               <LogoTab />

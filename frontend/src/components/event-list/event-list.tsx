@@ -84,7 +84,6 @@ const EventList = forwardRef(
     );
 
     useEffect(() => {
-      console.log(events.length, eventCount);
       if (eventCount !== 0 && events.length >= eventCount) {
         reupdateList(eventCount - 1);
       }
