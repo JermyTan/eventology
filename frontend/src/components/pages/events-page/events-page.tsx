@@ -21,16 +21,18 @@ function EventsPage() {
   const eventListRef = useRef<ElementRef<typeof EventList>>(null);
 
   useEffect(() => {
-    (async () => {
-      setEvents([]);
-      setEvents(await getEvents({ category, startDateTime, endDateTime }));
-      eventListRef.current?.reupdateList();
-    })();
+    setEvents([]);
+
+    if (category || startDateTime || endDateTime) {
+      (async () => {
+        setEvents(await getEvents({ category, startDateTime, endDateTime }));
+      })();
+    }
   }, [getEvents, category, startDateTime, endDateTime]);
 
   const refreshEvents = useCallback(async () => {
     setEvents((await getEvents()).reverse());
-    eventListRef.current?.reupdateList();
+    eventListRef.current?.rerenderList();
   }, [getEvents]);
 
   const getMoreEvents = useCallback(async () => {

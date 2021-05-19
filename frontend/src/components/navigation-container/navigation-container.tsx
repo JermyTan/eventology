@@ -21,7 +21,7 @@ function NavigationContainer({ children }: Props) {
   const { isSidebarOpened, setSidebarOpened } = useContext(SearchContext);
 
   useEffect(() => {
-    if (access === undefined) {
+    if (!access) {
       setSidebarOpened(false);
     }
   }, [setSidebarOpened, access]);

@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 import classNames from "classnames";
 import { Sidebar, Segment, Icon, Divider } from "semantic-ui-react";
 import SearchDateSection from "../search-date-section";
@@ -15,10 +15,8 @@ function SearchSidebar() {
     onSearch,
   } = useContext(SearchContext);
 
-  const isValidSearch = useMemo(
-    () => selectedDate !== undefined && selectedCategory !== undefined,
-    [selectedDate, selectedCategory],
-  );
+  const isValidSearch =
+    selectedDate !== undefined && selectedCategory !== undefined;
 
   return (
     <Sidebar

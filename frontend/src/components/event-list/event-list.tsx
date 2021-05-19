@@ -38,7 +38,7 @@ type Props = {
 };
 
 type EventListHandle = {
-  reupdateList: (index?: number) => void;
+  rerenderList: (index?: number) => void;
 };
 
 const EventList = forwardRef(
@@ -62,7 +62,7 @@ const EventList = forwardRef(
     );
     const listRef = useRef<List>(null) as MutableRefObject<List | null>;
 
-    const reupdateList = useCallback(
+    const rerenderList = useCallback(
       (index?: number) => {
         if (index === undefined) {
           cellMeasurerCache.clearAll();
@@ -78,18 +78,24 @@ const EventList = forwardRef(
     useImperativeHandle(
       ref,
       () => ({
-        reupdateList,
+        rerenderList,
       }),
-      [reupdateList],
+      [rerenderList],
     );
 
     useEffect(() => {
+      if (events.length === 0) {
+        rerenderList();
+      }
+    }, [events.length, rerenderList]);
+
+    useEffect(() => {
       if (eventCount !== 0 && events.length >= eventCount) {
-        reupdateList(eventCount - 1);
+        rerenderList(eventCount - 1);
       }
 
       setEventCount(hasNextPage ? events.length + 1 : events.length);
-    }, [eventCount, hasNextPage, events.length, reupdateList]);
+    }, [eventCount, hasNextPage, events.length, rerenderList]);
 
     const loadMoreEvents = useMemo(
       () =>
@@ -154,7 +160,7 @@ const EventList = forwardRef(
           {({ onRowsRendered, registerChild }) => (
             <WindowScroller scrollElement={scrollElement}>
               {({ height, isScrolling, onChildScroll, scrollTop }) => (
-                <AutoSizer onResize={() => reupdateList()} disableHeight>
+                <AutoSizer onResize={() => rerenderList()} disableHeight>
                   {({ width }) => (
                     <List
                       autoHeight

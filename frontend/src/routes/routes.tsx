@@ -26,7 +26,10 @@ function routes() {
   return (
     <Router>
       <ScrollToTopWrapper>
-        <QueryParamProvider ReactRouterRoute={Route}>
+        <QueryParamProvider
+          ReactRouterRoute={Route}
+          stringifyOptions={{ skipEmptyString: true, skipNull: true }}
+        >
           <SearchProvider>
             <NavigationContainer>
               <Switch>
