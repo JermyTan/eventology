@@ -8,6 +8,8 @@ import {
   useImperativeHandle,
   forwardRef,
   Ref,
+  Dispatch,
+  SetStateAction,
 } from "react";
 import {
   AutoSizer,
@@ -32,6 +34,7 @@ type Props = {
   hasNextPage: boolean;
   isNextPageLoading: boolean;
   events: EventData[];
+  setEvents: Dispatch<SetStateAction<EventData[]>>;
   loadNextPage: (params: IndexRange) => Promise<unknown>;
   refreshPage: () => Promise<unknown>;
   scrollElement?: Element;
@@ -47,6 +50,7 @@ const EventList = forwardRef(
       hasNextPage,
       isNextPageLoading,
       events,
+      setEvents,
       loadNextPage,
       refreshPage,
       scrollElement,
@@ -90,6 +94,7 @@ const EventList = forwardRef(
     }, [events.length, rerenderList]);
 
     useEffect(() => {
+      console.log(events.length, eventCount);
       if (eventCount !== 0 && events.length >= eventCount) {
         rerenderList(eventCount - 1);
       }
@@ -108,6 +113,18 @@ const EventList = forwardRef(
       [hasNextPage, events.length],
     );
 
+    const updateEvents = useCallback(
+      (index: number, changes: Partial<EventData>) => {
+        const updatedEvent = { ...events[index], ...changes };
+
+        const updatedEvents = [...events];
+        updatedEvents[index] = updatedEvent;
+
+        setEvents(updatedEvents);
+      },
+      [events, setEvents],
+    );
+
     const rowRenderer: ListRowRenderer = useCallback(
       ({ index, parent, key, style }) => (
         <CellMeasurer
@@ -119,7 +136,12 @@ const EventList = forwardRef(
         >
           <div style={style}>
             {isRowLoaded({ index }) ? (
-              <EventSummaryCard {...events[index]} />
+              <EventSummaryCard
+                event={events[index]}
+                onChange={(changes: Partial<EventData>) =>
+                  updateEvents(index, changes)
+                }
+              />
             ) : (
               <PlaceholderWrapper
                 isLoading
@@ -132,7 +154,7 @@ const EventList = forwardRef(
           </div>
         </CellMeasurer>
       ),
-      [events, cellMeasurerCache, isRowLoaded],
+      [events, cellMeasurerCache, isRowLoaded, updateEvents],
     );
 
     return (
@@ -177,7 +199,7 @@ const EventList = forwardRef(
                       isScrolling={isScrolling}
                       onScroll={onChildScroll}
                       scrollTop={scrollTop}
-                      overscanRowCount={3}
+                      overscanRowCount={5}
                       onRowsRendered={onRowsRendered}
                       noRowsRenderer={() => (
                         <PlaceholderWrapper

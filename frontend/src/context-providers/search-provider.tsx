@@ -8,7 +8,7 @@ import {
 } from "react";
 import { startOfToday } from "date-fns";
 import { useQueryParams, StringParam } from "use-query-params";
-import { useGetCategories } from "../custom-hooks/api/events-api";
+import { useGetEventCategories } from "../custom-hooks/api/events-api";
 import useDatePeriods from "../custom-hooks/use-date-periods";
 import { CATEGORY, END_DATE_TIME, START_DATE_TIME } from "../constants";
 
@@ -72,8 +72,8 @@ function SearchProvider({ children }: Props) {
   const {
     categories,
     isLoading: isLoadingCategories,
-    getCategories,
-  } = useGetCategories();
+    getEventCategories,
+  } = useGetEventCategories();
 
   const { category, startDateTime, endDateTime } = searchQuery;
   const { today, tomorrow, thisWeek, thisMonth } = datePeriods;
@@ -95,7 +95,7 @@ function SearchProvider({ children }: Props) {
         );
 
         (async () => {
-          const categories = await getCategories();
+          const categories = await getEventCategories();
           const defaultCategory = !category ? "" : category;
 
           setSelectedCategory(
@@ -107,7 +107,7 @@ function SearchProvider({ children }: Props) {
       }
     },
     [
-      getCategories,
+      getEventCategories,
       category,
       startDateTime,
       endDateTime,

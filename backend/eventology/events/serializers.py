@@ -30,13 +30,18 @@ class GetAdditionalEventDataSerializer(serializers.Serializer):
     user_id = serializers.IntegerField(required=False)
 
 
-class PostSerializer(serializers.Serializer):
+class EventSignUpSerializer(serializers.Serializer):
     event_id = serializers.IntegerField()
 
 
-class PostEventCommentSerializer(PostSerializer):
+class EventLikeSerializer(serializers.Serializer):
+    event_id = serializers.IntegerField()
+
+
+class PostEventCommentSerializer(serializers.Serializer):
+    event_id = serializers.IntegerField()
     content = serializers.CharField()
 
 
-class DeleteSerializer(serializers.Serializer):
+class DeleteEventCommentSerializer(serializers.Serializer):
     ids = serializers.ListField(child=serializers.IntegerField())

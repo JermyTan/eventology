@@ -30,6 +30,7 @@
   }
 
   .description {
+    color: #67616d;
     white-space: pre-wrap;
     word-wrap: break-word;
   }
@@ -38,6 +39,37 @@
     @include base.horizontalSpaceMargin;
     display: flex;
     flex-direction: row;
-    color: #ac8ec9;
+
+    .item {
+      cursor: pointer;
+
+      .loader {
+        color: #453257;
+      }
+
+      .signedUp {
+        color: #453257;
+
+        .icon {
+          color: #aecb4f;
+        }
+      }
+
+      .notSignedUp {
+        color: #ac8ec9;
+      }
+
+      .liked {
+        color: #453257;
+
+        .icon {
+          color: #ff5c5c;
+        }
+      }
+
+      .notLiked {
+        color: #ac8ec9;
+      }
+    }
   }
 }

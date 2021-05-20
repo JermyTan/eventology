@@ -23,6 +23,8 @@ import {
   USER_ID,
   OFFSET,
   LIMIT,
+  IDS,
+  EVENT,
 } from "../constants";
 
 export type EventCategoryData = BaseData & {
@@ -31,13 +33,32 @@ export type EventCategoryData = BaseData & {
 
 export type EventSignUpData = BaseData & {
   [USER]: UserData;
+  [EVENT_ID]?: number;
+  [EVENT]?: EventData;
+};
+
+export type EventSignUpPostData = {
   [EVENT_ID]: number;
 };
 
+export type EventSignUpDeleteData = EventSignUpPostData;
+
 export type EventLikeData = EventSignUpData;
+
+export type EventLikePostData = EventSignUpPostData;
+
+export type EventLikeDeleteData = EventSignUpDeleteData;
 
 export type EventCommentData = EventSignUpData & {
   [CONTENT]: string;
+};
+
+export type EventCommentPostData = EventSignUpPostData & {
+  [CONTENT]: string;
+};
+
+export type EventCommentDeleteData = {
+  [IDS]: number[];
 };
 
 export type EventData = BaseData & {

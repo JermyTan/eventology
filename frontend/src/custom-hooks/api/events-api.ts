@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { stringifyUrl } from "query-string";
 import { snakeCase } from "change-case";
 import { useAxiosWithTokenRefresh } from "./auth-api";
@@ -6,11 +6,20 @@ import { errorHandlerWrapper, resolveApiError } from "../../utils/error-utils";
 import { changeKeyCase } from "../../utils/parser-utils";
 import {
   EventCategoryData,
+  EventCommentData,
+  EventCommentDeleteData,
+  EventCommentPostData,
   EventData,
   EventGetQueryParams,
+  EventLikeData,
+  EventLikeDeleteData,
+  EventLikePostData,
+  EventSignUpData,
+  EventSignUpDeleteData,
+  EventSignUpPostData,
 } from "../../types/events";
 
-export function useGetCategories() {
+export function useGetEventCategories() {
   const [categories, setCategories] = useState<string[]>([]);
   const [{ loading }, apiCall] = useAxiosWithTokenRefresh<EventCategoryData[]>(
     {
@@ -20,7 +29,7 @@ export function useGetCategories() {
     { manual: true },
   );
 
-  const getCategories = useCallback(async () => {
+  const getEventCategories = useCallback(async () => {
     try {
       return await errorHandlerWrapper(async () => {
         const { data: categories = [] } = await apiCall();
@@ -37,7 +46,7 @@ export function useGetCategories() {
     }
   }, [apiCall]);
 
-  return { categories, isLoading: loading, getCategories };
+  return { categories, isLoading: loading, getEventCategories };
 }
 
 export function useGetEvents() {
@@ -77,4 +86,160 @@ export function useGetEvents() {
   );
 
   return { events, isLoading: loading, getEvents };
+}
+
+export function useCreateEventSignUp() {
+  const [{ loading }, apiCall] = useAxiosWithTokenRefresh<EventSignUpData>(
+    {
+      url: "/events/signups",
+      method: "post",
+    },
+    { manual: true },
+  );
+
+  const createEventSignUp = useMemo(
+    () =>
+      errorHandlerWrapper(async (data: EventSignUpPostData) => {
+        console.log("POST /events/signups data:", data);
+
+        const { data: signUp } = await apiCall({ data });
+
+        console.log("POST /events/signups success:", signUp);
+
+        return signUp;
+      }, "POST /events/signups error"),
+    [apiCall],
+  );
+
+  return { createEventSignUp, isLoading: loading };
+}
+
+export function useDeleteEventSignUps() {
+  const [{ loading }, apiCall] = useAxiosWithTokenRefresh<EventSignUpData>(
+    {
+      url: "/events/signups",
+      method: "delete",
+    },
+    { manual: true },
+  );
+
+  const deleteEventSignUps = useMemo(
+    () =>
+      errorHandlerWrapper(async (data: EventSignUpDeleteData) => {
+        console.log("DELETE /events/signups data:", data);
+
+        const { data: deletedSignUp } = await apiCall({ data });
+
+        console.log("DELETE /events/signups success:", deletedSignUp);
+
+        return deletedSignUp;
+      }, "DELETE /events/signups error"),
+    [apiCall],
+  );
+
+  return { deleteEventSignUps, isLoading: loading };
+}
+
+export function useCreateEventLike() {
+  const [{ loading }, apiCall] = useAxiosWithTokenRefresh<EventLikeData>(
+    {
+      url: "/events/likes",
+      method: "post",
+    },
+    { manual: true },
+  );
+
+  const createEventLike = useMemo(
+    () =>
+      errorHandlerWrapper(async (data: EventLikePostData) => {
+        console.log("POST /events/likes data:", data);
+
+        const { data: like } = await apiCall({ data });
+
+        console.log("POST /events/likes success:", like);
+
+        return like;
+      }, "POST /events/likes error"),
+    [apiCall],
+  );
+
+  return { createEventLike, isLoading: loading };
+}
+
+export function useDeleteEventLikes() {
+  const [{ loading }, apiCall] = useAxiosWithTokenRefresh<EventLikeData>(
+    {
+      url: "/events/likes",
+      method: "delete",
+    },
+    { manual: true },
+  );
+
+  const deleteEventLikes = useMemo(
+    () =>
+      errorHandlerWrapper(async (data: EventLikeDeleteData) => {
+        console.log("DELETE /events/likes data:", data);
+
+        const { data: deletedLike } = await apiCall({ data });
+
+        console.log("DELETE /events/likes success:", deletedLike);
+
+        return deletedLike;
+      }, "DELETE /events/likes error"),
+    [apiCall],
+  );
+
+  return { deleteEventLikes, isLoading: loading };
+}
+
+export function useCreateEventComment() {
+  const [{ loading }, apiCall] = useAxiosWithTokenRefresh<EventCommentData>(
+    {
+      url: "/events/comments",
+      method: "post",
+    },
+    { manual: true },
+  );
+
+  const createEventComment = useMemo(
+    () =>
+      errorHandlerWrapper(async (data: EventCommentPostData) => {
+        console.log("POST /events/comments data:", data);
+
+        const { data: comment } = await apiCall({ data });
+
+        console.log("POST /events/comments success:", comment);
+
+        return comment;
+      }, "POST /events/comments error"),
+    [apiCall],
+  );
+
+  return { createEventComment, isLoading: loading };
+}
+
+export function useDeleteEventComments() {
+  const [{ loading }, apiCall] = useAxiosWithTokenRefresh<EventCommentData[]>(
+    {
+      url: "/events/comments",
+      method: "delete",
+    },
+    { manual: true },
+  );
+
+  const deleteEventComments = useMemo(
+    () =>
+      errorHandlerWrapper(async (data: EventCommentDeleteData) => {
+        console.log("DELETE /events/comments data:", data);
+
+        const { data: deletedComments } = await apiCall({ data });
+
+        console.log("DELETE /events/comments success:", deletedComments);
+
+        return deletedComments;
+      }, "DELETE /events/comments error"),
+    [apiCall],
+  );
+
+  return { deleteEventComments, isLoading: loading };
 }

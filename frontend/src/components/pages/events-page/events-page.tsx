@@ -46,6 +46,7 @@ function EventsPage() {
       hasNextPage
       isNextPageLoading={isLoading}
       events={events}
+      setEvents={setEvents}
       loadNextPage={getMoreEvents}
       refreshPage={refreshEvents}
       scrollElement={pageBody}

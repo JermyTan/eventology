@@ -15,7 +15,7 @@ def check_access(view_method):
 
         except (User.DoesNotExist, User.MultipleObjectsReturned) as e:
             raise AuthenticationFailed(
-                _("Invalid user."),
+                detail=_("Invalid user."),
                 code="invalid_user",
             )
 

@@ -28,3 +28,5 @@ export const DATE_TIME_FORMAT = "d MMMM yyyy HH:mm";
 export const USER_ID = "userId";
 export const OFFSET = "offset";
 export const LIMIT = "limit";
+export const IDS = "ids";
+export const EVENT = "event";

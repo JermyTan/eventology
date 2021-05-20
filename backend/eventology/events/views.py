@@ -27,18 +27,19 @@ from .logic import (
     create_event_sign_up,
     create_event_like,
     create_event_comment,
-    delete_event_sign_ups,
-    delete_event_likes,
+    delete_event_sign_up,
+    delete_event_like,
     delete_event_comments,
 )
 from .serializers import (
     GetEventSerializer,
     GetAdditionalEventDataSerializer,
-    PostSerializer,
+    EventSignUpSerializer,
+    EventLikeSerializer,
     PostEventCommentSerializer,
-    DeleteSerializer,
+    DeleteEventCommentSerializer,
 )
-from .models import Event
+from .models import Event, EventSignUp, EventLike
 
 # Create your views here.
 class EventCategoriesView(APIView):
@@ -98,14 +99,15 @@ class EventSignUpsView(APIView):
         )
 
         data = [
-            event_sign_up_to_json(event_sign_up) for event_sign_up in event_sign_ups
+            event_sign_up_to_json(event_sign_up=event_sign_up, user=requester)
+            for event_sign_up in event_sign_ups
         ]
 
         return Response(data, status=status.HTTP_200_OK)
 
     @check_access
     def post(self, request, requester: User):
-        serializer = PostSerializer(data=request.data)
+        serializer = EventSignUpSerializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
 
@@ -113,31 +115,43 @@ class EventSignUpsView(APIView):
 
         try:
             new_event_sign_up = create_event_sign_up(event_id=event_id, user=requester)
-        except (Event.DoesNotExist, Event.MultipleObjectsReturned) as e:
-            raise NotFound("No event found.", code="not_found")
+        except Event.DoesNotExist as e:
+            raise NotFound(detail="No event found.", code="not_found")
         except IntegrityError as e:
             raise Conflict(detail="Event has already been signed up.")
         except Exception as e:
             raise BadRequest(e)
 
-        data = event_sign_up_to_json(new_event_sign_up)
+        data = event_sign_up_to_json(
+            event_sign_up=new_event_sign_up,
+            user=requester,
+            include_event_details=True,
+        )
 
         return Response(data, status=status.HTTP_201_CREATED)
 
     @check_access
     def delete(self, request, requester: User):
-        serializer = DeleteSerializer(data=request.data)
+        serializer = EventSignUpSerializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
 
-        event_sign_up_ids = serializer.validated_data.get("ids", [])
+        event_id = serializer.validated_data.get("event_id", None)
 
-        deleted_event_sign_ups = delete_event_sign_ups(ids=event_sign_up_ids)
+        try:
+            deleted_event_sign_up = delete_event_sign_up(
+                event_id=event_id, user=requester
+            )
+        except EventSignUp.DoesNotExist as e:
+            raise NotFound(detail="Event has not been signed up.", code="not_found")
+        except Exception as e:
+            raise BadRequest(e)
 
-        data = [
-            event_sign_up_to_json(event_sign_up)
-            for event_sign_up in deleted_event_sign_ups
-        ]
+        data = event_sign_up_to_json(
+            event_sign_up=deleted_event_sign_up,
+            user=requester,
+            include_event_details=True,
+        )
 
         return Response(data, status=status.HTTP_200_OK)
 
@@ -155,13 +169,16 @@ class EventLikesView(APIView):
 
         event_likes = get_requested_event_likes(event_id=event_id, user_id=user_id)
 
-        data = [event_like_to_json(event_like) for event_like in event_likes]
+        data = [
+            event_like_to_json(event_like=event_like, user=requester)
+            for event_like in event_likes
+        ]
 
         return Response(data, status=status.HTTP_200_OK)
 
     @check_access
     def post(self, request, requester: User):
-        serializer = PostSerializer(data=request.data)
+        serializer = EventLikeSerializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
 
@@ -169,28 +186,37 @@ class EventLikesView(APIView):
 
         try:
             new_event_like = create_event_like(event_id=event_id, user=requester)
-        except (Event.DoesNotExist, Event.MultipleObjectsReturned) as e:
-            raise NotFound("No event found.", code="not_found")
+        except Event.DoesNotExist as e:
+            raise NotFound(detail="No event found.", code="not_found")
         except IntegrityError as e:
             raise Conflict(detail="Event has already been liked.")
         except Exception as e:
             raise BadRequest(e)
 
-        data = event_like_to_json(new_event_like)
+        data = event_like_to_json(
+            event_like=new_event_like, user=requester, include_event_details=True
+        )
 
         return Response(data, status=status.HTTP_201_CREATED)
 
     @check_access
     def delete(self, request, requester: User):
-        serializer = DeleteSerializer(data=request.data)
+        serializer = EventLikeSerializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
 
-        event_like_ids = serializer.validated_data.get("ids", [])
+        event_id = serializer.validated_data.get("event_id", None)
 
-        deleted_event_likes = delete_event_likes(ids=event_like_ids)
+        try:
+            deleted_event_like = delete_event_like(event_id=event_id, user=requester)
+        except EventLike.DoesNotExist as e:
+            raise NotFound(detail="Event has not been liked.", code="not_found")
+        except Exception as e:
+            raise BadRequest(e)
 
-        data = [event_like_to_json(event_like) for event_like in deleted_event_likes]
+        data = event_like_to_json(
+            event_like=deleted_event_like, user=requester, include_event_details=True
+        )
 
         return Response(data, status=status.HTTP_200_OK)
 
@@ -230,8 +256,8 @@ class EventCommentsView(APIView):
             new_event_comment = create_event_comment(
                 event_id=event_id, user=requester, content=content
             )
-        except (Event.DoesNotExist, Event.MultipleObjectsReturned) as e:
-            raise NotFound("No event found.", code="not_found")
+        except Event.DoesNotExist as e:
+            raise NotFound(detail="No event found.", code="not_found")
         except Exception as e:
             raise BadRequest(e)
 
@@ -241,7 +267,7 @@ class EventCommentsView(APIView):
 
     @check_access
     def delete(self, request, requester: User):
-        serializer = DeleteSerializer(data=request.data)
+        serializer = DeleteEventCommentSerializer(data=request.data)
 
         serializer.is_valid(raise_exception=True)
 

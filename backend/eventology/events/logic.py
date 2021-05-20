@@ -25,6 +25,7 @@ from eventology.common.constants import (
     EVENT_ID,
     CONTENT,
     NAME,
+    EVENT,
 )
 from eventology.common.parsers import parse_datetime_to_ms_timestamp
 from users.logic import user_to_json
@@ -62,24 +63,43 @@ def event_category_to_json(event_category: EventCategory) -> dict:
     }
 
 
-def event_sign_up_to_json(event_sign_up: EventSignUp) -> dict:
-    return {
+def event_sign_up_to_json(
+    event_sign_up: EventSignUp, user: User, include_event_details: bool = False
+) -> dict:
+    data = {
         ID: event_sign_up.id,
         CREATED_AT: parse_datetime_to_ms_timestamp(event_sign_up.created_at),
         UPDATED_AT: parse_datetime_to_ms_timestamp(event_sign_up.updated_at),
         USER: user_to_json(event_sign_up.user),
-        EVENT_ID: event_sign_up.event_id,
     }
 
+    data.update(
+        {EVENT: event_to_json(event=event_sign_up.event, user=user)}
+        if include_event_details
+        else {EVENT_ID: event_sign_up.event_id}
+    )
 
-def event_like_to_json(event_like: EventLike) -> dict:
-    return {
+    return data
+
+
+def event_like_to_json(
+    event_like: EventLike, user: User, include_event_details: bool = False
+) -> dict:
+    data = {
         ID: event_like.id,
         CREATED_AT: parse_datetime_to_ms_timestamp(event_like.created_at),
         UPDATED_AT: parse_datetime_to_ms_timestamp(event_like.updated_at),
         USER: user_to_json(event_like.user),
         EVENT_ID: event_like.event_id,
     }
+
+    data.update(
+        {EVENT: event_to_json(event=event_like.event, user=user)}
+        if include_event_details
+        else {EVENT_ID: event_like.event_id}
+    )
+
+    return data
 
 
 def event_comment_to_json(event_comment: EventComment) -> dict:
@@ -233,30 +253,28 @@ def create_event_comment(event_id: int, user: User, content: str) -> EventCommen
     return new_event_comment
 
 
-def delete_event_sign_ups(ids: Iterable[int]) -> Sequence[EventSignUp]:
-    event_sign_ups_to_be_deleted = get_event_sign_ups(id__in=ids).select_related(
-        "event", "user"
-    )
+def delete_event_sign_up(event_id: int, user: User) -> EventSignUp:
+    event_sign_up_to_be_deleted = get_event_sign_ups(
+        event_id=event_id, user=user
+    ).select_related("event", "user")
 
-    deleted_event_sign_ups = [
-        event_sign_up for event_sign_up in event_sign_ups_to_be_deleted
-    ]
+    deleted_event_sign_up = event_sign_up_to_be_deleted.get()
 
-    event_sign_ups_to_be_deleted.delete()
+    event_sign_up_to_be_deleted.delete()
 
-    return deleted_event_sign_ups
+    return deleted_event_sign_up
 
 
-def delete_event_likes(ids: Iterable[int]) -> Sequence[EventLike]:
-    event_likes_to_be_deleted = get_event_likes(id__in=ids).select_related(
-        "event", "user"
-    )
+def delete_event_like(event_id: int, user: User) -> EventLike:
+    event_like_to_be_deleted = get_event_likes(
+        event_id=event_id, user=user
+    ).select_related("event", "user")
 
-    deleted_event_likes = [event_like for event_like in event_likes_to_be_deleted]
+    deleted_event_like = event_like_to_be_deleted.get()
 
-    event_likes_to_be_deleted.delete()
+    event_like_to_be_deleted.delete()
 
-    return deleted_event_likes
+    return deleted_event_like
 
 
 def delete_event_comments(ids: Iterable[int]) -> Sequence[EventComment]:
