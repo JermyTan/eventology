@@ -22,8 +22,7 @@ import {
   IndexRange,
   Index,
 } from "react-virtualized";
-import { Icon, Image } from "semantic-ui-react";
-import PullToRefresh from "react-simple-pull-to-refresh";
+import { Image } from "semantic-ui-react";
 import EventSummaryCard from "../event-summary-card";
 import PlaceholderWrapper from "../placeholder-wrapper";
 import { EventData } from "../../types/events";
@@ -36,7 +35,6 @@ type Props = {
   events: EventData[];
   setEvents: Dispatch<SetStateAction<EventData[]>>;
   loadNextPage: (params: IndexRange) => Promise<unknown>;
-  refreshPage: () => Promise<unknown>;
   scrollElement?: Element;
 };
 
@@ -52,7 +50,6 @@ const EventList = forwardRef(
       events,
       setEvents,
       loadNextPage,
-      refreshPage,
       scrollElement,
     }: Props,
     ref: Ref<EventListHandle>,
@@ -152,80 +149,53 @@ const EventList = forwardRef(
     );
 
     return (
-      <PullToRefresh
-        isPullable
-        onRefresh={refreshPage}
-        pullingContent={
-          <PlaceholderWrapper
-            showDefaultContent
-            defaultContent={
-              <h3 className={styles.pullingContentContainer}>
-                <Icon name="arrow down" fitted /> Pull down to refresh{" "}
-                <Icon name="arrow down" fitted />
-              </h3>
-            }
-          />
-        }
+      <InfiniteLoader
+        rowCount={eventCount}
+        isRowLoaded={isRowLoaded}
+        threshold={0}
+        loadMoreRows={loadMoreEvents}
       >
-        <InfiniteLoader
-          rowCount={eventCount}
-          isRowLoaded={isRowLoaded}
-          threshold={0}
-          loadMoreRows={loadMoreEvents}
-        >
-          {({ onRowsRendered, registerChild }) => (
-            <WindowScroller scrollElement={scrollElement}>
-              {({ height, isScrolling, onChildScroll, scrollTop }) => (
-                <AutoSizer onResize={() => rerenderList()} disableHeight>
-                  {({ width }) => (
-                    <List
-                      autoHeight
-                      ref={(element) => {
-                        registerChild(element);
-                        listRef.current = element;
-                      }}
-                      height={height}
-                      width={width}
-                      rowHeight={cellMeasurerCacheRef.current.rowHeight}
-                      deferredMeasurementCache={cellMeasurerCacheRef.current}
-                      rowRenderer={rowRenderer}
-                      rowCount={eventCount}
-                      isScrolling={isScrolling}
-                      onScroll={onChildScroll}
-                      scrollTop={scrollTop}
-                      overscanRowCount={5}
-                      onRowsRendered={onRowsRendered}
-                      noRowsRenderer={() => (
-                        <PlaceholderWrapper
-                          showDefaultContent
-                          defaultContent={
-                            <PlaceholderWrapper
-                              showDefaultContent
-                              placeholder
-                              defaultContent={
-                                <div className={styles.noEventContentContainer}>
-                                  <Image
-                                    src={noActivityLogo}
-                                    size="tiny"
-                                    wrapped
-                                  />
-                                  <h3 className={styles.text}>
-                                    No event found
-                                  </h3>
-                                </div>
-                              }
-                            />
-                          }
-                        />
-                      )}
-                    />
-                  )}
-                </AutoSizer>
-              )}
-            </WindowScroller>
-          )}
-        </InfiniteLoader>
-      </PullToRefresh>
+        {({ onRowsRendered, registerChild }) => (
+          <WindowScroller scrollElement={scrollElement}>
+            {({ height, isScrolling, onChildScroll, scrollTop }) => (
+              <AutoSizer onResize={() => rerenderList()} disableHeight>
+                {({ width }) => (
+                  <List
+                    autoHeight
+                    ref={(element) => {
+                      registerChild(element);
+                      listRef.current = element;
+                    }}
+                    height={height}
+                    width={width}
+                    rowHeight={cellMeasurerCacheRef.current.rowHeight}
+                    deferredMeasurementCache={cellMeasurerCacheRef.current}
+                    rowRenderer={rowRenderer}
+                    rowCount={eventCount}
+                    isScrolling={isScrolling}
+                    onScroll={onChildScroll}
+                    scrollTop={scrollTop}
+                    overscanRowCount={5}
+                    onRowsRendered={onRowsRendered}
+                    noRowsRenderer={() => (
+                      <PlaceholderWrapper
+                        showDefaultContent
+                        placeholder
+                        defaultContent={
+                          <div className={styles.noEventContentContainer}>
+                            <Image src={noActivityLogo} size="tiny" wrapped />
+                            <h3 className={styles.text}>No event found</h3>
+                          </div>
+                        }
+                      />
+                    )}
+                  />
+                )}
+              </AutoSizer>
+            )}
+          </WindowScroller>
+        )}
+      </InfiniteLoader>
     );
   },
 );

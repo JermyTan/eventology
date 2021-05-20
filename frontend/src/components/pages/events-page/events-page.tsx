@@ -6,10 +6,14 @@ import {
   useRef,
   useState,
 } from "react";
+import { Icon } from "semantic-ui-react";
+import PullToRefresh from "react-simple-pull-to-refresh";
 import { PageBodyContext, SearchContext } from "../../../context-providers";
 import { useGetEvents } from "../../../custom-hooks/api/events-api";
+import PlaceholderWrapper from "../../placeholder-wrapper";
 import { EventData } from "../../../types/events";
 import EventList from "../../event-list";
+import styles from "./events-page.module.scss";
 
 function EventsPage() {
   const { pageBody } = useContext(PageBodyContext);
@@ -41,16 +45,31 @@ function EventsPage() {
   }, [getEvents]);
 
   return (
-    <EventList
-      ref={eventListRef}
-      hasNextPage
-      isNextPageLoading={isLoading}
-      events={events}
-      setEvents={setEvents}
-      loadNextPage={getMoreEvents}
-      refreshPage={refreshEvents}
-      scrollElement={pageBody}
-    />
+    <PullToRefresh
+      isPullable
+      onRefresh={refreshEvents}
+      pullingContent={
+        <PlaceholderWrapper
+          showDefaultContent
+          defaultContent={
+            <h3 className={styles.pullingContentContainer}>
+              <Icon name="arrow down" fitted /> Pull down to refresh{" "}
+              <Icon name="arrow down" fitted />
+            </h3>
+          }
+        />
+      }
+    >
+      <EventList
+        ref={eventListRef}
+        hasNextPage
+        isNextPageLoading={isLoading}
+        events={events}
+        setEvents={setEvents}
+        loadNextPage={getMoreEvents}
+        scrollElement={pageBody}
+      />
+    </PullToRefresh>
   );
 }
 
