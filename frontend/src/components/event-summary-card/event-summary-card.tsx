@@ -6,16 +6,16 @@ import { useMemo } from "react";
 import { EventData } from "../../types/events";
 import { displayDateTime } from "../../utils/parser-utils";
 import LinkifyTextViewer from "../linkify-text-viewer";
-import defaultAvatarImage from "../../assets/avatar.png";
 import {
   useCreateEventSignUp,
   useCreateEventLike,
   useDeleteEventSignUps,
   useDeleteEventLikes,
 } from "../../custom-hooks/api/events-api";
-import { resolveApiError } from "../../utils/error-utils";
-import styles from "./event-summary-card.module.scss";
 import IconLoader from "../icon-loader/icon-loader";
+import { resolveApiError } from "../../utils/error-utils";
+import defaultAvatarImage from "../../assets/avatar.png";
+import styles from "./event-summary-card.module.scss";
 
 type Props = {
   event: EventData;

@@ -1,5 +1,6 @@
 import { ReactNode, useContext, useEffect } from "react";
 import { Sidebar, Menu, Segment } from "semantic-ui-react";
+import { useLocation } from "react-router-dom";
 import SearchTab from "../search-tab";
 import LogoTab from "../logo-tab";
 import UserTab from "../user-tab";
@@ -10,7 +11,6 @@ import {
   SearchContext,
 } from "../../context-providers";
 import styles from "./navigation-container.module.scss";
-import { useLocation } from "react-router-dom";
 import { PROFILE_PATH } from "../../routes/paths";
 import HomeTab from "../home-tab";
 
