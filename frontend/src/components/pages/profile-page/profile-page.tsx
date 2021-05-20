@@ -1,5 +1,20 @@
+import { useContext } from "react";
+import { Segment } from "semantic-ui-react";
+import { UserContext } from "../../../context-providers";
+
 function ProfilePage() {
-  return <h1>This is the profile page</h1>;
+  const { email, name } = useContext(UserContext);
+
+  return (
+    <div>
+      <Segment vertical>
+        {name}
+        {email}
+      </Segment>
+
+      <Segment vertical></Segment>
+    </div>
+  );
 }
 
 export default ProfilePage;

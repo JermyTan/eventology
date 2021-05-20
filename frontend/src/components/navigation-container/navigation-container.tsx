@@ -1,5 +1,5 @@
 import { ReactNode, useContext, useEffect } from "react";
-import { Sidebar, Menu, Container, Segment } from "semantic-ui-react";
+import { Sidebar, Menu, Segment } from "semantic-ui-react";
 import SearchTab from "../search-tab";
 import LogoTab from "../logo-tab";
 import UserTab from "../user-tab";
@@ -10,12 +10,16 @@ import {
   SearchContext,
 } from "../../context-providers";
 import styles from "./navigation-container.module.scss";
+import { useLocation } from "react-router-dom";
+import { PROFILE_PATH } from "../../routes/paths";
+import HomeTab from "../home-tab";
 
 type Props = {
   children: ReactNode;
 };
 
 function NavigationContainer({ children }: Props) {
+  const { pathname } = useLocation();
   const { access } = useContext(UserContext);
   const { setPageBody } = useContext(PageBodyContext);
   const { isSidebarOpened, setSidebarOpened } = useContext(SearchContext);
@@ -37,7 +41,11 @@ function NavigationContainer({ children }: Props) {
             dimmed={isSidebarOpened}
           >
             <Menu className={styles.appBar} borderless size="huge">
-              <SearchTab onTabClick={() => setSidebarOpened(true)} />
+              {pathname.startsWith(PROFILE_PATH) ? (
+                <HomeTab />
+              ) : (
+                <SearchTab onTabClick={() => setSidebarOpened(true)} />
+              )}
               <LogoTab />
               <UserTab />
             </Menu>
@@ -47,7 +55,7 @@ function NavigationContainer({ children }: Props) {
               className={styles.bodyContainer}
             >
               <Segment vertical className={styles.verticalPaddingContainer}>
-                <Container>{children}</Container>
+                {children}
               </Segment>
             </div>
           </Sidebar.Pusher>
