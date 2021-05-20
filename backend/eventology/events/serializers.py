@@ -23,3 +23,20 @@ class GetEventSerializer(serializers.Serializer):
             )
 
         return attrs
+
+
+class GetAdditionalEventDataSerializer(serializers.Serializer):
+    event_id = serializers.IntegerField(required=False)
+    user_id = serializers.IntegerField(required=False)
+
+
+class PostSerializer(serializers.Serializer):
+    event_id = serializers.IntegerField()
+
+
+class PostEventCommentSerializer(PostSerializer):
+    content = serializers.CharField()
+
+
+class DeleteSerializer(serializers.Serializer):
+    ids = serializers.ListField(child=serializers.IntegerField())

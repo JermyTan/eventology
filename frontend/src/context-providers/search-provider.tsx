@@ -80,23 +80,24 @@ function SearchProvider({ children }: Props) {
 
   const setSidebarOpened = useCallback(
     (newValue: boolean) => {
+      _setSidebarOpened(newValue);
+
       if (newValue) {
+        const defaultDatePeriod =
+          !startDateTime && !endDateTime
+            ? ""
+            : `${startDateTime}-${endDateTime}`;
+
+        setSelectedDate(
+          ["", today, tomorrow, thisWeek, thisMonth].includes(defaultDatePeriod)
+            ? defaultDatePeriod
+            : undefined,
+        );
+
         (async () => {
           const categories = await getCategories();
-
-          const defaultDatePeriod =
-            !startDateTime && !endDateTime
-              ? ""
-              : `${startDateTime}-${endDateTime}`;
           const defaultCategory = !category ? "" : category;
 
-          setSelectedDate(
-            ["", today, tomorrow, thisWeek, thisMonth].includes(
-              defaultDatePeriod,
-            )
-              ? defaultDatePeriod
-              : undefined,
-          );
           setSelectedCategory(
             ["", ...categories].includes(defaultCategory)
               ? defaultCategory
@@ -104,8 +105,6 @@ function SearchProvider({ children }: Props) {
           );
         })();
       }
-
-      _setSidebarOpened(newValue);
     },
     [
       getCategories,

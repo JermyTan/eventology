@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Iterable, Sequence
 from datetime import datetime
 from django.db.models import QuerySet
 
@@ -137,6 +137,48 @@ def event_to_json(
     return data
 
 
+def get_requested_event_sign_ups(
+    event_id: Optional[int], user_id: Optional[int]
+) -> QuerySet[EventSignUp]:
+    event_sign_ups = get_event_sign_ups().select_related("event", "user")
+
+    if event_id is not None:
+        event_sign_ups = event_sign_ups.filter(event_id=event_id)
+
+    if user_id is not None:
+        event_sign_ups = event_sign_ups.filter(user_id=user_id)
+
+    return event_sign_ups
+
+
+def get_requested_event_likes(
+    event_id: Optional[int], user_id: Optional[int]
+) -> QuerySet[EventLike]:
+    event_likes = get_event_likes().select_related("event", "user")
+
+    if event_id is not None:
+        event_likes = event_likes.filter(event_id=event_id)
+
+    if user_id is not None:
+        event_likes = event_likes.filter(user_id=user_id)
+
+    return event_likes
+
+
+def get_requested_event_comments(
+    event_id: Optional[int], user_id: Optional[int]
+) -> QuerySet[EventComment]:
+    event_comments = get_event_comments().select_related("event", "user")
+
+    if event_id is not None:
+        event_comments = event_comments.filter(event_id=event_id)
+
+    if user_id is not None:
+        event_comments = event_comments.filter(user_id=user_id)
+
+    return event_comments
+
+
 def get_requested_events(
     user_id: Optional[int],
     category: Optional[str],
@@ -145,21 +187,87 @@ def get_requested_events(
     offset: int,
     limit: Optional[int],
 ) -> QuerySet[Event]:
-    filtered_events = (
+    events = (
         get_events()
         .exclude(end_date_time__lt=start_date_time)
         .exclude(start_date_time__gt=end_date_time)
     ).select_related("creator", "category")
 
     if user_id is not None:
-        filtered_events = filtered_events.filter(creator_id=user_id)
+        events = events.filter(creator_id=user_id)
 
     if category is not None:
-        filtered_events = filtered_events.filter(category__name=category)
+        events = events.filter(category__name=category)
 
     if limit is not None:
-        filtered_events = filtered_events[offset : offset + limit]
+        events = events[offset : offset + limit]
     else:
-        filtered_events = filtered_events[offset:]
+        events = events[offset:]
 
-    return filtered_events
+    return events
+
+
+def create_event_sign_up(event_id: int, user: User) -> EventSignUp:
+    event = get_events(id=event_id).get()
+
+    new_event_sign_up = EventSignUp.objects.create(event=event, user=user)
+
+    return new_event_sign_up
+
+
+def create_event_like(event_id: int, user: User) -> EventLike:
+    event = get_events(id=event_id).get()
+
+    new_event_like = EventLike.objects.create(event=event, user=user)
+
+    return new_event_like
+
+
+def create_event_comment(event_id: int, user: User, content: str) -> EventComment:
+    event = get_events(id=event_id).get()
+
+    new_event_comment = EventComment.objects.create(
+        event=event, user=user, content=content
+    )
+
+    return new_event_comment
+
+
+def delete_event_sign_ups(ids: Iterable[int]) -> Sequence[EventSignUp]:
+    event_sign_ups_to_be_deleted = get_event_sign_ups(id__in=ids).select_related(
+        "event", "user"
+    )
+
+    deleted_event_sign_ups = [
+        event_sign_up for event_sign_up in event_sign_ups_to_be_deleted
+    ]
+
+    event_sign_ups_to_be_deleted.delete()
+
+    return deleted_event_sign_ups
+
+
+def delete_event_likes(ids: Iterable[int]) -> Sequence[EventLike]:
+    event_likes_to_be_deleted = get_event_likes(id__in=ids).select_related(
+        "event", "user"
+    )
+
+    deleted_event_likes = [event_like for event_like in event_likes_to_be_deleted]
+
+    event_likes_to_be_deleted.delete()
+
+    return deleted_event_likes
+
+
+def delete_event_comments(ids: Iterable[int]) -> Sequence[EventComment]:
+    event_comments_to_be_deleted = get_event_comments(id__in=ids).select_related(
+        "event", "user"
+    )
+
+    deleted_event_comments = [
+        event_comment for event_comment in event_comments_to_be_deleted
+    ]
+
+    event_comments_to_be_deleted.delete()
+
+    return deleted_event_comments
