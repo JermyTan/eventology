@@ -14,14 +14,27 @@
     .appBar {
       display: flex;
       flex-direction: row;
-      justify-content: space-between;
       background-color: base.$primary-color;
       padding: 0 0.5rem;
       border-radius: 0;
       margin: 0;
 
-      &:after {
-        content: none;
+      .tabContainer {
+        display: flex;
+        flex-direction: row;
+        flex: 1;
+      }
+
+      .leftTab {
+        justify-content: flex-start;
+      }
+
+      .centerTab {
+        justify-content: center;
+      }
+
+      .rightTab {
+        justify-content: flex-end;
       }
     }
 

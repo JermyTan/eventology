@@ -1,4 +1,5 @@
 import { ReactNode, useContext, useEffect } from "react";
+import classNames from "classnames";
 import { Sidebar, Menu, Segment } from "semantic-ui-react";
 import { useLocation } from "react-router-dom";
 import SearchTab from "../search-tab";
@@ -41,13 +42,23 @@ function NavigationContainer({ children }: Props) {
             dimmed={isSidebarOpened}
           >
             <Menu className={styles.appBar} borderless size="huge">
-              {pathname.startsWith(PROFILE_PATH) ? (
-                <HomeTab />
-              ) : (
-                <SearchTab onTabClick={() => setSidebarOpened(true)} />
-              )}
-              <LogoTab />
-              <UserTab />
+              <div className={classNames(styles.tabContainer, styles.leftTab)}>
+                {pathname.startsWith(PROFILE_PATH) ? (
+                  <HomeTab />
+                ) : (
+                  <SearchTab onTabClick={() => setSidebarOpened(true)} />
+                )}
+              </div>
+
+              <div
+                className={classNames(styles.tabContainer, styles.centerTab)}
+              >
+                <LogoTab />
+              </div>
+
+              <div className={classNames(styles.tabContainer, styles.rightTab)}>
+                <UserTab />
+              </div>
             </Menu>
 
             <div

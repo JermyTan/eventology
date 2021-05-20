@@ -18,7 +18,7 @@ function UserTab() {
   }, [updateUser]);
 
   return (
-    <Menu.Menu>
+    <Menu.Menu className={styles.userTab}>
       <Media className="item" greaterThanOrEqual="computer">
         <strong className={styles.nameLabel}>{name}</strong>
       </Media>

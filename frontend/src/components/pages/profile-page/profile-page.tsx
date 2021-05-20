@@ -30,7 +30,9 @@ function ProfilePage() {
         </Container>
       </Segment>
 
-      <Segment vertical />
+      <Segment vertical>
+        <Container></Container>
+      </Segment>
     </div>
   );
 }
