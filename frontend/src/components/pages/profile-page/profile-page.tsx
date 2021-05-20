@@ -30,9 +30,28 @@ function ProfilePage() {
         </Container>
       </Segment>
 
-      <Segment vertical>
-        <Container></Container>
+      <Segment padded vertical>
+        <Container className={styles.tabContainer}>
+          <div>
+            <Icon name="heart outline" />
+            12 Likes
+          </div>
+
+          <div className={styles.verticalDivider} />
+
+          <div>
+            <Icon name="check" />0 Going
+          </div>
+
+          <div className={styles.verticalDivider} />
+
+          <div>
+            <i className="far fa-paw icon" />0 Past
+          </div>
+        </Container>
       </Segment>
+
+      <div />
     </div>
   );
 }

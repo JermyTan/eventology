@@ -65,9 +65,7 @@ function NavigationContainer({ children }: Props) {
               ref={(pageBody) => setPageBody(pageBody ?? undefined)}
               className={styles.bodyContainer}
             >
-              <Segment vertical className={styles.verticalPaddingContainer}>
-                {children}
-              </Segment>
+              {children}
             </div>
           </Sidebar.Pusher>
         </Sidebar.Pushable>
