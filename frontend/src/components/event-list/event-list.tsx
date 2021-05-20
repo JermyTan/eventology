@@ -58,7 +58,7 @@ const EventList = forwardRef(
     ref: Ref<EventListHandle>,
   ) => {
     const [eventCount, setEventCount] = useState(events.length);
-    const [cellMeasurerCache] = useState(
+    const cellMeasurerCacheRef = useRef(
       new CellMeasurerCache({
         fixedWidth: true,
         defaultHeight: 350,
@@ -66,18 +66,15 @@ const EventList = forwardRef(
     );
     const listRef = useRef<List>(null) as MutableRefObject<List | null>;
 
-    const rerenderList = useCallback(
-      (index?: number) => {
-        if (index === undefined) {
-          cellMeasurerCache.clearAll();
-        } else {
-          cellMeasurerCache.clear(index, 0);
-        }
+    const rerenderList = useCallback((index?: number) => {
+      if (index === undefined) {
+        cellMeasurerCacheRef.current.clearAll();
+      } else {
+        cellMeasurerCacheRef.current.clear(index, 0);
+      }
 
-        listRef.current?.recomputeRowHeights(index);
-      },
-      [cellMeasurerCache],
-    );
+      listRef.current?.recomputeRowHeights(index);
+    }, []);
 
     useImperativeHandle(
       ref,
@@ -94,7 +91,6 @@ const EventList = forwardRef(
     }, [events.length, rerenderList]);
 
     useEffect(() => {
-      console.log(events.length, eventCount);
       if (eventCount !== 0 && events.length >= eventCount) {
         rerenderList(eventCount - 1);
       }
@@ -114,7 +110,7 @@ const EventList = forwardRef(
     );
 
     const updateEvents = useCallback(
-      (index: number, changes: Partial<EventData>) => {
+      (index: number) => (changes: Partial<EventData>) => {
         const updatedEvent = { ...events[index], ...changes };
 
         const updatedEvents = [...events];
@@ -129,7 +125,7 @@ const EventList = forwardRef(
       ({ index, parent, key, style }) => (
         <CellMeasurer
           key={key}
-          cache={cellMeasurerCache}
+          cache={cellMeasurerCacheRef.current}
           parent={parent}
           columnIndex={0}
           rowIndex={index}
@@ -138,9 +134,7 @@ const EventList = forwardRef(
             {isRowLoaded({ index }) ? (
               <EventSummaryCard
                 event={events[index]}
-                onChange={(changes: Partial<EventData>) =>
-                  updateEvents(index, changes)
-                }
+                onChange={updateEvents(index)}
               />
             ) : (
               <PlaceholderWrapper
@@ -154,7 +148,7 @@ const EventList = forwardRef(
           </div>
         </CellMeasurer>
       ),
-      [events, cellMeasurerCache, isRowLoaded, updateEvents],
+      [events, isRowLoaded, updateEvents],
     );
 
     return (
@@ -192,8 +186,8 @@ const EventList = forwardRef(
                       }}
                       height={height}
                       width={width}
-                      rowHeight={cellMeasurerCache.rowHeight}
-                      deferredMeasurementCache={cellMeasurerCache}
+                      rowHeight={cellMeasurerCacheRef.current.rowHeight}
+                      deferredMeasurementCache={cellMeasurerCacheRef.current}
                       rowRenderer={rowRenderer}
                       rowCount={eventCount}
                       isScrolling={isScrolling}
