@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Icon, Container, Segment } from "semantic-ui-react";
+import { Icon, Container } from "semantic-ui-react";
 import PullToRefresh from "react-simple-pull-to-refresh";
 import { PageBodyContext, SearchContext } from "../../../context-providers";
 import { useGetEvents } from "../../../custom-hooks/api/events-api";
@@ -45,35 +45,33 @@ function EventsPage() {
   }, [getEvents]);
 
   return (
-    <Segment className={styles.eventPage} vertical>
-      <Container>
-        <PullToRefresh
-          isPullable
-          onRefresh={refreshEvents}
-          pullingContent={
-            <PlaceholderWrapper
-              showDefaultContent
-              defaultContent={
-                <h3 className={styles.pullingContentContainer}>
-                  <Icon name="arrow down" fitted /> Pull down to refresh{" "}
-                  <Icon name="arrow down" fitted />
-                </h3>
-              }
-            />
-          }
-        >
-          <EventList
-            ref={eventListRef}
-            hasNextPage
-            isNextPageLoading={isLoading}
-            events={events}
-            setEvents={setEvents}
-            loadNextPage={getMoreEvents}
-            scrollElement={pageBody}
+    <Container>
+      <PullToRefresh
+        isPullable
+        onRefresh={refreshEvents}
+        pullingContent={
+          <PlaceholderWrapper
+            showDefaultContent
+            defaultContent={
+              <h3 className={styles.pullingContentContainer}>
+                <Icon name="arrow down" fitted /> Pull down to refresh{" "}
+                <Icon name="arrow down" fitted />
+              </h3>
+            }
           />
-        </PullToRefresh>
-      </Container>
-    </Segment>
+        }
+      >
+        <EventList
+          ref={eventListRef}
+          hasNextPage
+          isNextPageLoading={isLoading}
+          events={events}
+          setEvents={setEvents}
+          loadNextPage={getMoreEvents}
+          scrollElement={pageBody}
+        />
+      </PullToRefresh>
+    </Container>
   );
 }
 

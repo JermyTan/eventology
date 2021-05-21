@@ -25,6 +25,7 @@ import {
   LIMIT,
   IDS,
   EVENT,
+  EVENT_DETAILS,
 } from "../constants";
 
 export type EventCategoryData = BaseData & {
@@ -86,4 +87,10 @@ export type EventGetQueryParams = {
   [END_DATE_TIME]?: number | string | null;
   [OFFSET]?: number | string | null;
   [LIMIT]?: number | string | null;
+};
+
+export type EventSignUpGetQueryParams = {
+  [USER_ID]?: number | string | null;
+  [EVENT_ID]?: number | string | null;
+  [EVENT_DETAILS]?: number | boolean | null;
 };

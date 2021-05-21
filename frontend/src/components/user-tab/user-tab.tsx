@@ -4,13 +4,15 @@ import { Dropdown, Menu, Image } from "semantic-ui-react";
 import { toast } from "react-toastify";
 import { Link, useLocation } from "react-router-dom";
 import { Media, UserContext } from "../../context-providers";
-import { PROFILE_PATH } from "../../routes/paths";
+import { PROFILE_MAIN_PATH } from "../../routes/paths";
+import { USER_ID } from "../../constants";
 import defaultAvatarImage from "../../assets/avatar.png";
 import styles from "./user-tab.module.scss";
 
 function UserTab() {
-  const { name, updateUser } = useContext(UserContext);
+  const { id, name, updateUser } = useContext(UserContext);
   const { pathname } = useLocation();
+  const userProfilePath = PROFILE_MAIN_PATH.replace(`:${USER_ID}`, `${id}`);
 
   const onSignOut = useCallback(() => {
     updateUser(null);
@@ -24,7 +26,7 @@ function UserTab() {
       </Media>
 
       <Dropdown
-        className={classNames({ active: pathname.startsWith(PROFILE_PATH) })}
+        className={classNames({ active: pathname.startsWith(userProfilePath) })}
         trigger={
           <Image src={defaultAvatarImage} alt="" avatar bordered size="mini" />
         }
@@ -36,9 +38,9 @@ function UserTab() {
         <Dropdown.Menu>
           <Dropdown.Item
             as={Link}
-            to={PROFILE_PATH}
-            active={pathname.startsWith(PROFILE_PATH)}
-            text="Profile"
+            to={userProfilePath}
+            active={pathname.startsWith(userProfilePath)}
+            text="My Profile"
             icon="user"
           />
           <Dropdown.Item onClick={onSignOut} text="Sign Out" icon="sign out" />

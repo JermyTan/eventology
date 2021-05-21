@@ -11,9 +11,10 @@ import {
   PageBodyContext,
   SearchContext,
 } from "../../context-providers";
-import styles from "./navigation-container.module.scss";
-import { PROFILE_PATH } from "../../routes/paths";
 import HomeTab from "../home-tab";
+import { PROFILE_MAIN_PATH } from "../../routes/paths";
+import { USER_ID } from "../../constants";
+import styles from "./navigation-container.module.scss";
 
 type Props = {
   children: ReactNode;
@@ -21,7 +22,7 @@ type Props = {
 
 function NavigationContainer({ children }: Props) {
   const { pathname } = useLocation();
-  const { access } = useContext(UserContext);
+  const { id, access } = useContext(UserContext);
   const { setPageBody } = useContext(PageBodyContext);
   const { isSidebarOpened, setSidebarOpened } = useContext(SearchContext);
 
@@ -43,7 +44,9 @@ function NavigationContainer({ children }: Props) {
           >
             <Menu className={styles.appBar} borderless size="huge">
               <div className={classNames(styles.tabContainer, styles.leftTab)}>
-                {pathname.startsWith(PROFILE_PATH) ? (
+                {pathname.startsWith(
+                  PROFILE_MAIN_PATH.replace(`:${USER_ID}`, `${id}`),
+                ) ? (
                   <HomeTab />
                 ) : (
                   <SearchTab onTabClick={() => setSidebarOpened(true)} />
@@ -65,7 +68,9 @@ function NavigationContainer({ children }: Props) {
               ref={(pageBody) => setPageBody(pageBody ?? undefined)}
               className={styles.bodyContainer}
             >
-              {children}
+              <Segment className={styles.verticalPaddingContainer} vertical>
+                {children}
+              </Segment>
             </div>
           </Sidebar.Pusher>
         </Sidebar.Pushable>

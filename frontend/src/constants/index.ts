@@ -30,3 +30,4 @@ export const OFFSET = "offset";
 export const LIMIT = "limit";
 export const IDS = "ids";
 export const EVENT = "event";
+export const EVENT_DETAILS = "eventDetails";

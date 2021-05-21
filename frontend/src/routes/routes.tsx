@@ -14,7 +14,10 @@ import {
   LOGIN_PATH,
   EVENTS_PATH,
   EVENTS_SINGLE_VIEW_PATH,
-  PROFILE_PATH,
+  PROFILE_LIKES_PATH,
+  PROFILE_GOING_PATH,
+  PROFILE_PAST_PATH,
+  PROFILE_MAIN_PATH,
 } from "./paths";
 import { SearchProvider, UserContext } from "../context-providers";
 import ScrollToTopWrapper from "../components/scroll-to-top-wrapper";
@@ -51,7 +54,16 @@ function routes() {
                   <EventsSingleViewPage />
                 </Route>
 
-                <Route path={PROFILE_PATH} exact strict>
+                <Route
+                  path={[
+                    PROFILE_MAIN_PATH,
+                    PROFILE_LIKES_PATH,
+                    PROFILE_GOING_PATH,
+                    PROFILE_PAST_PATH,
+                  ]}
+                  exact
+                  strict
+                >
                   <ProfilePage />
                 </Route>
 
