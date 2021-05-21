@@ -22,6 +22,7 @@ import {
 import { SearchProvider, UserContext } from "../context-providers";
 import ScrollToTopWrapper from "../components/scroll-to-top-wrapper";
 import NavigationContainer from "../components/navigation-container";
+import { USER_ID } from "../constants";
 
 function routes() {
   const { access } = useContext(UserContext);
@@ -40,11 +41,7 @@ function routes() {
                   {access ? <Redirect to={EVENTS_PATH} /> : <LoginPage />}
                 </Route>
 
-                {!access && (
-                  <Route>
-                    <Redirect to={LOGIN_PATH} />
-                  </Route>
-                )}
+                {!access && <Redirect to={LOGIN_PATH} />}
 
                 <Route path={EVENTS_PATH} exact strict>
                   <EventsPage />
@@ -54,9 +51,22 @@ function routes() {
                   <EventsSingleViewPage />
                 </Route>
 
+                <Route path={[PROFILE_MAIN_PATH]} exact>
+                  {({ match }) => {
+                    const {
+                      params: { userId },
+                    } = match as unknown as { params: { [USER_ID]: string } };
+
+                    return (
+                      <Redirect
+                        to={PROFILE_LIKES_PATH.replace(`:${USER_ID}`, userId)}
+                      />
+                    );
+                  }}
+                </Route>
+
                 <Route
                   path={[
-                    PROFILE_MAIN_PATH,
                     PROFILE_LIKES_PATH,
                     PROFILE_GOING_PATH,
                     PROFILE_PAST_PATH,
@@ -67,9 +77,7 @@ function routes() {
                   <ProfilePage />
                 </Route>
 
-                <Route>
-                  <Redirect to={LOGIN_PATH} />
-                </Route>
+                <Redirect to={LOGIN_PATH} />
               </Switch>
             </NavigationContainer>
           </SearchProvider>

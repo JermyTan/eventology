@@ -56,7 +56,7 @@ class EventSignUp(TimestampedModel):
                 fields=["user_id", "event_id"], name="unique_user_event_signup"
             )
         ]
-        ordering = ["created_at"]
+        ordering = ["-created_at"]
 
     def __str__(self):
         return f"{self.user.name} | {self.event}"
@@ -72,7 +72,7 @@ class EventLike(TimestampedModel):
                 fields=["user_id", "event_id"], name="unique_user_event_like"
             )
         ]
-        ordering = ["created_at"]
+        ordering = ["-created_at"]
 
     def __str__(self):
         return f"{self.user.name} | {self.event}"

@@ -93,13 +93,18 @@ class EventSignUpsView(APIView):
 
         event_id = validated_data.get("event_id", None)
         user_id = validated_data.get("user_id", None)
+        event_details = validated_data.get("event_details", False)
 
         event_sign_ups = get_requested_event_sign_ups(
             event_id=event_id, user_id=user_id
         )
 
         data = [
-            event_sign_up_to_json(event_sign_up=event_sign_up, user=requester)
+            event_sign_up_to_json(
+                event_sign_up=event_sign_up,
+                user=requester,
+                include_event_details=event_details,
+            )
             for event_sign_up in event_sign_ups
         ]
 
@@ -166,11 +171,16 @@ class EventLikesView(APIView):
 
         event_id = validated_data.get("event_id", None)
         user_id = validated_data.get("user_id", None)
+        event_details = validated_data.get("event_details", False)
 
         event_likes = get_requested_event_likes(event_id=event_id, user_id=user_id)
 
         data = [
-            event_like_to_json(event_like=event_like, user=requester)
+            event_like_to_json(
+                event_like=event_like,
+                user=requester,
+                include_event_details=event_details,
+            )
             for event_like in event_likes
         ]
 

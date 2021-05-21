@@ -31,3 +31,5 @@ export const LIMIT = "limit";
 export const IDS = "ids";
 export const EVENT = "event";
 export const EVENT_DETAILS = "eventDetails";
+export const GOING = "going";
+export const PAST = "past";

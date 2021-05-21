@@ -90,7 +90,6 @@ def event_like_to_json(
         CREATED_AT: parse_datetime_to_ms_timestamp(event_like.created_at),
         UPDATED_AT: parse_datetime_to_ms_timestamp(event_like.updated_at),
         USER: user_to_json(event_like.user),
-        EVENT_ID: event_like.event_id,
     }
 
     data.update(

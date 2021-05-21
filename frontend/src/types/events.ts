@@ -94,3 +94,5 @@ export type EventSignUpGetQueryParams = {
   [EVENT_ID]?: number | string | null;
   [EVENT_DETAILS]?: number | boolean | null;
 };
+
+export type EventLikeGetQueryParams = EventSignUpGetQueryParams;

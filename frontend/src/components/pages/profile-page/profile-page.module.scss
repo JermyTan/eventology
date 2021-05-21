@@ -1,5 +1,3 @@
-@use "../../../base";
-
 .profilePage {
   display: flex;
   flex-direction: column;
@@ -17,46 +15,6 @@
       margin-top: 1rem;
       color: #bababa;
       font-weight: normal;
-    }
-  }
-
-  .infoContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    .avatar {
-      border: 4px solid #d3c1e5;
-    }
-
-    .name {
-      font-weight: normal;
-      color: #67616d;
-    }
-
-    .emailContainer {
-      font-weight: normal;
-      margin-top: 0;
-
-      .email {
-        color: base.$primary-color;
-
-        &:hover {
-          color: #624085;
-        }
-      }
-    }
-  }
-
-  .tabContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-
-    .verticalDivider {
-      margin: 0 1rem;
-      border-left: 1px solid #e8e8e8;
     }
   }
 }

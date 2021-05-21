@@ -28,6 +28,7 @@ class GetEventSerializer(serializers.Serializer):
 class GetAdditionalEventDataSerializer(serializers.Serializer):
     event_id = serializers.IntegerField(required=False)
     user_id = serializers.IntegerField(required=False)
+    event_details = serializers.BooleanField(required=False, default=False)
 
 
 class EventSignUpSerializer(serializers.Serializer):

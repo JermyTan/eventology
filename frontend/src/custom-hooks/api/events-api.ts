@@ -13,9 +13,11 @@ import {
   EventGetQueryParams,
   EventLikeData,
   EventLikeDeleteData,
+  EventLikeGetQueryParams,
   EventLikePostData,
   EventSignUpData,
   EventSignUpDeleteData,
+  EventSignUpGetQueryParams,
   EventSignUpPostData,
 } from "../../types/events";
 
@@ -88,6 +90,46 @@ export function useGetEvents() {
   return { events, isLoading: loading, getEvents };
 }
 
+export function useGetEventSignUps() {
+  const [eventSignUps, setEventSignUps] = useState<EventSignUpData[]>([]);
+
+  const [{ loading }, apiCall] = useAxiosWithTokenRefresh<EventSignUpData[]>(
+    {
+      method: "get",
+    },
+    { manual: true },
+  );
+
+  const getEventSignUps = useCallback(
+    async (queryParams?: EventSignUpGetQueryParams) => {
+      const url = stringifyUrl(
+        {
+          url: "/events/signups",
+          query: changeKeyCase(snakeCase, queryParams),
+        },
+        { skipNull: true, skipEmptyString: true },
+      );
+
+      try {
+        return await errorHandlerWrapper(async () => {
+          const { data: eventSignUps = [] } = await apiCall({ url });
+          console.log(`GET ${url} success:`, eventSignUps);
+          setEventSignUps(eventSignUps);
+          return eventSignUps;
+        }, `GET ${url} error`)();
+      } catch (error) {
+        resolveApiError(error);
+
+        setEventSignUps([]);
+        return [];
+      }
+    },
+    [apiCall],
+  );
+
+  return { eventSignUps, isLoading: loading, getEventSignUps };
+}
+
 export function useCreateEventSignUp() {
   const [{ loading }, apiCall] = useAxiosWithTokenRefresh<EventSignUpData>(
     {
@@ -138,6 +180,46 @@ export function useDeleteEventSignUps() {
   );
 
   return { deleteEventSignUps, isLoading: loading };
+}
+
+export function useGetEventLikes() {
+  const [eventLikes, setEventLikes] = useState<EventLikeData[]>([]);
+
+  const [{ loading }, apiCall] = useAxiosWithTokenRefresh<EventLikeData[]>(
+    {
+      method: "get",
+    },
+    { manual: true },
+  );
+
+  const getEventLikes = useCallback(
+    async (queryParams?: EventLikeGetQueryParams) => {
+      const url = stringifyUrl(
+        {
+          url: "/events/likes",
+          query: changeKeyCase(snakeCase, queryParams),
+        },
+        { skipNull: true, skipEmptyString: true },
+      );
+
+      try {
+        return await errorHandlerWrapper(async () => {
+          const { data: eventLikes = [] } = await apiCall({ url });
+          console.log(`GET ${url} success:`, eventLikes);
+          setEventLikes(eventLikes);
+          return eventLikes;
+        }, `GET ${url} error`)();
+      } catch (error) {
+        resolveApiError(error);
+
+        setEventLikes([]);
+        return [];
+      }
+    },
+    [apiCall],
+  );
+
+  return { eventLikes, isLoading: loading, getEventLikes };
 }
 
 export function useCreateEventLike() {
