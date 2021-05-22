@@ -12,8 +12,8 @@ import {
   SearchContext,
 } from "../../context-providers";
 import HomeTab from "../home-tab";
-import { PROFILE_MAIN_PATH } from "../../routes/paths";
-import { USER_ID } from "../../constants";
+import { EVENTS_SINGLE_VIEW_PATH, PROFILE_MAIN_PATH } from "../../routes/paths";
+import { EVENT_ID, USER_ID } from "../../constants";
 import styles from "./navigation-container.module.scss";
 
 type Props = {
@@ -46,6 +46,9 @@ function NavigationContainer({ children }: Props) {
               <div className={classNames(styles.tabContainer, styles.leftTab)}>
                 {pathname.startsWith(
                   PROFILE_MAIN_PATH.replace(`:${USER_ID}`, ""),
+                ) ||
+                pathname.startsWith(
+                  EVENTS_SINGLE_VIEW_PATH.replace(`:${EVENT_ID}`, ""),
                 ) ? (
                   <HomeTab />
                 ) : (

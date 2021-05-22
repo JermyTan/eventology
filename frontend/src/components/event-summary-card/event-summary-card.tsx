@@ -2,6 +2,7 @@ import { Image, Label, Divider, Icon } from "semantic-ui-react";
 import { toast } from "react-toastify";
 // @ts-ignore
 import LinesEllipsis from "react-lines-ellipsis";
+import { useHistory } from "react-router-dom";
 import { useMemo } from "react";
 import { EventData } from "../../types/events";
 import { displayDateTime } from "../../utils/parser-utils";
@@ -16,6 +17,8 @@ import IconLoader from "../icon-loader/icon-loader";
 import { resolveApiError } from "../../utils/error-utils";
 import defaultAvatarImage from "../../assets/avatar.png";
 import styles from "./event-summary-card.module.scss";
+import { EVENTS_SINGLE_VIEW_PATH } from "../../routes/paths";
+import { EVENT_ID } from "../../constants";
 
 type Props = {
   event: EventData;
@@ -44,6 +47,7 @@ function EventSummaryCard({
   const { deleteEventSignUps, isLoading: isWithdrawing } =
     useDeleteEventSignUps();
   const { deleteEventLikes, isLoading: isUnliking } = useDeleteEventLikes();
+  const history = useHistory();
 
   const {
     onCreateEventSignUp,
@@ -198,6 +202,17 @@ function EventSummaryCard({
                 {likeCount} Likes
               </div>
             )}
+          </div>
+
+          <div
+            onClick={() =>
+              history.push(
+                EVENTS_SINGLE_VIEW_PATH.replace(`:${EVENT_ID}`, `${id}`),
+              )
+            }
+            className={styles.item}
+          >
+            <Label as="a" circular content="View details" basic color="blue" />
           </div>
         </div>
       </div>
