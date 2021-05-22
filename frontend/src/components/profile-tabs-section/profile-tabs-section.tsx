@@ -2,25 +2,30 @@ import classNames from "classnames";
 import { useHistory, useLocation } from "react-router-dom";
 import { Segment, Container, Icon } from "semantic-ui-react";
 import { GOING, LIKES, PAST } from "../../constants";
-import { EventData } from "../../types/events";
 import styles from "./profile-tabs-section.module.scss";
 
 type Props = {
-  likedEvents: EventData[];
-  goingEvents: EventData[];
-  pastEvents: EventData[];
+  numLikedEvents: number;
+  numGoingEvents: number;
+  numPastEvents: number;
+  isLikesTabActive: boolean;
+  isGoingTabActive: boolean;
+  isPastTabActive: boolean;
 };
 
-function ProfileTabsSection({ likedEvents, goingEvents, pastEvents }: Props) {
+function ProfileTabsSection({
+  numLikedEvents,
+  numGoingEvents,
+  numPastEvents,
+  isLikesTabActive,
+  isGoingTabActive,
+  isPastTabActive,
+}: Props) {
   const { pathname } = useLocation();
   const history = useHistory();
-  const currentTabCategory = pathname.match(/[^/]*$/)?.[0];
-  const isLikesTabActive = currentTabCategory === LIKES;
-  const isGoingTabActive = currentTabCategory === GOING;
-  const isPastTabActive = currentTabCategory === PAST;
 
   const onChangeTab = (newTabCategory: string) => {
-    if (currentTabCategory === newTabCategory) {
+    if (pathname.match(/[^/]*$/)?.[0] === newTabCategory) {
       return;
     }
 
@@ -42,7 +47,7 @@ function ProfileTabsSection({ likedEvents, goingEvents, pastEvents }: Props) {
               <Icon name="heart outline" />
             )}
           </span>
-          {likedEvents.length} Likes
+          {numLikedEvents} Likes
         </div>
 
         <div className={styles.verticalDivider} />
@@ -54,7 +59,7 @@ function ProfileTabsSection({ likedEvents, goingEvents, pastEvents }: Props) {
           <span className={styles.iconContainer}>
             <Icon name="check" />
           </span>
-          {goingEvents.length} Going
+          {numGoingEvents} Going
         </div>
 
         <div className={styles.verticalDivider} />
@@ -70,7 +75,7 @@ function ProfileTabsSection({ likedEvents, goingEvents, pastEvents }: Props) {
               <i className="far fa-paw icon" />
             )}
           </span>
-          {pastEvents.length} Past
+          {numPastEvents} Past
         </div>
       </Container>
     </Segment>

@@ -2,14 +2,10 @@ import {
   MutableRefObject,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
-  useState,
   useImperativeHandle,
   forwardRef,
   Ref,
-  Dispatch,
-  SetStateAction,
 } from "react";
 import {
   AutoSizer,
@@ -30,11 +26,11 @@ import noActivityLogo from "../../assets/no-activity-purple.svg";
 import styles from "./event-list.module.scss";
 
 type Props = {
-  hasNextPage: boolean;
-  isNextPageLoading: boolean;
+  hasNextPage?: boolean;
+  isNextPageLoading?: boolean;
   events: EventData[];
-  setEvents: Dispatch<SetStateAction<EventData[]>>;
-  loadNextPage: (params: IndexRange) => Promise<unknown>;
+  onUpdateEvent?: (index: number) => (changes: Partial<EventData>) => void;
+  loadNextPage?: (params: IndexRange) => Promise<unknown>;
   scrollElement?: Element;
 };
 
@@ -42,25 +38,27 @@ type EventListHandle = {
   rerenderList: (index?: number) => void;
 };
 
+const defaultLoadNextPage = () => new Promise<unknown>(() => {});
+
 function EventList(
   {
-    hasNextPage,
-    isNextPageLoading,
+    hasNextPage = false,
+    isNextPageLoading = false,
     events,
-    setEvents,
-    loadNextPage,
+    onUpdateEvent,
+    loadNextPage = defaultLoadNextPage,
     scrollElement,
   }: Props,
   ref: Ref<EventListHandle>,
 ) {
-  const [eventCount, setEventCount] = useState(events.length);
+  const listRef = useRef<List>(null) as MutableRefObject<List | null>;
+  const previousRowCountRef = useRef(0);
   const cellMeasurerCacheRef = useRef(
     new CellMeasurerCache({
       fixedWidth: true,
       defaultHeight: 350,
     }),
   );
-  const listRef = useRef<List>(null) as MutableRefObject<List | null>;
 
   const rerenderList = useCallback((index?: number) => {
     if (index === undefined) {
@@ -80,41 +78,13 @@ function EventList(
     [rerenderList],
   );
 
-  useEffect(() => {
-    if (events.length === 0) {
-      rerenderList();
-    }
-  }, [events.length, rerenderList]);
+  const rowCount = hasNextPage ? events.length + 1 : events.length;
 
-  useEffect(() => {
-    if (eventCount !== 0 && events.length >= eventCount) {
-      rerenderList(eventCount - 1);
-    }
-
-    setEventCount(hasNextPage ? events.length + 1 : events.length);
-  }, [eventCount, hasNextPage, events.length, rerenderList]);
-
-  const loadMoreEvents = useMemo(
-    () =>
-      isNextPageLoading ? () => new Promise<unknown>(() => {}) : loadNextPage,
-    [isNextPageLoading, loadNextPage],
-  );
+  const loadMoreRows = isNextPageLoading ? defaultLoadNextPage : loadNextPage;
 
   const isRowLoaded = useCallback(
     (params: Index) => !hasNextPage || params.index < events.length,
     [hasNextPage, events.length],
-  );
-
-  const updateEvents = useCallback(
-    (index: number) => (changes: Partial<EventData>) => {
-      const updatedEvent = { ...events[index], ...changes };
-
-      const updatedEvents = [...events];
-      updatedEvents[index] = updatedEvent;
-
-      setEvents(updatedEvents);
-    },
-    [events, setEvents],
   );
 
   const rowRenderer: ListRowRenderer = useCallback(
@@ -130,7 +100,7 @@ function EventList(
           {isRowLoaded({ index }) ? (
             <EventSummaryCard
               event={events[index]}
-              onChange={updateEvents(index)}
+              onChange={onUpdateEvent?.(index)}
             />
           ) : (
             <PlaceholderWrapper
@@ -144,15 +114,33 @@ function EventList(
         </div>
       </CellMeasurer>
     ),
-    [events, isRowLoaded, updateEvents],
+    [events, isRowLoaded, onUpdateEvent],
   );
+
+  useEffect(() => {
+    if (events.length === 0) {
+      rerenderList();
+    }
+  }, [events.length, rerenderList]);
+
+  useEffect(() => {
+    if (
+      previousRowCountRef.current !== 0 &&
+      events.length >= previousRowCountRef.current
+    ) {
+      console.log(previousRowCountRef.current, events.length);
+      rerenderList(previousRowCountRef.current - 1);
+    }
+
+    previousRowCountRef.current = rowCount;
+  }, [rowCount, events.length, rerenderList]);
 
   return (
     <InfiniteLoader
-      rowCount={eventCount}
+      rowCount={rowCount}
       isRowLoaded={isRowLoaded}
       threshold={0}
-      loadMoreRows={loadMoreEvents}
+      loadMoreRows={loadMoreRows}
     >
       {({ onRowsRendered, registerChild }) => (
         <WindowScroller scrollElement={scrollElement}>
@@ -170,7 +158,7 @@ function EventList(
                   rowHeight={cellMeasurerCacheRef.current.rowHeight}
                   deferredMeasurementCache={cellMeasurerCacheRef.current}
                   rowRenderer={rowRenderer}
-                  rowCount={eventCount}
+                  rowCount={rowCount}
                   isScrolling={isScrolling}
                   onScroll={onChildScroll}
                   scrollTop={scrollTop}

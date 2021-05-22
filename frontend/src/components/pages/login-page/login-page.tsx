@@ -67,7 +67,7 @@ function LoginPage() {
     [login, updateUser],
   );
 
-  const onError = (error: DeepMap<LoginFormProps, FieldError>) => {
+  const onError = useCallback((error: DeepMap<LoginFormProps, FieldError>) => {
     const errorMsg = Object.values(error)
       .flatMap((value) => (value?.message ? [value.message] : []))
       .join("\n");
@@ -77,7 +77,7 @@ function LoginPage() {
     }
 
     toast.error(errorMsg);
-  };
+  }, []);
 
   return (
     <div className={styles.loginPage}>

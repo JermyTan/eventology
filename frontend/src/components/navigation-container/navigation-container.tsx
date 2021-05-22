@@ -22,7 +22,7 @@ type Props = {
 
 function NavigationContainer({ children }: Props) {
   const { pathname } = useLocation();
-  const { id, access } = useContext(UserContext);
+  const { access } = useContext(UserContext);
   const { setPageBody } = useContext(PageBodyContext);
   const { isSidebarOpened, setSidebarOpened } = useContext(SearchContext);
 
@@ -45,7 +45,7 @@ function NavigationContainer({ children }: Props) {
             <Menu className={styles.appBar} borderless size="huge">
               <div className={classNames(styles.tabContainer, styles.leftTab)}>
                 {pathname.startsWith(
-                  PROFILE_MAIN_PATH.replace(`:${USER_ID}`, `${id}`),
+                  PROFILE_MAIN_PATH.replace(`:${USER_ID}`, ""),
                 ) ? (
                   <HomeTab />
                 ) : (

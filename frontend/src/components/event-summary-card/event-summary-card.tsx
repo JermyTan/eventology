@@ -51,7 +51,6 @@ function EventSummaryCard({
     onDeleteEventSignUp,
     onDeleteEventLike,
   } = useMemo(() => {
-    console.log("test");
     const onCreateEventSignUp = async () => {
       try {
         const { event: updatedEvent } = await createEventSignUp({

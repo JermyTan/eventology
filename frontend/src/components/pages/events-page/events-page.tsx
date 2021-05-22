@@ -44,6 +44,18 @@ function EventsPage() {
     setEvents((events) => events.concat(moreEvents));
   }, [getEvents]);
 
+  const onUpdateEvent = useCallback(
+    (index: number) => (changes: Partial<EventData>) => {
+      const updatedEvent = { ...events[index], ...changes };
+
+      const updatedEvents = [...events];
+      updatedEvents[index] = updatedEvent;
+
+      setEvents(updatedEvents);
+    },
+    [events],
+  );
+
   return (
     <Container>
       <PullToRefresh
@@ -66,7 +78,7 @@ function EventsPage() {
           hasNextPage
           isNextPageLoading={isLoading}
           events={events}
-          setEvents={setEvents}
+          onUpdateEvent={onUpdateEvent}
           loadNextPage={getMoreEvents}
           scrollElement={pageBody}
         />
