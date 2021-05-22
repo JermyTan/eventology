@@ -210,7 +210,6 @@ function EventSummaryCard({
                 EVENTS_SINGLE_VIEW_PATH.replace(`:${EVENT_ID}`, `${id}`),
               )
             }
-            className={styles.item}
           >
             <Label as="a" circular content="View details" basic color="blue" />
           </div>
