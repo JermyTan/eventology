@@ -6,57 +6,61 @@ import {
   useImperativeHandle,
   forwardRef,
   Ref,
+  ReactNode,
 } from "react";
 import {
   AutoSizer,
   List,
   ListRowRenderer,
-  CellMeasurer,
   CellMeasurerCache,
   WindowScroller,
   InfiniteLoader,
   IndexRange,
   Index,
+  CellMeasurer,
 } from "react-virtualized";
-import { Image } from "semantic-ui-react";
-import EventSummaryCard from "../event-summary-card";
 import PlaceholderWrapper from "../placeholder-wrapper";
-import { EventData } from "../../types/events";
-import noActivityLogo from "../../assets/no-activity-purple.svg";
-import styles from "./event-list.module.scss";
 
 type Props = {
+  itemRenderer: (index: number) => ReactNode;
+  loaderRenderer?: (index: number) => ReactNode;
+  noRowsRenderer?: () => JSX.Element;
   hasNextPage?: boolean;
   isNextPageLoading?: boolean;
-  events: EventData[];
-  onUpdateEvent?: (index: number) => (changes: Partial<EventData>) => void;
+  numItems: number;
   loadNextPage?: (params: IndexRange) => Promise<unknown>;
   scrollElement?: Element;
+  defaultRowHeight?: number;
 };
 
-type EventListHandle = {
+type VirtualizedListHandle = {
   rerenderList: (index?: number) => void;
 };
 
 const defaultLoadNextPage = () => new Promise<unknown>(() => {});
 
-function EventList(
+const defaultLoaderRenderer = () => <PlaceholderWrapper isLoading />;
+
+function VirtualizedList(
   {
+    itemRenderer,
+    loaderRenderer = defaultLoaderRenderer,
+    noRowsRenderer,
     hasNextPage = false,
     isNextPageLoading = false,
-    events,
-    onUpdateEvent,
+    numItems,
     loadNextPage = defaultLoadNextPage,
     scrollElement,
+    defaultRowHeight = 200,
   }: Props,
-  ref: Ref<EventListHandle>,
+  ref: Ref<VirtualizedListHandle>,
 ) {
   const listRef = useRef<List>(null) as MutableRefObject<List | null>;
   const previousRowCountRef = useRef(0);
   const cellMeasurerCacheRef = useRef(
     new CellMeasurerCache({
       fixedWidth: true,
-      defaultHeight: 350,
+      defaultHeight: defaultRowHeight,
     }),
   );
 
@@ -78,13 +82,13 @@ function EventList(
     [rerenderList],
   );
 
-  const rowCount = hasNextPage ? events.length + 1 : events.length;
+  const rowCount = hasNextPage ? numItems + 1 : numItems;
 
   const loadMoreRows = isNextPageLoading ? defaultLoadNextPage : loadNextPage;
 
   const isRowLoaded = useCallback(
-    (params: Index) => !hasNextPage || params.index < events.length,
-    [hasNextPage, events.length],
+    (params: Index) => !hasNextPage || params.index < numItems,
+    [hasNextPage, numItems],
   );
 
   const rowRenderer: ListRowRenderer = useCallback(
@@ -97,43 +101,30 @@ function EventList(
         rowIndex={index}
       >
         <div style={style}>
-          {isRowLoaded({ index }) ? (
-            <EventSummaryCard
-              event={events[index]}
-              onChange={onUpdateEvent?.(index)}
-            />
-          ) : (
-            <PlaceholderWrapper
-              isLoading
-              loadingMessage={
-                events.length === 0 ? "Retrieving events" : undefined
-              }
-              placeholder={events.length === 0}
-            />
-          )}
+          {isRowLoaded({ index }) ? itemRenderer(index) : loaderRenderer(index)}
         </div>
       </CellMeasurer>
     ),
-    [events, isRowLoaded, onUpdateEvent],
+    [isRowLoaded, itemRenderer, loaderRenderer],
   );
 
   useEffect(() => {
-    if (events.length === 0) {
+    if (numItems === 0) {
       rerenderList();
     }
-  }, [events.length, rerenderList]);
+  }, [numItems, rerenderList]);
 
   useEffect(() => {
     if (
       previousRowCountRef.current !== 0 &&
-      events.length >= previousRowCountRef.current
+      numItems >= previousRowCountRef.current
     ) {
-      console.log(previousRowCountRef.current, events.length);
+      console.log(previousRowCountRef.current, numItems);
       rerenderList(previousRowCountRef.current - 1);
     }
 
     previousRowCountRef.current = rowCount;
-  }, [rowCount, events.length, rerenderList]);
+  }, [rowCount, numItems, rerenderList]);
 
   return (
     <InfiniteLoader
@@ -164,18 +155,7 @@ function EventList(
                   scrollTop={scrollTop}
                   overscanRowCount={5}
                   onRowsRendered={onRowsRendered}
-                  noRowsRenderer={() => (
-                    <PlaceholderWrapper
-                      showDefaultContent
-                      placeholder
-                      defaultContent={
-                        <div className={styles.noEventContentContainer}>
-                          <Image src={noActivityLogo} size="tiny" wrapped />
-                          <h3 className={styles.text}>No event found</h3>
-                        </div>
-                      }
-                    />
-                  )}
+                  noRowsRenderer={noRowsRenderer}
                 />
               )}
             </AutoSizer>
@@ -186,4 +166,4 @@ function EventList(
   );
 }
 
-export default forwardRef(EventList);
+export default forwardRef(VirtualizedList);

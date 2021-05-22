@@ -2,13 +2,16 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { Container, Segment } from "semantic-ui-react";
 import { useLocation } from "react-router-dom";
 import PlaceholderWrapper from "../placeholder-wrapper";
+import PullToRefreshWrapper from "../pull-to-refresh-wrapper";
+import NoEventBanner from "../no-event-banner";
+import EventSummaryCard from "../event-summary-card";
 import {
   useGetEventLikes,
   useGetEventSignUps,
 } from "../../custom-hooks/api/events-api";
 import { EventData } from "../../types/events";
 import ProfileTabSection from "../profile-tabs-section";
-import EventList from "../event-list";
+import VirtualizedList from "../virtualized-list";
 import { PageBodyContext } from "../../context-providers";
 import { LIKES, GOING, PAST } from "../../constants";
 
@@ -90,7 +93,12 @@ function ProfileEventSection({ userId }: Props) {
     }
   }, [userId, getEvents]);
 
-  const onUpdateEvent = useCallback(() => getEvents, [getEvents]);
+  const itemRenderer = useCallback(
+    (index: number) => (
+      <EventSummaryCard event={showingEvents[index]} onChange={getEvents} />
+    ),
+    [showingEvents, getEvents],
+  );
 
   return (
     <PlaceholderWrapper
@@ -109,11 +117,15 @@ function ProfileEventSection({ userId }: Props) {
 
       <Segment vertical>
         <Container>
-          <EventList
-            events={showingEvents}
-            onUpdateEvent={onUpdateEvent}
-            scrollElement={pageBody}
-          />
+          <PullToRefreshWrapper onRefresh={getEvents}>
+            <VirtualizedList
+              itemRenderer={itemRenderer}
+              noRowsRenderer={() => <NoEventBanner />}
+              numItems={showingEvents.length}
+              scrollElement={pageBody}
+              defaultRowHeight={350}
+            />
+          </PullToRefreshWrapper>
         </Container>
       </Segment>
     </PlaceholderWrapper>
