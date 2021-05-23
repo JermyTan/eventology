@@ -19,6 +19,7 @@ import {
   Index,
   CellMeasurer,
 } from "react-virtualized";
+import { Divider } from "semantic-ui-react";
 import PlaceholderWrapper from "../placeholder-wrapper";
 
 type Props = {
@@ -102,10 +103,11 @@ function VirtualizedList(
       >
         <div style={style}>
           {isRowLoaded({ index }) ? itemRenderer(index) : loaderRenderer(index)}
+          {index < rowCount - 1 && <Divider />}
         </div>
       </CellMeasurer>
     ),
-    [isRowLoaded, itemRenderer, loaderRenderer],
+    [rowCount, isRowLoaded, itemRenderer, loaderRenderer],
   );
 
   useEffect(() => {

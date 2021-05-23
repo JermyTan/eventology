@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useState } from "react";
-import { Container, Segment } from "semantic-ui-react";
-import { useLocation } from "react-router-dom";
+import { Container, Segment, Icon } from "semantic-ui-react";
+import { useHistory, useLocation } from "react-router-dom";
 import PlaceholderWrapper from "../placeholder-wrapper";
 import PullToRefreshWrapper from "../pull-to-refresh-wrapper";
 import NoEventBanner from "../no-event-banner";
@@ -10,7 +10,7 @@ import {
   useGetEventSignUps,
 } from "../../custom-hooks/api/events-api";
 import { EventData } from "../../types/events";
-import ProfileTabSection from "../profile-tabs-section";
+import TabsSection, { Tab } from "../tabs-section";
 import VirtualizedList from "../virtualized-list";
 import { PageBodyContext } from "../../context-providers";
 import { LIKES, GOING, PAST } from "../../constants";
@@ -28,6 +28,7 @@ function ProfileEventSection({ userId }: Props) {
   const [goingEvents, setGoingEvents] = useState<EventData[]>([]);
   const [pastEvents, setPastEvents] = useState<EventData[]>([]);
   const { pathname } = useLocation();
+  const history = useHistory();
   const currentTabCategory = pathname.match(/[^/]*$/)?.[0];
   const isLikesTabActive = currentTabCategory === LIKES;
   const isGoingTabActive = currentTabCategory === GOING;
@@ -46,6 +47,47 @@ function ProfileEventSection({ userId }: Props) {
     }
 
     return [];
+  })();
+
+  const tabsSectionProps = (() => {
+    const tabs: Tab[] = [
+      {
+        key: LIKES,
+        label: `${likedEvents.length} Likes`,
+        icon: isLikesTabActive ? (
+          <Icon name="heart" />
+        ) : (
+          <Icon name="heart outline" />
+        ),
+        isActive: isLikesTabActive,
+      },
+      {
+        key: GOING,
+        label: `${goingEvents.length} Going`,
+        icon: <Icon name="check" />,
+        isActive: isGoingTabActive,
+      },
+      {
+        key: PAST,
+        label: `${pastEvents.length} Past`,
+        icon: isPastTabActive ? (
+          <i className="fas fa-paw icon" />
+        ) : (
+          <i className="far fa-paw icon" />
+        ),
+        isActive: isPastTabActive,
+      },
+    ];
+
+    const onTabClick = (key: string) => {
+      if (currentTabCategory === key) {
+        return;
+      }
+
+      // matches last part of url
+      history.push(pathname.replace(/[^/]*$/, key));
+    };
+    return { tabs, onTabClick };
   })();
 
   const getEvents = useCallback(async () => {
@@ -106,14 +148,7 @@ function ProfileEventSection({ userId }: Props) {
       loadingMessage="Retrieving events"
       placeholder
     >
-      <ProfileTabSection
-        numLikedEvents={likedEvents.length}
-        numGoingEvents={goingEvents.length}
-        numPastEvents={pastEvents.length}
-        isLikesTabActive={isLikesTabActive}
-        isGoingTabActive={isGoingTabActive}
-        isPastTabActive={isPastTabActive}
-      />
+      <TabsSection {...tabsSectionProps} />
 
       <Segment vertical>
         <Container>

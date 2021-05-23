@@ -6,6 +6,7 @@ import { useGetSingleEvent } from "../../../custom-hooks/api/events-api";
 import { EVENT_ID } from "../../../constants";
 import VirtualizedList from "../../virtualized-list";
 import { PageBodyContext } from "../../../context-providers";
+import EventDetailsView from "../../event-details-view";
 
 function EventsSingleViewPage() {
   const { pageBody } = useContext(PageBodyContext);
@@ -16,9 +17,10 @@ function EventsSingleViewPage() {
     getSingleEvent(eventId);
   }, [eventId, getSingleEvent]);
 
-  const itemRenderer = useCallback(() => {
-    return <div>{event?.id}</div>;
-  }, [event]);
+  const itemRenderer = useCallback(
+    () => (event ? <EventDetailsView event={event} /> : undefined),
+    [event],
+  );
 
   return (
     <PlaceholderWrapper
@@ -30,7 +32,7 @@ function EventsSingleViewPage() {
     >
       <VirtualizedList
         itemRenderer={itemRenderer}
-        numItems={1}
+        numItems={event ? 1 : 0}
         scrollElement={pageBody}
         defaultRowHeight={800}
       />

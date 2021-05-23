@@ -1,6 +1,13 @@
 import { format } from "date-fns";
 import { StringifiableRecord } from "query-string";
-import { DATE_TIME_FORMAT } from "../constants";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
+import { DATE_TIME_FORMAT, RELATIVE } from "../constants";
+
+TimeAgo.addLocale(en);
+TimeAgo.setDefaultLocale("en");
+
+const timeAgo = new TimeAgo("en-US");
 
 export function deepTrim<T>(value: T): T {
   const unknownValue = value as unknown;
@@ -25,9 +32,11 @@ export function deepTrim<T>(value: T): T {
 
 export function displayDateTime(
   dateTime: number | Date,
-  dateTimeFormat: string = DATE_TIME_FORMAT,
+  dateTimeFormat: typeof RELATIVE | string = DATE_TIME_FORMAT,
 ): string {
-  return format(dateTime, dateTimeFormat);
+  return dateTimeFormat === RELATIVE
+    ? timeAgo.format(dateTime)
+    : format(dateTime, dateTimeFormat);
 }
 
 export function changeKeyCase(

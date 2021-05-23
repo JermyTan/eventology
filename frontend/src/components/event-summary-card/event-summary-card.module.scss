@@ -1,7 +1,7 @@
 @use "../../base";
 
 .eventSummaryCard {
-  @include base.verticalSpaceMargin;
+  @include base.vertical-space-margin-2;
 
   .meta {
     display: flex;
@@ -10,7 +10,7 @@
     align-items: center;
 
     .userInfo {
-      @include base.horizontalSpaceMargin;
+      @include base.horizontal-space-margin-1;
 
       .name {
         color: #67616d;
@@ -19,7 +19,7 @@
 
     .category {
       color: base.$primary-color;
-      border-color: base.$primary-color;
+      border-color: #d3c1e5;
     }
   }
 
@@ -29,7 +29,7 @@
     word-wrap: break-word;
   }
 
-  .subtitle {
+  .dateTime {
     color: base.$primary-color;
   }
 
@@ -40,7 +40,7 @@
   }
 
   .extra {
-    @include base.horizontalSpaceMargin;
+    @include base.horizontal-space-margin-4;
     display: flex;
     flex-direction: row;
     align-items: center;
