@@ -13,15 +13,17 @@ export function useGetSingleUser() {
 
   const getSingleUser = useCallback(
     async (userId: string | number) => {
+      const url = `/users/${userId}`;
+
       try {
         return await errorHandlerWrapper(async () => {
           const { data: user } = await apiCall({
-            url: `/users/${userId}`,
+            url,
           });
-          console.log(`GET /users/${userId} success:`, user);
+          console.log(`GET ${url} success:`, user);
 
           return user;
-        }, `GET /events/${userId} error:`)();
+        }, `GET ${url} error:`)();
       } catch (error) {
         resolveApiError(error);
         return undefined;

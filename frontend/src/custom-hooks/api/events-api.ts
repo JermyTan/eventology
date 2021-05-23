@@ -90,6 +90,36 @@ export function useGetEvents() {
   return { events, isLoading: loading, getEvents };
 }
 
+export function useGetSingleEvent() {
+  const [{ data: event, loading }, apiCall] =
+    useAxiosWithTokenRefresh<EventData>(
+      {
+        method: "get",
+      },
+      { manual: true },
+    );
+
+  const getSingleEvent = useCallback(
+    async (eventId: number | string) => {
+      const url = `/events/${eventId}`;
+
+      try {
+        return await errorHandlerWrapper(async () => {
+          const { data: event } = await apiCall({ url });
+          console.log(`GET ${url} success:`, event);
+          return event;
+        }, `GET ${url} error`)();
+      } catch (error) {
+        resolveApiError(error);
+        return undefined;
+      }
+    },
+    [apiCall],
+  );
+
+  return { event, isLoading: loading, getSingleEvent };
+}
+
 export function useGetEventSignUps() {
   const [eventSignUps, setEventSignUps] = useState<EventSignUpData[]>([]);
 

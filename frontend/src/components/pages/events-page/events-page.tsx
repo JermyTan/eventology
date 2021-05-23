@@ -80,7 +80,13 @@ function EventsPage() {
           ref={virtualizedListRef}
           itemRenderer={itemRenderer}
           loaderRenderer={loaderRenderer}
-          noRowsRenderer={() => <NoEventBanner />}
+          noRowsRenderer={() => (
+            <PlaceholderWrapper
+              placeholder
+              showDefaultContent
+              defaultContent={<NoEventBanner />}
+            />
+          )}
           hasNextPage
           isNextPageLoading={isLoading}
           numItems={events.length}

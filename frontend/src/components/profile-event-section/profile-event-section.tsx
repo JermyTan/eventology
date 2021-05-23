@@ -120,7 +120,13 @@ function ProfileEventSection({ userId }: Props) {
           <PullToRefreshWrapper onRefresh={getEvents}>
             <VirtualizedList
               itemRenderer={itemRenderer}
-              noRowsRenderer={() => <NoEventBanner />}
+              noRowsRenderer={() => (
+                <PlaceholderWrapper
+                  placeholder
+                  showDefaultContent
+                  defaultContent={<NoEventBanner />}
+                />
+              )}
               numItems={showingEvents.length}
               scrollElement={pageBody}
               defaultRowHeight={350}
