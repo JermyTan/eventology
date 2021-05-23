@@ -138,11 +138,11 @@ def event_to_json(
     if include_additional_details:
         additional_data = {
             SIGN_UPS: [
-                event_sign_up_to_json(event_sign_up)
+                event_sign_up_to_json(event_sign_up=event_sign_up, user=user)
                 for event_sign_up in get_event_sign_ups(event=event)
             ],
             LIKES: [
-                event_like_to_json(event_like)
+                event_like_to_json(event_like=event_like, user=user)
                 for event_like in get_event_likes(event=event)
             ],
             COMMENTS: [

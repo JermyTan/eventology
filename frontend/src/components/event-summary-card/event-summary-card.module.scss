@@ -11,6 +11,10 @@
 
     .userInfo {
       @include base.horizontalSpaceMargin;
+
+      .name {
+        color: #67616d;
+      }
     }
 
     .category {

@@ -1,7 +1,5 @@
 import { Image, Label, Divider, Icon } from "semantic-ui-react";
 import { toast } from "react-toastify";
-// @ts-ignore
-import LinesEllipsis from "react-lines-ellipsis";
 import { useHistory } from "react-router-dom";
 import { useMemo } from "react";
 import { EventData } from "../../types/events";
@@ -134,7 +132,7 @@ function EventSummaryCard({
               bordered
               size="mini"
             />
-            <strong>{creator.name}</strong>
+            <strong className={styles.name}>{creator.name}</strong>
           </div>
 
           {category && (

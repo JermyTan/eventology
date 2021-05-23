@@ -83,6 +83,23 @@ class EventsView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
+class SingleEventView(APIView):
+    @check_access
+    def get(self, request, requester: User, event_id: int):
+        try:
+            event = get_events(id=event_id).get()
+        except Event.DoesNotExist as e:
+            raise NotFound(detail="No event found.", code="not_found")
+        except Exception as e:
+            raise BadRequest(e)
+
+        data = event_to_json(
+            event=event, user=requester, include_additional_details=True
+        )
+
+        return Response(data, status=status.HTTP_200_OK)
+
+
 class EventSignUpsView(APIView):
     @check_access
     def get(self, request, requester: User):
