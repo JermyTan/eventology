@@ -96,7 +96,7 @@ function LoginPage() {
               >
                 <h4>FIND THE MOST LOVED ACTIVITIES</h4>
                 <h1>BLACK CAT</h1>
-                <Image src={catLogo} size="tiny" wrapped />
+                <Image src={catLogo} alt="" size="tiny" wrapped />
               </Segment>
 
               <Segment vertical padded="very" className={styles.inputContainer}>

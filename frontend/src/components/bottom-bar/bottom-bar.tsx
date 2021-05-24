@@ -1,10 +1,12 @@
-import { Transition, Icon } from "semantic-ui-react";
-import classNames from "classnames";
+import { Transition } from "semantic-ui-react";
 import { useEffect, useState } from "react";
 import styles from "./bottom-bar.module.scss";
+import EventActionButtons from "../event-action-buttons";
+import EventCommentInput from "../event-comment-input";
 
 function BottomBar() {
   const [isMounted, setMounted] = useState(false);
+  const [isCommenting, setCommenting] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -16,20 +18,11 @@ function BottomBar() {
     <Transition unmountOnHide visible={isMounted} animation="slide up">
       <div className={styles.bottomBar}>
         <div className={styles.actionsContainer}>
-          <div className={styles.commentAndLikeButtonContainer}>
-            <div className={classNames(styles.iconContainer, styles.pointer)}>
-              <i className="far fa-comment-dots icon large" />
-            </div>
-
-            <div className={classNames(styles.iconContainer, styles.pointer)}>
-              <Icon name="heart outline" size="large" />
-            </div>
-          </div>
-
-          <div className={classNames(styles.joinButton, styles.pointer)}>
-            <Icon className={styles.icon} name="check" size="large" />
-            <h4 className={styles.text}>Join</h4>
-          </div>
+          {isCommenting ? (
+            <EventCommentInput onClickCancel={() => setCommenting(false)} />
+          ) : (
+            <EventActionButtons onClickComment={() => setCommenting(true)} />
+          )}
         </div>
       </div>
     </Transition>

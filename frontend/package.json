@@ -8,7 +8,8 @@
     "start": "webpack serve --open --inline --hot",
     "build": "cross-env NODE_ENV=production webpack",
     "format": "prettier --write ./src",
-    "lint": "tsc --noEmit && eslint --ext .js,.jsx,.ts,.tsx ./src"
+    "lint": "tsc --noEmit && eslint --ext .js,.jsx,.ts,.tsx ./src",
+    "create": "node code-generator.js"
   },
   "dependencies": {
     "@artsy/fresnel": "^1.5.0",
@@ -48,6 +49,7 @@
     "@babel/runtime": "^7.14.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@types/dotenv-webpack": "^7.0.2",
+    "@types/fs-extra": "^9.0.11",
     "@types/javascript-time-ago": "^2.0.2",
     "@types/lodash.get": "^4.4.6",
     "@types/lodash.isequal": "^4.5.5",
@@ -59,6 +61,7 @@
     "@types/react-virtualized": "^9.21.11",
     "@types/webpack": "^5.28.0",
     "@types/webpack-dev-server": "^3.11.4",
+    "@types/yargs": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "^4.24.0",
     "babel-loader": "^8.2.2",
@@ -74,6 +77,7 @@
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
     "file-loader": "^6.2.0",
+    "fs-extra": "^10.0.0",
     "html-webpack-plugin": "^5.3.1",
     "mini-css-extract-plugin": "^1.6.0",
     "prettier": "^2.3.0",
@@ -87,7 +91,8 @@
     "typescript-plugin-css-modules": "^3.2.0",
     "webpack": "^5.37.1",
     "webpack-cli": "^4.7.0",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^3.11.2",
+    "yargs": "^17.0.1"
   },
   "browserslist": {
     "production": [

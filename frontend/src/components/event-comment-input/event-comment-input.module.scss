@@ -1,0 +1,50 @@
+@use "../../base";
+
+.pointer {
+  cursor: pointer;
+}
+
+.inputContainer {
+  background-color: base.$primary-color;
+  flex: 10;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 1rem;
+  @include base.horizontal-space-margin-2;
+
+  .iconContainer {
+    color: base.$secondary-color;
+
+    &:hover,
+    &:focus {
+      color: #bbd172;
+    }
+  }
+
+  .roundedInput {
+    width: 100%;
+
+    > input {
+      border-radius: 2rem;
+
+      &::placeholder {
+        color: #d3c1e5;
+      }
+    }
+  }
+}
+
+.sendButton {
+  background-color: base.$secondary-color;
+  flex: 3;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  &:hover,
+  &:focus {
+    background-color: #bbd172;
+  }
+}

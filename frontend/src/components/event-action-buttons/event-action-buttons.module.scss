@@ -1,0 +1,42 @@
+@use "../../base";
+
+.pointer {
+  cursor: pointer;
+}
+
+.commentAndLikeButtonContainer {
+  background-color: base.$primary-color;
+  flex: 5;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+
+  .iconContainer {
+    color: #453257;
+  }
+}
+
+.joinButton.important {
+  background-color: base.$secondary-color;
+  flex: 4;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  @include base.horizontal-space-margin-2;
+
+  &:hover,
+  &:focus {
+    background-color: #bbd172;
+  }
+
+  .icon {
+    color: rgba(#453257, 0.3);
+  }
+
+  .text {
+    margin: 0;
+    color: #788c36;
+  }
+}
