@@ -26,6 +26,7 @@ type Props = {
   itemRenderer: (index: number) => ReactNode;
   loaderRenderer?: (index: number) => ReactNode;
   noRowsRenderer?: () => JSX.Element;
+  dividerRenderer?: (index: number) => JSX.Element;
   hasNextPage?: boolean;
   isNextPageLoading?: boolean;
   numItems: number;
@@ -39,14 +40,15 @@ type VirtualizedListHandle = {
 };
 
 const defaultLoadNextPage = () => new Promise<unknown>(() => {});
-
 const defaultLoaderRenderer = () => <PlaceholderWrapper isLoading />;
+const defaultDividerRenderer = () => <Divider />;
 
 function VirtualizedList(
   {
     itemRenderer,
     loaderRenderer = defaultLoaderRenderer,
     noRowsRenderer,
+    dividerRenderer = defaultDividerRenderer,
     hasNextPage = false,
     isNextPageLoading = false,
     numItems,
@@ -103,11 +105,11 @@ function VirtualizedList(
       >
         <div style={style}>
           {isRowLoaded({ index }) ? itemRenderer(index) : loaderRenderer(index)}
-          {index < rowCount - 1 && <Divider />}
+          {index < rowCount - 1 && dividerRenderer(index)}
         </div>
       </CellMeasurer>
     ),
-    [rowCount, isRowLoaded, itemRenderer, loaderRenderer],
+    [rowCount, isRowLoaded, itemRenderer, loaderRenderer, dividerRenderer],
   );
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useCallback, useState } from "react";
 import classNames from "classnames";
 import {
   Container,
@@ -9,8 +9,15 @@ import {
   Grid,
   Popup,
   Divider,
+  Ref,
 } from "semantic-ui-react";
+import { useHistory } from "react-router-dom";
 import { capitalCase } from "change-case";
+import TabsSection, { Tab } from "../tabs-section";
+import LinkifyTextViewer from "../linkify-text-viewer";
+import { PROFILE_MAIN_PATH } from "../../routes/paths";
+import VirtualizedList from "../virtualized-list";
+import Comment from "../comment";
 import { EventData } from "../../types/events";
 import { displayDateTime } from "../../utils/parser-utils";
 import {
@@ -25,10 +32,6 @@ import {
 } from "../../constants";
 import defaultAvatarImage from "../../assets/avatar.png";
 import styles from "./event-details-view.module.scss";
-import TabsSection, { Tab } from "../tabs-section";
-import LinkifyTextViewer from "../linkify-text-viewer";
-import { useHistory } from "react-router-dom";
-import { PROFILE_MAIN_PATH } from "../../routes/paths";
 
 type Props = {
   event: EventData;
@@ -46,10 +49,12 @@ function EventDetailsView({
     venue,
     signUps = [],
     likes = [],
-    comments = [],
+    comments: temp = [],
   },
 }: Props) {
   const history = useHistory();
+  const [commentsContainer, setCommentsContainer] =
+    useState<HTMLElement | null>(null);
 
   const onUserClickGenerator = (userId: number) => () =>
     history.push(PROFILE_MAIN_PATH.replace(`:${USER_ID}`, `${userId}`));
@@ -95,6 +100,13 @@ function EventDetailsView({
     const onTabClick = (key: string) => {};
     return { tabs, onTabClick };
   })();
+
+  const comments = temp.flatMap((comment) => Array(50).fill(comment));
+
+  const commentRenderer = useCallback(
+    (index: number) => <Comment comment={comments[index]} />,
+    [comments],
+  );
 
   return (
     <div className={styles.eventDetailsView}>
@@ -291,15 +303,21 @@ function EventDetailsView({
           </Grid>
         </Segment>
 
-        <Segment vertical>
-          <Container>
-            {comments.map(({ user: { id, name }, createdAt, content }) => (
-              <div>
-                <Segment vertical></Segment>
-              </div>
-            ))}
-          </Container>
-        </Segment>
+        <Ref innerRef={setCommentsContainer}>
+          <Segment className={styles.commentsContainer} vertical>
+            <Container>
+              <VirtualizedList
+                itemRenderer={commentRenderer}
+                dividerRenderer={() => (
+                  <Divider className={styles.commentDivider} hidden />
+                )}
+                numItems={comments.length}
+                scrollElement={commentsContainer ?? undefined}
+                defaultRowHeight={100}
+              />
+            </Container>
+          </Segment>
+        </Ref>
       </div>
     </div>
   );

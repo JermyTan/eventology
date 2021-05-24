@@ -45,7 +45,7 @@ function EventsPage() {
     setEvents((events) => events.concat(moreEvents));
   }, [getEvents]);
 
-  const itemRenderer = useCallback(
+  const eventSummaryCardRenderer = useCallback(
     (index: number) => (
       <EventSummaryCard
         event={events[index]}
@@ -78,7 +78,7 @@ function EventsPage() {
       <PullToRefreshWrapper onRefresh={refreshEvents}>
         <VirtualizedList
           ref={virtualizedListRef}
-          itemRenderer={itemRenderer}
+          itemRenderer={eventSummaryCardRenderer}
           loaderRenderer={loaderRenderer}
           noRowsRenderer={() => (
             <PlaceholderWrapper

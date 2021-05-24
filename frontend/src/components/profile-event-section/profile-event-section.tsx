@@ -135,7 +135,7 @@ function ProfileEventSection({ userId }: Props) {
     }
   }, [userId, getEvents]);
 
-  const itemRenderer = useCallback(
+  const eventSummaryCardRenderer = useCallback(
     (index: number) => (
       <EventSummaryCard event={showingEvents[index]} onChange={getEvents} />
     ),
@@ -154,7 +154,7 @@ function ProfileEventSection({ userId }: Props) {
         <Container>
           <PullToRefreshWrapper onRefresh={getEvents}>
             <VirtualizedList
-              itemRenderer={itemRenderer}
+              itemRenderer={eventSummaryCardRenderer}
               noRowsRenderer={() => (
                 <PlaceholderWrapper
                   placeholder

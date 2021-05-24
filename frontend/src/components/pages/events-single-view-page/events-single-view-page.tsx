@@ -17,7 +17,7 @@ function EventsSingleViewPage() {
     getSingleEvent(eventId);
   }, [eventId, getSingleEvent]);
 
-  const itemRenderer = useCallback(
+  const eventDetailsViewRenderer = useCallback(
     () => (event ? <EventDetailsView event={event} /> : undefined),
     [event],
   );
@@ -31,7 +31,7 @@ function EventsSingleViewPage() {
       defaultContent={<NoEventBanner />}
     >
       <VirtualizedList
-        itemRenderer={itemRenderer}
+        itemRenderer={eventDetailsViewRenderer}
         numItems={event ? 1 : 0}
         scrollElement={pageBody}
         defaultRowHeight={800}

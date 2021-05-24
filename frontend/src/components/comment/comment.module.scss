@@ -1,0 +1,44 @@
+@use "../../base";
+
+.comment {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  @include base.horizontal-space-margin-1;
+
+  .pointer {
+    cursor: pointer;
+  }
+
+  .textContainer {
+    flex-grow: 1;
+
+    .info {
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      @include base.horizontal-space-margin-1;
+
+      .name {
+        color: base.$primary-color;
+      }
+
+      .postedDateTime {
+        color: #bababa;
+        font-size: 0.85rem;
+      }
+    }
+
+    .content {
+      margin-top: 0.25rem;
+      color: #666666;
+      font-size: 1.15rem;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  }
+
+  .replyIconContainer {
+    color: base.$secondary-color;
+  }
+}

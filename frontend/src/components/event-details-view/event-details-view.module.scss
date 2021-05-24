@@ -133,5 +133,14 @@
         margin: 0 !important;
       }
     }
+
+    .commentsContainer {
+      height: 30rem;
+      overflow-y: auto;
+
+      .commentDivider {
+        margin-top: 0;
+      }
+    }
   }
 }
