@@ -1,21 +1,23 @@
-import { useCallback, useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useCallback, useContext, useEffect, useState } from "react";
 import PlaceholderWrapper from "../placeholder-wrapper";
 import NoEventBanner from "../no-event-banner";
-import { useGetSingleEvent } from "../../custom-hooks/api/events-api";
-import { EVENT_ID } from "../../constants";
 import VirtualizedList from "../virtualized-list";
-import { PageBodyContext } from "../../context-providers";
+import { PageBodyContext, SingleEventContext } from "../../context-providers";
 import EventDetailsView from "../event-details-view";
+import PullToRefreshWrapper from "../pull-to-refresh-wrapper";
 
 function EventBody() {
   const { pageBody } = useContext(PageBodyContext);
-  const { eventId } = useParams<{ [EVENT_ID]: string }>();
-  const { event, isLoading, getSingleEvent } = useGetSingleEvent();
+  const { event, getSingleEvent } = useContext(SingleEventContext);
+  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    getSingleEvent(eventId);
-  }, [eventId, getSingleEvent]);
+    (async () => {
+      setLoading(true);
+      await getSingleEvent();
+      setLoading(false);
+    })();
+  }, [getSingleEvent]);
 
   const eventDetailsViewRenderer = useCallback(
     () => (event ? <EventDetailsView event={event} /> : undefined),
@@ -30,12 +32,14 @@ function EventBody() {
       showDefaultContent={!event}
       defaultContent={<NoEventBanner />}
     >
-      <VirtualizedList
-        itemRenderer={eventDetailsViewRenderer}
-        numItems={event ? 1 : 0}
-        scrollElement={pageBody}
-        defaultRowHeight={800}
-      />
+      <PullToRefreshWrapper onRefresh={getSingleEvent}>
+        <VirtualizedList
+          itemRenderer={eventDetailsViewRenderer}
+          numItems={event ? 1 : 0}
+          scrollElement={pageBody}
+          defaultRowHeight={800}
+        />
+      </PullToRefreshWrapper>
     </PlaceholderWrapper>
   );
 }

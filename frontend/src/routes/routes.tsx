@@ -19,9 +19,13 @@ import {
   PROFILE_PAST_PATH,
   PROFILE_MAIN_PATH,
 } from "./paths";
-import { SearchProvider, UserContext } from "../context-providers";
+import {
+  SearchProvider,
+  SingleEventProvider,
+  UserContext,
+} from "../context-providers";
 import ScrollToTopWrapper from "../components/scroll-to-top-wrapper";
-import { USER_ID } from "../constants";
+import { EVENT_ID, USER_ID } from "../constants";
 
 function routes() {
   const { access } = useContext(UserContext);
@@ -47,7 +51,17 @@ function routes() {
             </Route>
 
             <Route path={EVENTS_SINGLE_VIEW_PATH} exact strict>
-              <EventsSingleViewPage />
+              {({ match }) => {
+                const {
+                  params: { eventId },
+                } = match as unknown as { params: { [EVENT_ID]: string } };
+
+                return (
+                  <SingleEventProvider eventId={eventId}>
+                    <EventsSingleViewPage />
+                  </SingleEventProvider>
+                );
+              }}
             </Route>
 
             <Route path={[PROFILE_MAIN_PATH]} exact>
