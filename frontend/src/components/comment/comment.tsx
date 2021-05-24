@@ -1,6 +1,7 @@
 import classNames from "classnames";
 import { useHistory } from "react-router-dom";
 import { Image } from "semantic-ui-react";
+import { memo, useState } from "react";
 import LinkifyTextViewer from "../linkify-text-viewer";
 import { displayDateTime } from "../../utils/parser-utils";
 import { RELATIVE, USER_ID } from "../../constants";
@@ -8,7 +9,6 @@ import { PROFILE_MAIN_PATH } from "../../routes/paths";
 import { EventCommentData } from "../../types/events";
 import defaultAvatarImage from "../../assets/avatar.png";
 import styles from "./comment.module.scss";
-import { useState } from "react";
 
 type Props = {
   comment: EventCommentData;
@@ -73,4 +73,4 @@ function Comment({
   );
 }
 
-export default Comment;
+export default memo(Comment);

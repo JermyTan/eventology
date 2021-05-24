@@ -1,0 +1,52 @@
+@use "../../base";
+
+.bottomBar {
+  height: 5rem;
+
+  .pointer {
+    cursor: pointer;
+  }
+
+  .actionsContainer {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+
+    .commentAndLikeButtonContainer {
+      background-color: base.$primary-color;
+      flex: 5;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-evenly;
+
+      .iconContainer {
+        color: #453257;
+      }
+    }
+
+    .joinButton {
+      background-color: base.$secondary-color;
+      flex: 4;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      @include base.horizontal-space-margin-2;
+
+      &:hover,
+      &:focus {
+        background-color: #bbd172;
+      }
+
+      .icon {
+        color: rgba(#453257, 0.3);
+      }
+
+      .text {
+        margin: 0;
+        color: #788c36;
+      }
+    }
+  }
+}

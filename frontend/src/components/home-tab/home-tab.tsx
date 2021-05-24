@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Icon, MenuItem } from "semantic-ui-react";
+import { MenuItem } from "semantic-ui-react";
 import { EVENTS_PATH } from "../../routes/paths";
 
 function HomeTab() {
@@ -7,7 +7,7 @@ function HomeTab() {
     <MenuItem
       as={Link}
       to={EVENTS_PATH}
-      icon={<Icon name="home" size="large" />}
+      icon={<i className="fas fa-home-lg-alt large icon" />}
     />
   );
 }

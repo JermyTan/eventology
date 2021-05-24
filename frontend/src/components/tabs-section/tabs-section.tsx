@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import classNames from "classnames";
-import { Segment, Container } from "semantic-ui-react";
+import { Container } from "semantic-ui-react";
 import styles from "./tabs-section.module.scss";
 
 export type Tab = {
@@ -11,13 +11,14 @@ export type Tab = {
 };
 
 type Props = {
+  className?: string;
   tabs: Tab[];
   onTabClick: (key: string) => void;
 };
 
-function TabsSection({ tabs, onTabClick }: Props) {
+function TabsSection({ className, tabs, onTabClick }: Props) {
   return (
-    <Segment className={styles.tabsSection} vertical>
+    <div className={classNames(styles.tabsSection, className)}>
       <Container className={styles.tabsContainer}>
         {tabs.flatMap(({ key, label, icon, isActive }, index) => {
           const components = [
@@ -43,7 +44,7 @@ function TabsSection({ tabs, onTabClick }: Props) {
           return components;
         })}
       </Container>
-    </Segment>
+    </div>
   );
 }
 

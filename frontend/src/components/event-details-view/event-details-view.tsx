@@ -148,7 +148,9 @@ function EventDetailsView({
         </Container>
       </Segment>
 
-      <TabsSection {...tabsSectionProps} />
+      <Segment vertical>
+        <TabsSection {...tabsSectionProps} className={styles.tabsSection} />
+      </Segment>
 
       <div className={styles.contentContainer}>
         <Segment className={styles.detailsContainer} vertical>
@@ -219,7 +221,7 @@ function EventDetailsView({
                 title="Venue map"
                 className={styles.map}
                 loading="lazy"
-                src={`https://www.google.com/maps/embed/v1/place?key=${"AIzaSyAWRrV5klHlGZu_mwPvYqnSXc2WBPrIuhc"}&q=${venue}`}
+                src={`https://www.google.com/maps/embed/v1/place?key=${process.env.GOOGLE_MAPS_API_KEY}&q=${venue}`}
               />
             </Segment>
           </Container>

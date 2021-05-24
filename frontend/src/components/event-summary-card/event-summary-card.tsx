@@ -1,7 +1,8 @@
-import { Image, Label, Icon } from "semantic-ui-react";
+import { useMemo } from "react";
+import { Image, Label, Icon, Popup } from "semantic-ui-react";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
-import { useMemo } from "react";
+import classNames from "classnames";
 import { EventData } from "../../types/events";
 import { displayDateTime } from "../../utils/parser-utils";
 import LinkifyTextViewer from "../linkify-text-viewer";
@@ -13,8 +14,8 @@ import {
 } from "../../custom-hooks/api/events-api";
 import IconLoader from "../icon-loader/icon-loader";
 import { resolveApiError } from "../../utils/error-utils";
-import { EVENTS_SINGLE_VIEW_PATH } from "../../routes/paths";
-import { EVENT_ID } from "../../constants";
+import { EVENTS_SINGLE_VIEW_PATH, PROFILE_MAIN_PATH } from "../../routes/paths";
+import { EVENT_ID, USER_ID } from "../../constants";
 import defaultAvatarImage from "../../assets/avatar.png";
 import styles from "./event-summary-card.module.scss";
 
@@ -61,7 +62,7 @@ function EventSummaryCard({
 
         onChange?.({ ...updatedEvent });
 
-        toast.success("You have signed up for the event.");
+        toast.success("You have joined for the event.");
       } catch (error) {
         resolveApiError(error);
       }
@@ -120,12 +121,31 @@ function EventSummaryCard({
     deleteEventLikes,
   ]);
 
+  const onUserClick = () =>
+    history.push(PROFILE_MAIN_PATH.replace(`:${USER_ID}`, `${creator.id}`));
+
+  const onViewDetails = () =>
+    history.push(EVENTS_SINGLE_VIEW_PATH.replace(`:${EVENT_ID}`, `${id}`));
+
   return (
     <div className={styles.eventSummaryCard}>
       <div className={styles.meta}>
         <div className={styles.userInfo}>
-          <Image src={defaultAvatarImage} alt="" avatar bordered size="mini" />
-          <strong className={styles.name}>{creator.name}</strong>
+          <Image
+            onClick={onUserClick}
+            className={styles.pointer}
+            src={defaultAvatarImage}
+            alt=""
+            avatar
+            bordered
+            size="mini"
+          />
+          <strong
+            onClick={onUserClick}
+            className={classNames(styles.name, styles.pointer)}
+          >
+            {creator.name}
+          </strong>
         </div>
 
         {category && (
@@ -149,57 +169,78 @@ function EventSummaryCard({
       </div>
 
       <div className={styles.extra}>
-        <div className={styles.item}>
+        <div className={styles.pointer}>
           {hasSignedUp ? (
-            <div onClick={onDeleteEventSignUp} className={styles.signedUp}>
-              {isWithdrawing ? (
-                <IconLoader className={styles.loader} />
-              ) : (
-                <Icon className={styles.icon} name="check" />
-              )}
-              I am going!
-            </div>
+            <Popup
+              content="Withdraw"
+              position="top center"
+              trigger={
+                <div onClick={onDeleteEventSignUp} className={styles.signedUp}>
+                  {isWithdrawing ? (
+                    <IconLoader className={styles.loader} />
+                  ) : (
+                    <Icon className={styles.icon} name="check" />
+                  )}
+                  I am going!
+                </div>
+              }
+            />
           ) : (
-            <div onClick={onCreateEventSignUp} className={styles.notSignedUp}>
-              {isSigningUp ? (
-                <IconLoader className={styles.loader} />
-              ) : (
-                <Icon name="check" />
-              )}
-              {signUpCount} Going
-            </div>
+            <Popup
+              content="Join"
+              position="top center"
+              trigger={
+                <div
+                  onClick={onCreateEventSignUp}
+                  className={styles.notSignedUp}
+                >
+                  {isSigningUp ? (
+                    <IconLoader className={styles.loader} />
+                  ) : (
+                    <Icon name="check" />
+                  )}
+                  {signUpCount} Going
+                </div>
+              }
+            />
           )}
         </div>
 
-        <div className={styles.item}>
+        <div className={styles.pointer}>
           {hasLiked ? (
-            <div onClick={onDeleteEventLike} className={styles.liked}>
-              {isUnliking ? (
-                <IconLoader className={styles.loader} />
-              ) : (
-                <Icon className={styles.icon} name="heart" />
-              )}
-              I like it
-            </div>
+            <Popup
+              content="Unlike"
+              position="top center"
+              trigger={
+                <div onClick={onDeleteEventLike} className={styles.liked}>
+                  {isUnliking ? (
+                    <IconLoader className={styles.loader} />
+                  ) : (
+                    <Icon className={styles.icon} name="heart" />
+                  )}
+                  I like it
+                </div>
+              }
+            />
           ) : (
-            <div onClick={onCreateEventLike} className={styles.notLiked}>
-              {isLiking ? (
-                <IconLoader className={styles.loader} />
-              ) : (
-                <Icon name="heart outline" />
-              )}
-              {likeCount} Likes
-            </div>
+            <Popup
+              content="Like"
+              position="top center"
+              trigger={
+                <div onClick={onCreateEventLike} className={styles.notLiked}>
+                  {isLiking ? (
+                    <IconLoader className={styles.loader} />
+                  ) : (
+                    <Icon name="heart outline" />
+                  )}
+                  {likeCount} Likes
+                </div>
+              }
+            />
           )}
         </div>
 
-        <div
-          onClick={() =>
-            history.push(
-              EVENTS_SINGLE_VIEW_PATH.replace(`:${EVENT_ID}`, `${id}`),
-            )
-          }
-        >
+        <div onClick={onViewDetails}>
           <Label as="a" circular content="View details" basic color="blue" />
         </div>
       </div>

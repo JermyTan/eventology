@@ -1,101 +1,32 @@
-import {
-  ElementRef,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { Container } from "semantic-ui-react";
-import PullToRefreshWrapper from "../../pull-to-refresh-wrapper";
-import EventSummaryCard from "../../event-summary-card";
-import NoEventBanner from "../../no-event-banner";
-import PlaceholderWrapper from "../../placeholder-wrapper";
-import { PageBodyContext, SearchContext } from "../../../context-providers";
-import { useGetEvents } from "../../../custom-hooks/api/events-api";
-import { EventData } from "../../../types/events";
-import VirtualizedList from "../../virtualized-list";
+import { useContext } from "react";
+import { Sidebar } from "semantic-ui-react";
+import { SearchContext } from "../../../context-providers";
+import EventList from "../../event-list";
+import TopBar from "../../top-bar";
+import VirtualizedPageBody from "../../virtualized-page-body";
+import VirtualizedPageContainer from "../../virtualized-page-container";
+import SearchSidebar from "../../search-sidebar";
+import SearchTab from "../../search-tab";
 
 function EventsPage() {
-  const { pageBody } = useContext(PageBodyContext);
-  const {
-    searchQuery: { category, startDateTime, endDateTime },
-  } = useContext(SearchContext);
-  const [events, setEvents] = useState<EventData[]>([]);
-  const { isLoading, getEvents } = useGetEvents();
-  const virtualizedListRef = useRef<ElementRef<typeof VirtualizedList>>(null);
-
-  useEffect(() => {
-    setEvents([]);
-
-    if (category || startDateTime || endDateTime) {
-      (async () => {
-        setEvents(await getEvents({ category, startDateTime, endDateTime }));
-      })();
-    }
-  }, [getEvents, category, startDateTime, endDateTime]);
-
-  const refreshEvents = useCallback(async () => {
-    setEvents((await getEvents()).reverse());
-    virtualizedListRef.current?.rerenderList();
-  }, [getEvents]);
-
-  const getMoreEvents = useCallback(async () => {
-    const moreEvents = await getEvents();
-    setEvents((events) => events.concat(moreEvents));
-  }, [getEvents]);
-
-  const eventSummaryCardRenderer = useCallback(
-    (index: number) => (
-      <EventSummaryCard
-        event={events[index]}
-        onChange={(changes: Partial<EventData>) => {
-          const updatedEvent = { ...events[index], ...changes };
-
-          const updatedEvents = [...events];
-          updatedEvents[index] = updatedEvent;
-
-          setEvents(updatedEvents);
-        }}
-      />
-    ),
-    [events],
-  );
-
-  const loaderRenderer = useCallback(
-    () => (
-      <PlaceholderWrapper
-        isLoading
-        loadingMessage={events.length === 0 ? "Retrieving events" : undefined}
-        placeholder={events.length === 0}
-      />
-    ),
-    [events],
-  );
+  const { isSidebarOpened, setSidebarOpened } = useContext(SearchContext);
 
   return (
-    <Container>
-      <PullToRefreshWrapper onRefresh={refreshEvents}>
-        <VirtualizedList
-          ref={virtualizedListRef}
-          itemRenderer={eventSummaryCardRenderer}
-          loaderRenderer={loaderRenderer}
-          noRowsRenderer={() => (
-            <PlaceholderWrapper
-              placeholder
-              showDefaultContent
-              defaultContent={<NoEventBanner />}
-            />
-          )}
-          hasNextPage
-          isNextPageLoading={isLoading}
-          numItems={events.length}
-          loadNextPage={getMoreEvents}
-          scrollElement={pageBody}
-          defaultRowHeight={350}
-        />
-      </PullToRefreshWrapper>
-    </Container>
+    <Sidebar.Pushable>
+      <SearchSidebar />
+
+      <Sidebar.Pusher dimmed={isSidebarOpened}>
+        <VirtualizedPageContainer>
+          <TopBar
+            leftTab={<SearchTab onTabClick={() => setSidebarOpened(true)} />}
+          />
+
+          <VirtualizedPageBody>
+            <EventList />;
+          </VirtualizedPageBody>
+        </VirtualizedPageContainer>
+      </Sidebar.Pusher>
+    </Sidebar.Pushable>
   );
 }
 

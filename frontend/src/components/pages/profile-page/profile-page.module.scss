@@ -1,20 +1,15 @@
-.profilePage {
+.noUserContentContainer {
   display: flex;
   flex-direction: column;
+  align-items: center;
 
-  .noUserContentContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  .icon {
+    color: #d3c1e5;
+  }
 
-    .icon {
-      color: #d3c1e5;
-    }
-
-    .text {
-      margin-top: 1rem;
-      color: #bababa;
-      font-weight: normal;
-    }
+  .text {
+    margin-top: 1rem;
+    color: #bababa;
+    font-weight: normal;
   }
 }

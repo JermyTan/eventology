@@ -1,42 +1,20 @@
-import { useCallback, useContext, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import PlaceholderWrapper from "../../placeholder-wrapper";
-import NoEventBanner from "../../no-event-banner";
-import { useGetSingleEvent } from "../../../custom-hooks/api/events-api";
-import { EVENT_ID } from "../../../constants";
-import VirtualizedList from "../../virtualized-list";
-import { PageBodyContext } from "../../../context-providers";
-import EventDetailsView from "../../event-details-view";
+import VirtualizedPageContainer from "../../virtualized-page-container";
+import TopBar from "../../top-bar";
+import VirtualizedPageBody from "../../virtualized-page-body";
+import EventBody from "../../event-body/event-body";
+import BottomBar from "../../bottom-bar";
 
 function EventsSingleViewPage() {
-  const { pageBody } = useContext(PageBodyContext);
-  const { eventId } = useParams<{ [EVENT_ID]: string }>();
-  const { event, isLoading, getSingleEvent } = useGetSingleEvent();
-
-  useEffect(() => {
-    getSingleEvent(eventId);
-  }, [eventId, getSingleEvent]);
-
-  const eventDetailsViewRenderer = useCallback(
-    () => (event ? <EventDetailsView event={event} /> : undefined),
-    [event],
-  );
-
   return (
-    <PlaceholderWrapper
-      isLoading={isLoading}
-      loadingMessage="Retrieving event"
-      placeholder
-      showDefaultContent={!event}
-      defaultContent={<NoEventBanner />}
-    >
-      <VirtualizedList
-        itemRenderer={eventDetailsViewRenderer}
-        numItems={event ? 1 : 0}
-        scrollElement={pageBody}
-        defaultRowHeight={800}
-      />
-    </PlaceholderWrapper>
+    <VirtualizedPageContainer>
+      <TopBar />
+
+      <VirtualizedPageBody>
+        <EventBody />
+      </VirtualizedPageBody>
+
+      <BottomBar />
+    </VirtualizedPageContainer>
   );
 }
 

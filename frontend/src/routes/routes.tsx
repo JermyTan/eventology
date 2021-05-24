@@ -21,7 +21,6 @@ import {
 } from "./paths";
 import { SearchProvider, UserContext } from "../context-providers";
 import ScrollToTopWrapper from "../components/scroll-to-top-wrapper";
-import NavigationContainer from "../components/navigation-container";
 import { USER_ID } from "../constants";
 
 function routes() {
@@ -34,53 +33,47 @@ function routes() {
           ReactRouterRoute={Route}
           stringifyOptions={{ skipEmptyString: true, skipNull: true }}
         >
-          <SearchProvider>
-            <NavigationContainer>
-              <Switch>
-                <Route path={LOGIN_PATH} exact>
-                  {access ? <Redirect to={EVENTS_PATH} /> : <LoginPage />}
-                </Route>
+          <Switch>
+            <Route path={LOGIN_PATH} exact>
+              {access ? <Redirect to={EVENTS_PATH} /> : <LoginPage />}
+            </Route>
 
-                {!access && <Redirect to={LOGIN_PATH} />}
+            {!access && <Redirect to={LOGIN_PATH} />}
 
-                <Route path={EVENTS_PATH} exact strict>
-                  <EventsPage />
-                </Route>
+            <Route path={EVENTS_PATH} exact strict>
+              <SearchProvider>
+                <EventsPage />
+              </SearchProvider>
+            </Route>
 
-                <Route path={EVENTS_SINGLE_VIEW_PATH} exact strict>
-                  <EventsSingleViewPage />
-                </Route>
+            <Route path={EVENTS_SINGLE_VIEW_PATH} exact strict>
+              <EventsSingleViewPage />
+            </Route>
 
-                <Route path={[PROFILE_MAIN_PATH]} exact>
-                  {({ match }) => {
-                    const {
-                      params: { userId },
-                    } = match as unknown as { params: { [USER_ID]: string } };
+            <Route path={[PROFILE_MAIN_PATH]} exact>
+              {({ match }) => {
+                const {
+                  params: { userId },
+                } = match as unknown as { params: { [USER_ID]: string } };
 
-                    return (
-                      <Redirect
-                        to={PROFILE_LIKES_PATH.replace(`:${USER_ID}`, userId)}
-                      />
-                    );
-                  }}
-                </Route>
+                return (
+                  <Redirect
+                    to={PROFILE_LIKES_PATH.replace(`:${USER_ID}`, userId)}
+                  />
+                );
+              }}
+            </Route>
 
-                <Route
-                  path={[
-                    PROFILE_LIKES_PATH,
-                    PROFILE_GOING_PATH,
-                    PROFILE_PAST_PATH,
-                  ]}
-                  exact
-                  strict
-                >
-                  <ProfilePage />
-                </Route>
+            <Route
+              path={[PROFILE_LIKES_PATH, PROFILE_GOING_PATH, PROFILE_PAST_PATH]}
+              exact
+              strict
+            >
+              <ProfilePage />
+            </Route>
 
-                <Redirect to={LOGIN_PATH} />
-              </Switch>
-            </NavigationContainer>
-          </SearchProvider>
+            <Redirect to={LOGIN_PATH} />
+          </Switch>
         </QueryParamProvider>
       </ScrollToTopWrapper>
     </Router>

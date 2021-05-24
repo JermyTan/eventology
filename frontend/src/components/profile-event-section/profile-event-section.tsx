@@ -148,7 +148,9 @@ function ProfileEventSection({ userId }: Props) {
       loadingMessage="Retrieving events"
       placeholder
     >
-      <TabsSection {...tabsSectionProps} />
+      <Segment vertical>
+        <TabsSection {...tabsSectionProps} />
+      </Segment>
 
       <Segment vertical>
         <Container>

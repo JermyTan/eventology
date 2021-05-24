@@ -3,6 +3,10 @@
 .eventSummaryCard {
   @include base.vertical-space-margin-2;
 
+  .pointer {
+    cursor: pointer;
+  }
+
   .meta {
     display: flex;
     flex-direction: row;
@@ -45,36 +49,32 @@
     flex-direction: row;
     align-items: center;
 
-    .item {
-      cursor: pointer;
+    .loader {
+      color: #453257;
+    }
 
-      .loader {
-        color: #453257;
+    .signedUp {
+      color: #453257;
+
+      .icon {
+        color: #aecb4f;
       }
+    }
 
-      .signedUp {
-        color: #453257;
+    .notSignedUp {
+      color: #ac8ec9;
+    }
 
-        .icon {
-          color: #aecb4f;
-        }
+    .liked {
+      color: #453257;
+
+      .icon {
+        color: #ff5c5c;
       }
+    }
 
-      .notSignedUp {
-        color: #ac8ec9;
-      }
-
-      .liked {
-        color: #453257;
-
-        .icon {
-          color: #ff5c5c;
-        }
-      }
-
-      .notLiked {
-        color: #ac8ec9;
-      }
+    .notLiked {
+      color: #ac8ec9;
     }
   }
 }

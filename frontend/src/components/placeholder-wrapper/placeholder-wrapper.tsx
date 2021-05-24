@@ -1,8 +1,11 @@
-import { ReactNode } from "react";
+import { CSSProperties, ReactNode } from "react";
+import classNames from "classnames";
 import { Segment, Loader, LoaderProps } from "semantic-ui-react";
 import styles from "./placeholder-wrapper.module.scss";
 
 type Props = {
+  style?: CSSProperties;
+  className?: string;
   children?: ReactNode;
   isLoading?: boolean;
   loadingMessage?: string;
@@ -14,6 +17,8 @@ type Props = {
 };
 
 function PlaceholderWrapper({
+  style,
+  className,
   children = null,
   isLoading = false,
   loadingMessage,
@@ -25,7 +30,8 @@ function PlaceholderWrapper({
 }: Props) {
   return isLoading || showDefaultContent ? (
     <Segment
-      className={styles.placeholderWrapper}
+      style={style}
+      className={classNames(styles.placeholderWrapper, className)}
       basic
       placeholder={placeholder}
       textAlign="center"
