@@ -1,4 +1,15 @@
-import { Container, Segment, Label, Image } from "semantic-ui-react";
+import { memo } from "react";
+import classNames from "classnames";
+import {
+  Container,
+  Segment,
+  Label,
+  Image,
+  Icon,
+  Grid,
+  Popup,
+  Divider,
+} from "semantic-ui-react";
 import { capitalCase } from "change-case";
 import { EventData } from "../../types/events";
 import { displayDateTime } from "../../utils/parser-utils";
@@ -10,11 +21,14 @@ import {
   DATE_FORMAT,
   TIME_FORMAT,
   TIME_PERIOD_FORMAT,
+  USER_ID,
 } from "../../constants";
 import defaultAvatarImage from "../../assets/avatar.png";
 import styles from "./event-details-view.module.scss";
 import TabsSection, { Tab } from "../tabs-section";
 import LinkifyTextViewer from "../linkify-text-viewer";
+import { useHistory } from "react-router-dom";
+import { PROFILE_MAIN_PATH } from "../../routes/paths";
 
 type Props = {
   event: EventData;
@@ -29,8 +43,17 @@ function EventDetailsView({
     description,
     startDateTime,
     endDateTime,
+    venue,
+    signUps = [],
+    likes = [],
+    comments = [],
   },
 }: Props) {
+  const history = useHistory();
+
+  const onUserClickGenerator = (userId: number) => () =>
+    history.push(PROFILE_MAIN_PATH.replace(`:${USER_ID}`, `${userId}`));
+
   const tabsSectionProps = (() => {
     const isShowingDetails = true;
     const isShowingParticipants = false;
@@ -89,15 +112,22 @@ function EventDetailsView({
 
           <div className={styles.userInfo}>
             <Image
+              onClick={onUserClickGenerator(creator.id)}
               src={defaultAvatarImage}
               alt=""
               avatar
               bordered
               size="mini"
+              className={styles.pointer}
             />
 
             <div>
-              <div className={styles.name}>{creator.name}</div>
+              <div
+                onClick={onUserClickGenerator(creator.id)}
+                className={classNames(styles.name, styles.pointer)}
+              >
+                {creator.name}
+              </div>
               <div className={styles.publishedDateTime}>
                 {displayDateTime(createdAt, RELATIVE)}
               </div>
@@ -109,65 +139,170 @@ function EventDetailsView({
       <TabsSection {...tabsSectionProps} />
 
       <div className={styles.contentContainer}>
-        <Container>
-          <Segment vertical>
-            <div className={styles.description}>
-              <LinkifyTextViewer>{description}</LinkifyTextViewer>
-            </div>
-          </Segment>
+        <Segment className={styles.detailsContainer} vertical>
+          <Container>
+            <Segment vertical>
+              <div className={styles.description}>
+                <LinkifyTextViewer>{description}</LinkifyTextViewer>
+              </div>
+            </Segment>
 
-          <Segment className={styles.dateTimeSection} vertical>
-            <h3 className={styles.header}>
-              <div className={styles.verticalBar} />
-              <div className={styles.label}>When</div>
-            </h3>
+            <Segment className={styles.dateTimeSection} vertical>
+              <h3 className={styles.sectionHeader}>
+                <div className={styles.verticalBar} />
+                <div className={styles.label}>When</div>
+              </h3>
 
-            <div className={styles.periodContainer}>
-              <Segment className={styles.dateTimeContainer} vertical>
-                <h3 className={styles.dateContainer}>
-                  <span className={styles.iconContainer}>
-                    <i className="far fa-arrow-from-left icon" />
-                  </span>
-                  {displayDateTime(startDateTime, DATE_FORMAT)}
-                </h3>
+              <div className={styles.periodContainer}>
+                <Segment className={styles.dateTimeContainer} vertical>
+                  <h3 className={styles.dateContainer}>
+                    <span className={styles.iconContainer}>
+                      <i className="far fa-arrow-from-left icon" />
+                    </span>
+                    {displayDateTime(startDateTime, DATE_FORMAT)}
+                  </h3>
 
-                <div className={styles.timeContainer}>
-                  <h1 className={styles.time}>
-                    {displayDateTime(startDateTime, TIME_FORMAT)}
-                  </h1>
+                  <div className={styles.timeContainer}>
+                    <h1 className={styles.time}>
+                      {displayDateTime(startDateTime, TIME_FORMAT)}
+                    </h1>
 
-                  <div>
-                    {displayDateTime(startDateTime, TIME_PERIOD_FORMAT)}
+                    <div>
+                      {displayDateTime(startDateTime, TIME_PERIOD_FORMAT)}
+                    </div>
                   </div>
-                </div>
-              </Segment>
+                </Segment>
 
-              <div className={styles.verticalDivider} />
+                <div className={styles.verticalDivider} />
 
-              <Segment className={styles.dateTimeContainer} vertical>
-                <h3 className={styles.dateContainer}>
-                  <span className={styles.iconContainer}>
-                    <i className="far fa-arrow-from-right icon" />
-                  </span>
-                  {displayDateTime(endDateTime, DATE_FORMAT)}
-                </h3>
+                <Segment className={styles.dateTimeContainer} vertical>
+                  <h3 className={styles.dateContainer}>
+                    <span className={styles.iconContainer}>
+                      <i className="far fa-arrow-from-right icon" />
+                    </span>
+                    {displayDateTime(endDateTime, DATE_FORMAT)}
+                  </h3>
 
-                <div className={styles.timeContainer}>
-                  <h1 className={styles.time}>
-                    {displayDateTime(endDateTime, TIME_FORMAT)}
-                  </h1>
+                  <div className={styles.timeContainer}>
+                    <h1 className={styles.time}>
+                      {displayDateTime(endDateTime, TIME_FORMAT)}
+                    </h1>
 
-                  <div>{displayDateTime(endDateTime, TIME_PERIOD_FORMAT)}</div>
-                </div>
-              </Segment>
-            </div>
-          </Segment>
+                    <div>
+                      {displayDateTime(endDateTime, TIME_PERIOD_FORMAT)}
+                    </div>
+                  </div>
+                </Segment>
+              </div>
+            </Segment>
 
-          <Segment vertical />
-        </Container>
+            <Segment className={styles.venueSection} vertical>
+              <h3 className={styles.sectionHeader}>
+                <div className={styles.verticalBar} />
+                <div className={styles.label}>Where</div>
+              </h3>
+
+              <h4 className={styles.venue}>{venue}</h4>
+              <iframe
+                title="Venue map"
+                className={styles.map}
+                loading="lazy"
+                src={`https://www.google.com/maps/embed/v1/place?key=${"AIzaSyAWRrV5klHlGZu_mwPvYqnSXc2WBPrIuhc"}&q=${venue}`}
+              />
+            </Segment>
+          </Container>
+        </Segment>
+
+        <Segment padded className={styles.participantsContainer} vertical>
+          <Grid columns="2" container>
+            <Grid.Row>
+              <Grid.Column
+                className={styles.label}
+                computer="2"
+                tablet="3"
+                mobile="4"
+              >
+                <Icon className={styles.icon} name="check" />
+                {signUps.length} going
+              </Grid.Column>
+
+              <Grid.Column computer="14" tablet="13" mobile="12">
+                {signUps
+                  .flatMap((signUp) => Array(50).fill(signUp))
+                  .map(({ user: { id, name } }) => (
+                    <Popup
+                      key={id}
+                      content={name}
+                      trigger={
+                        <Image
+                          onClick={onUserClickGenerator(id)}
+                          src={defaultAvatarImage}
+                          alt=""
+                          avatar
+                          bordered
+                          size="mini"
+                          className={styles.pointer}
+                        />
+                      }
+                      position="top center"
+                      on="hover"
+                    />
+                  ))}
+              </Grid.Column>
+            </Grid.Row>
+
+            <Divider className={styles.horizontalDivider} />
+
+            <Grid.Row>
+              <Grid.Column
+                className={styles.label}
+                computer="2"
+                tablet="3"
+                mobile="4"
+              >
+                <Icon className={styles.icon} name="heart outline" />
+                {likes.length} likes
+              </Grid.Column>
+
+              <Grid.Column computer="14" tablet="13" mobile="12">
+                {likes
+                  .flatMap((signUp) => Array(50).fill(signUp))
+                  .map(({ user: { id, name } }) => (
+                    <Popup
+                      key={id}
+                      content={name}
+                      trigger={
+                        <Image
+                          onClick={onUserClickGenerator(id)}
+                          src={defaultAvatarImage}
+                          alt=""
+                          avatar
+                          bordered
+                          size="mini"
+                          className={styles.pointer}
+                        />
+                      }
+                      position="top center"
+                      on="hover"
+                    />
+                  ))}
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </Segment>
+
+        <Segment vertical>
+          <Container>
+            {comments.map(({ user: { id, name }, createdAt, content }) => (
+              <div>
+                <Segment vertical></Segment>
+              </div>
+            ))}
+          </Container>
+        </Segment>
       </div>
     </div>
   );
 }
 
-export default EventDetailsView;
+export default memo(EventDetailsView);

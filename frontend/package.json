@@ -30,6 +30,7 @@
     "react-intersection-observer": "^8.32.0",
     "react-linkify": "^1.0.0-alpha",
     "react-router-dom": "^5.2.0",
+    "react-show-more-text": "^1.4.6",
     "react-simple-pull-to-refresh": "^1.2.3",
     "react-toastify": "^7.0.4",
     "react-virtualized": "^9.22.3",
