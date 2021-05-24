@@ -5,18 +5,30 @@ import SearchDateSection from "../search-date-section";
 import styles from "./search-sidebar.module.scss";
 import { SearchContext } from "../../context-providers";
 import SearchCategorySection from "../search-category-section";
+import useSearchQueryParams from "../../custom-hooks/use-search-query-params";
 
 function SearchSidebar() {
-  const {
-    isSidebarOpened,
-    setSidebarOpened,
-    selectedDate,
-    selectedCategory,
-    onSearch,
-  } = useContext(SearchContext);
+  const { setSearchQuery } = useSearchQueryParams();
+  const { isSidebarOpened, setSidebarOpened, selectedDate, selectedCategory } =
+    useContext(SearchContext);
 
   const isValidSearch =
     selectedDate !== undefined && selectedCategory !== undefined;
+
+  const onSearch = () => {
+    if (!isValidSearch) {
+      return;
+    }
+
+    const [startDateTime, endDateTime] = selectedDate?.split("-") ?? [];
+
+    setSearchQuery({
+      category: selectedCategory,
+      startDateTime,
+      endDateTime,
+    });
+    setSidebarOpened(false);
+  };
 
   return (
     <Sidebar

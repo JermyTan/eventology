@@ -7,10 +7,9 @@ import {
   useState,
 } from "react";
 import { startOfToday } from "date-fns";
-import { useQueryParams, StringParam } from "use-query-params";
 import { useGetEventCategories } from "../custom-hooks/api/events-api";
 import useDatePeriods from "../custom-hooks/use-date-periods";
-import { CATEGORY, END_DATE_TIME, START_DATE_TIME } from "../constants";
+import useSearchQueryParams from "../custom-hooks/use-search-query-params";
 
 type SearchContextType = {
   isSidebarOpened: boolean;
@@ -19,12 +18,6 @@ type SearchContextType = {
   setSelectedDate: Dispatch<SetStateAction<string | undefined>>;
   selectedCategory?: string;
   setSelectedCategory: Dispatch<SetStateAction<string | undefined>>;
-  onSearch: () => void;
-  searchQuery: {
-    [CATEGORY]?: string | null;
-    [START_DATE_TIME]?: string | null;
-    [END_DATE_TIME]?: string | null;
-  };
   datePeriods: {
     today?: string;
     tomorrow?: string;
@@ -46,10 +39,6 @@ export const SearchContext = createContext<SearchContextType>({
   setSelectedCategory: () => {
     throw new Error("setSelectedCategory is not defined.");
   },
-  onSearch: () => {
-    throw new Error("onSearch is not defined.");
-  },
-  searchQuery: {},
   datePeriods: {},
   categories: [],
   isLoadingCategories: false,
@@ -63,11 +52,9 @@ function SearchProvider({ children }: Props) {
   const [isSidebarOpened, _setSidebarOpened] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>();
   const [selectedCategory, setSelectedCategory] = useState<string>();
-  const [searchQuery, setSearchQuery] = useQueryParams({
-    [CATEGORY]: StringParam,
-    [START_DATE_TIME]: StringParam,
-    [END_DATE_TIME]: StringParam,
-  });
+  const {
+    searchQuery: { category, startDateTime, endDateTime },
+  } = useSearchQueryParams();
   const datePeriods = useDatePeriods(startOfToday().getTime());
   const {
     categories,
@@ -75,7 +62,6 @@ function SearchProvider({ children }: Props) {
     getEventCategories,
   } = useGetEventCategories();
 
-  const { category, startDateTime, endDateTime } = searchQuery;
   const { today, tomorrow, thisWeek, thisMonth } = datePeriods;
 
   const setSidebarOpened = useCallback(
@@ -118,21 +104,6 @@ function SearchProvider({ children }: Props) {
     ],
   );
 
-  const onSearch = useCallback(() => {
-    if (selectedDate === undefined || selectedCategory === undefined) {
-      return;
-    }
-
-    const [startDateTime, endDateTime] = selectedDate.split("-");
-
-    setSearchQuery({
-      category: selectedCategory,
-      startDateTime,
-      endDateTime,
-    });
-    _setSidebarOpened(false);
-  }, [selectedDate, selectedCategory, setSearchQuery]);
-
   return (
     <SearchContext.Provider
       value={{
@@ -142,8 +113,6 @@ function SearchProvider({ children }: Props) {
         setSelectedDate,
         selectedCategory,
         setSelectedCategory,
-        onSearch,
-        searchQuery,
         datePeriods,
         categories,
         isLoadingCategories,

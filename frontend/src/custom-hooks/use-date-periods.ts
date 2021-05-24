@@ -10,38 +10,27 @@ import {
 import { useMemo } from "react";
 
 function useDatePeriods(currentDateTime: number) {
-  const today = useMemo(
-    () =>
-      `${startOfDay(currentDateTime).getTime()}-${endOfDay(
-        currentDateTime,
-      ).getTime()}`,
-    [currentDateTime],
-  );
+  return useMemo(() => {
+    const today = `${startOfDay(currentDateTime).getTime()}-${endOfDay(
+      currentDateTime,
+    ).getTime()}`;
 
-  const tomorrow = useMemo(() => {
-    const nextDay = addDays(currentDateTime, 1);
-    return `${startOfDay(nextDay).getTime()}-${endOfDay(nextDay).getTime()}`;
+    const tomorrow = `${startOfDay(
+      addDays(currentDateTime, 1),
+    ).getTime()}-${endOfDay(addDays(currentDateTime, 1)).getTime()}`;
+
+    const thisWeek = `${startOfWeek(currentDateTime, {
+      weekStartsOn: 1,
+    }).getTime()}-${endOfWeek(currentDateTime, {
+      weekStartsOn: 1,
+    }).getTime()}`;
+
+    const thisMonth = `${startOfMonth(currentDateTime).getTime()}-${endOfMonth(
+      currentDateTime,
+    ).getTime()}`;
+
+    return { today, tomorrow, thisWeek, thisMonth };
   }, [currentDateTime]);
-
-  const thisWeek = useMemo(
-    () =>
-      `${startOfWeek(currentDateTime, {
-        weekStartsOn: 1,
-      }).getTime()}-${endOfWeek(currentDateTime, {
-        weekStartsOn: 1,
-      }).getTime()}`,
-    [currentDateTime],
-  );
-
-  const thisMonth = useMemo(
-    () =>
-      `${startOfMonth(currentDateTime).getTime()}-${endOfMonth(
-        currentDateTime,
-      ).getTime()}`,
-    [currentDateTime],
-  );
-
-  return { today, tomorrow, thisWeek, thisMonth };
 }
 
 export default useDatePeriods;

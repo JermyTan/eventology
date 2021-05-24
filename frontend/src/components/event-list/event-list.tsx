@@ -6,21 +6,24 @@ import {
   useRef,
   useState,
 } from "react";
+import classNames from "classnames";
 import { Container, Segment } from "semantic-ui-react";
 import PullToRefreshWrapper from "../pull-to-refresh-wrapper";
 import EventSummaryCard from "../event-summary-card";
 import NoEventBanner from "../no-event-banner";
 import PlaceholderWrapper from "../placeholder-wrapper";
-import { PageBodyContext, SearchContext } from "../../context-providers";
+import { PageBodyContext } from "../../context-providers";
 import { useGetEvents } from "../../custom-hooks/api/events-api";
 import { EventData } from "../../types/events";
 import VirtualizedList from "../virtualized-list";
+import styles from "./event-list.module.scss";
+import useSearchQueryParams from "../../custom-hooks/use-search-query-params";
 
 function EventList() {
   const { pageBody } = useContext(PageBodyContext);
   const {
     searchQuery: { category, startDateTime, endDateTime },
-  } = useContext(SearchContext);
+  } = useSearchQueryParams();
   const [events, setEvents] = useState<EventData[]>([]);
   const { isLoading, getEvents } = useGetEvents();
   const virtualizedListRef = useRef<ElementRef<typeof VirtualizedList>>(null);
@@ -65,7 +68,10 @@ function EventList() {
   const loaderRenderer = useCallback(
     () => (
       <PlaceholderWrapper
-        style={{ margin: "-1em 0" }}
+        className={classNames(
+          events.length === 0 && styles.loader,
+          events.length === 0 && styles.important,
+        )}
         isLoading
         loadingMessage={events.length === 0 ? "Retrieving events" : undefined}
         placeholder={events.length === 0}
@@ -75,7 +81,7 @@ function EventList() {
   );
 
   return (
-    <Segment vertical>
+    <Segment className={styles.eventList} vertical>
       <Container>
         <PullToRefreshWrapper onRefresh={refreshEvents}>
           <VirtualizedList
