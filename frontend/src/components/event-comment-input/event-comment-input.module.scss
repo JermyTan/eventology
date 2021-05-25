@@ -47,4 +47,8 @@
   &:focus {
     background-color: #bbd172;
   }
+
+  .loader {
+    color: base.$primary-color;
+  }
 }

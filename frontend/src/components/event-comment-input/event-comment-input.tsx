@@ -1,23 +1,30 @@
 import classNames from "classnames";
-import { Image, Input, InputOnChangeData } from "semantic-ui-react";
-import { useCallback, useState } from "react";
+import { Image, Input } from "semantic-ui-react";
+import { useContext, useState } from "react";
 import styles from "./event-comment-input.module.scss";
 import sendLogo from "../../assets/send-purple.svg";
-import { useCreateEventComment } from "../../custom-hooks/api/events-api";
+import { SingleEventContext } from "../../context-providers";
+import IconLoader from "../icon-loader/icon-loader";
 
 type Props = {
   onClickCancel: () => void;
 };
 
 function EventCommentInput({ onClickCancel }: Props) {
+  const { createEventComment } = useContext(SingleEventContext);
   const [comment, setComment] = useState("");
+  const [isSending, setSending] = useState(false);
 
-  const onCommentChange = useCallback(
-    (_: React.ChangeEvent<HTMLInputElement>, { value }: InputOnChangeData) => {
-      setComment(value);
-    },
-    [],
-  );
+  const onSend = async () => {
+    if (!comment) {
+      return;
+    }
+
+    setSending(true);
+    await createEventComment(comment);
+    setSending(false);
+    setComment("");
+  };
 
   return (
     <>
@@ -29,13 +36,20 @@ function EventCommentInput({ onClickCancel }: Props) {
         <Input
           placeholder="Leave your comment here"
           className={styles.roundedInput}
-          onChange={onCommentChange}
+          onChange={(_, { value }) => setComment(value)}
           value={comment}
         />
       </div>
 
-      <div className={classNames(styles.sendButton, styles.pointer)}>
-        <Image src={sendLogo} alt="Send" size="mini" />
+      <div
+        onClick={onSend}
+        className={classNames(styles.sendButton, styles.pointer)}
+      >
+        {isSending ? (
+          <IconLoader className={styles.loader} size="big" />
+        ) : (
+          <Image src={sendLogo} alt="Send" size="mini" />
+        )}
       </div>
     </>
   );

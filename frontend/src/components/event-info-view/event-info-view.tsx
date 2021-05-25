@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import { Container, Segment } from "semantic-ui-react";
 import { capitalCase } from "change-case";
 import TabsSection, { Tab } from "../tabs-section";
@@ -8,12 +7,28 @@ import EventInfoMetaSection from "../event-info-meta-section";
 import EventInfoDetailsSection from "../event-info-details-section";
 import EventInfoParticipantsSection from "../event-info-participants-section";
 import { COMMENTS, DETAILS, PARTICIPANTS } from "../../constants";
-import { SingleEventContext } from "../../context-providers";
+import { EventData } from "../../types/events";
 import styles from "./event-info-view.module.scss";
 
-function EventInfoView() {
-  const { event } = useContext(SingleEventContext);
+type Props = {
+  event: EventData;
+};
 
+function EventInfoView({
+  event: {
+    category,
+    title,
+    creator,
+    createdAt,
+    description,
+    startDateTime,
+    endDateTime,
+    venue,
+    signUps = [],
+    likes = [],
+    comments = [],
+  },
+}: Props) {
   const tabsSectionProps = (() => {
     const isShowingDetails = true;
     const isShowingParticipants = false;
@@ -56,15 +71,15 @@ function EventInfoView() {
     return { tabs, onTabClick };
   })();
 
-  return event ? (
+  return (
     <div className={styles.eventInfoView}>
       <Segment vertical>
         <Container>
           <EventInfoMetaSection
-            category={event?.category}
-            title={event.title}
-            creator={event.creator}
-            createdAt={event.createdAt}
+            category={category}
+            title={title}
+            creator={creator}
+            createdAt={createdAt}
           />
         </Container>
       </Segment>
@@ -79,33 +94,30 @@ function EventInfoView() {
         <Segment className={styles.detailsContainer} vertical>
           <Container>
             <EventInfoDetailsSection
-              description={event.description}
-              startDateTime={event.startDateTime}
-              endDateTime={event.endDateTime}
-              venue={event.venue}
+              description={description}
+              startDateTime={startDateTime}
+              endDateTime={endDateTime}
+              venue={venue}
             />
           </Container>
         </Segment>
 
         <Segment padded vertical>
-          <EventInfoParticipantsSection
-            signUps={event.signUps ?? []}
-            likes={event.likes ?? []}
-          />
+          <EventInfoParticipantsSection signUps={signUps} likes={likes} />
         </Segment>
 
         <div className={styles.commentsContainer}>
           <VirtualizedPageBody>
             <Segment vertical>
               <Container>
-                <EventInfoCommentsSection comments={event.comments ?? []} />
+                <EventInfoCommentsSection comments={comments} />
               </Container>
             </Segment>
           </VirtualizedPageBody>
         </div>
       </div>
     </div>
-  ) : null;
+  );
 }
 
 export default EventInfoView;

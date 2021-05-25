@@ -167,7 +167,7 @@ function ProfileEventSection({ userId }: Props) {
                 />
               )}
               numItems={showingEvents.length}
-              scrollElement={pageBody}
+              scrollElement={pageBody ?? undefined}
               defaultRowHeight={350}
             />
           </PullToRefreshWrapper>

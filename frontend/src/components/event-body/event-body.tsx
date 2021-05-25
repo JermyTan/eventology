@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import PlaceholderWrapper from "../placeholder-wrapper";
 import NoEventBanner from "../no-event-banner";
 import VirtualizedList from "../virtualized-list";
@@ -8,7 +8,8 @@ import PullToRefreshWrapper from "../pull-to-refresh-wrapper";
 
 function EventBody() {
   const { pageBody } = useContext(PageBodyContext);
-  const { event, getSingleEvent } = useContext(SingleEventContext);
+  const { event, getSingleEvent, setEventList } =
+    useContext(SingleEventContext);
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -18,6 +19,11 @@ function EventBody() {
       setLoading(false);
     })();
   }, [getSingleEvent]);
+
+  const eventInfoViewRenderer = useCallback(
+    () => (event ? <EventInfoView event={event} /> : undefined),
+    [event],
+  );
 
   return (
     <PlaceholderWrapper
@@ -29,9 +35,10 @@ function EventBody() {
     >
       <PullToRefreshWrapper onRefresh={getSingleEvent}>
         <VirtualizedList
-          itemRenderer={() => <EventInfoView />}
+          ref={setEventList}
+          itemRenderer={eventInfoViewRenderer}
           numItems={event ? 1 : 0}
-          scrollElement={pageBody}
+          scrollElement={pageBody ?? undefined}
           defaultRowHeight={800}
         />
       </PullToRefreshWrapper>

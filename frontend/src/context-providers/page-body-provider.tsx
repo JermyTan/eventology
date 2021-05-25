@@ -7,12 +7,12 @@ import {
 } from "react";
 
 type PageBodyContextType = {
-  pageBody?: HTMLDivElement;
-  setPageBody: Dispatch<SetStateAction<HTMLDivElement | undefined>>;
+  pageBody: HTMLDivElement | null;
+  setPageBody: Dispatch<SetStateAction<HTMLDivElement | null>>;
 };
 
 export const PageBodyContext = createContext<PageBodyContextType>({
-  pageBody: undefined,
+  pageBody: null,
   setPageBody: () => {
     throw new Error("setPageBody is not defined.");
   },
@@ -23,7 +23,7 @@ type Props = {
 };
 
 function PageBodyProvider({ children }: Props) {
-  const [pageBody, setPageBody] = useState<HTMLDivElement>();
+  const [pageBody, setPageBody] = useState<HTMLDivElement | null>(null);
 
   return (
     <PageBodyContext.Provider value={{ pageBody, setPageBody }}>

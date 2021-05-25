@@ -10,9 +10,8 @@ type Props = {
   comments: EventCommentData[];
 };
 
-function EventInfoCommentsSection({ comments: temp }: Props) {
+function EventInfoCommentsSection({ comments }: Props) {
   const { pageBody } = useContext(PageBodyContext);
-  const comments = temp.flatMap((comment) => Array(50).fill(comment));
 
   const commentRenderer = useCallback(
     (index: number) => <Comment comment={comments[index]} />,
@@ -26,7 +25,7 @@ function EventInfoCommentsSection({ comments: temp }: Props) {
         <Divider className={styles.commentDivider} hidden />
       )}
       numItems={comments.length}
-      scrollElement={pageBody}
+      scrollElement={pageBody ?? undefined}
       defaultRowHeight={100}
     />
   );

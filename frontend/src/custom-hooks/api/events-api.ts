@@ -187,7 +187,7 @@ export function useCreateEventSignUp() {
   return { createEventSignUp, isLoading: loading };
 }
 
-export function useDeleteEventSignUps() {
+export function useDeleteEventSignUp() {
   const [{ loading }, apiCall] = useAxiosWithTokenRefresh<EventSignUpData>(
     {
       url: "/events/signups",
@@ -196,7 +196,7 @@ export function useDeleteEventSignUps() {
     { manual: true },
   );
 
-  const deleteEventSignUps = useMemo(
+  const deleteEventSignUp = useMemo(
     () =>
       errorHandlerWrapper(async (data: EventSignUpDeleteData) => {
         console.log("DELETE /events/signups data:", data);
@@ -210,7 +210,7 @@ export function useDeleteEventSignUps() {
     [apiCall],
   );
 
-  return { deleteEventSignUps, isLoading: loading };
+  return { deleteEventSignUp, isLoading: loading };
 }
 
 export function useGetEventLikes() {
@@ -279,7 +279,7 @@ export function useCreateEventLike() {
   return { createEventLike, isLoading: loading };
 }
 
-export function useDeleteEventLikes() {
+export function useDeleteEventLike() {
   const [{ loading }, apiCall] = useAxiosWithTokenRefresh<EventLikeData>(
     {
       url: "/events/likes",
@@ -288,7 +288,7 @@ export function useDeleteEventLikes() {
     { manual: true },
   );
 
-  const deleteEventLikes = useMemo(
+  const deleteEventLike = useMemo(
     () =>
       errorHandlerWrapper(async (data: EventLikeDeleteData) => {
         console.log("DELETE /events/likes data:", data);
@@ -302,7 +302,7 @@ export function useDeleteEventLikes() {
     [apiCall],
   );
 
-  return { deleteEventLikes, isLoading: loading };
+  return { deleteEventLike, isLoading: loading };
 }
 
 export function useGetEventComments() {

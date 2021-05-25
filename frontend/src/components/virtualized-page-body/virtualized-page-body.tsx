@@ -10,10 +10,7 @@ const PageBody = ({ children }: Props) => {
   const { setPageBody } = useContext(PageBodyContext);
 
   return (
-    <div
-      className={styles.virtualizedPageBody}
-      ref={(pageBody) => setPageBody(pageBody ?? undefined)}
-    >
+    <div className={styles.virtualizedPageBody} ref={setPageBody}>
       <div>{children}</div>
     </div>
   );

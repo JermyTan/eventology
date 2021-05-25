@@ -9,8 +9,8 @@ import LinkifyTextViewer from "../linkify-text-viewer";
 import {
   useCreateEventSignUp,
   useCreateEventLike,
-  useDeleteEventSignUps,
-  useDeleteEventLikes,
+  useDeleteEventSignUp,
+  useDeleteEventLike,
 } from "../../custom-hooks/api/events-api";
 import IconLoader from "../icon-loader/icon-loader";
 import { resolveApiError } from "../../utils/error-utils";
@@ -43,9 +43,9 @@ function EventSummaryCard({
 }: Props) {
   const { createEventSignUp, isLoading: isSigningUp } = useCreateEventSignUp();
   const { createEventLike, isLoading: isLiking } = useCreateEventLike();
-  const { deleteEventSignUps, isLoading: isWithdrawing } =
-    useDeleteEventSignUps();
-  const { deleteEventLikes, isLoading: isUnliking } = useDeleteEventLikes();
+  const { deleteEventSignUp, isLoading: isWithdrawing } =
+    useDeleteEventSignUp();
+  const { deleteEventLike, isLoading: isUnliking } = useDeleteEventLike();
   const history = useHistory();
 
   const {
@@ -82,7 +82,7 @@ function EventSummaryCard({
 
     const onDeleteEventSignUp = async () => {
       try {
-        const { event: updatedEvent } = await deleteEventSignUps({
+        const { event: updatedEvent } = await deleteEventSignUp({
           eventId: id,
         });
 
@@ -96,7 +96,7 @@ function EventSummaryCard({
 
     const onDeleteEventLike = async () => {
       try {
-        const { event: updatedEvent } = await deleteEventLikes({ eventId: id });
+        const { event: updatedEvent } = await deleteEventLike({ eventId: id });
 
         onChange?.({ ...updatedEvent });
 
@@ -117,8 +117,8 @@ function EventSummaryCard({
     onChange,
     createEventSignUp,
     createEventLike,
-    deleteEventSignUps,
-    deleteEventLikes,
+    deleteEventSignUp,
+    deleteEventLike,
   ]);
 
   const onUserClick = () =>

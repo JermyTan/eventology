@@ -52,14 +52,16 @@ function EventList() {
     (index: number) => (
       <EventSummaryCard
         event={events[index]}
-        onChange={(changes: Partial<EventData>) => {
-          const updatedEvent = { ...events[index], ...changes };
+        onChange={(changes: Partial<EventData>) =>
+          setEvents((events) => {
+            const updatedEvent = { ...events[index], ...changes };
 
-          const updatedEvents = [...events];
-          updatedEvents[index] = updatedEvent;
+            const updatedEvents = [...events];
+            updatedEvents[index] = updatedEvent;
 
-          setEvents(updatedEvents);
-        }}
+            return updatedEvents;
+          })
+        }
       />
     ),
     [events],
@@ -99,7 +101,7 @@ function EventList() {
             isNextPageLoading={isLoading}
             numItems={events.length}
             loadNextPage={getMoreEvents}
-            scrollElement={pageBody}
+            scrollElement={pageBody ?? undefined}
             defaultRowHeight={350}
           />
         </PullToRefreshWrapper>
