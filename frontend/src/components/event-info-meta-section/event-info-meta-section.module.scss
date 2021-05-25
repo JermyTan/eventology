@@ -1,0 +1,35 @@
+@use "../../base";
+
+.eventInfoMetaSection.important {
+  @include base.vertical-space-margin-1;
+
+  .pointer {
+    cursor: pointer;
+  }
+
+  .category {
+    color: base.$primary-color;
+    border-color: #d3c1e5;
+  }
+
+  .title {
+    color: #453257;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .userInfo {
+    @include base.horizontal-space-margin-1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .name {
+      color: #67616d;
+    }
+
+    .publishedDateTime {
+      color: #bababa;
+    }
+  }
+}

@@ -34,12 +34,12 @@ export type EventCategoryData = BaseData & {
 
 export type EventSignUpData = BaseData & {
   [USER]: UserData;
-  [EVENT_ID]?: number;
+  [EVENT_ID]?: number | string;
   [EVENT]?: EventData;
 };
 
 export type EventSignUpPostData = {
-  [EVENT_ID]: number;
+  [EVENT_ID]: number | string;
 };
 
 export type EventSignUpDeleteData = EventSignUpPostData;
@@ -59,7 +59,7 @@ export type EventCommentPostData = EventSignUpPostData & {
 };
 
 export type EventCommentDeleteData = {
-  [IDS]: number[];
+  [IDS]: number[] | string[];
 };
 
 export type EventData = BaseData & {
@@ -96,3 +96,5 @@ export type EventSignUpGetQueryParams = {
 };
 
 export type EventLikeGetQueryParams = EventSignUpGetQueryParams;
+
+export type EventCommentGetQueryParams = EventSignUpGetQueryParams;

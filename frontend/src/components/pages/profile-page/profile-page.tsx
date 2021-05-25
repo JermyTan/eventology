@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Icon } from "semantic-ui-react";
+import { Icon, Container, Segment } from "semantic-ui-react";
 import { useGetSingleUser } from "../../../custom-hooks/api/users-api";
 import PlaceholderWrapper from "../../placeholder-wrapper";
 import ProfileInfoSection from "../../profile-info-section";
@@ -35,7 +35,13 @@ function ProfilePage() {
             </div>
           }
         >
-          {user && <ProfileInfoSection {...user} />}
+          {user && (
+            <Segment padded vertical>
+              <Container>
+                <ProfileInfoSection {...user} />
+              </Container>
+            </Segment>
+          )}
 
           <ProfileEventSection userId={user?.id} />
         </PlaceholderWrapper>

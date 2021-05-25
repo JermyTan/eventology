@@ -1,6 +1,10 @@
 import { createContext, ReactNode, useCallback, useState } from "react";
-import { useGetSingleEvent } from "../custom-hooks/api/events-api";
-import { EventData } from "../types/events";
+import {
+  useCreateEventComment,
+  useGetEventComments,
+  useGetSingleEvent,
+} from "../custom-hooks/api/events-api";
+import { EventCommentPostData, EventData } from "../types/events";
 
 type SingleEventContextType = {
   event?: EventData;
@@ -21,6 +25,8 @@ type Props = {
 function SingleEventProvider({ eventId, children }: Props) {
   const [event, setEvent] = useState<EventData>();
   const { getSingleEvent: _getSingleEvent } = useGetSingleEvent();
+  const { createEventComment: _createEventComment } = useCreateEventComment();
+  const { getEventComments } = useGetEventComments();
 
   const getSingleEvent = useCallback(async () => {
     const event = await _getSingleEvent(eventId);

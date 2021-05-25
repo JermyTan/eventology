@@ -1,26 +1,24 @@
 .tabsSection {
-  .tabsContainer {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 
-    .tab {
-      cursor: pointer;
-      color: #8c8c8c;
+  .tab {
+    cursor: pointer;
+    color: #8c8c8c;
 
-      .iconContainer {
-        color: #bababa;
-      }
+    .iconContainer {
+      color: #bababa;
     }
+  }
 
-    .active,
-    .active .iconContainer {
-      color: #aecb4f;
-    }
+  .active,
+  .active .iconContainer {
+    color: #aecb4f;
+  }
 
-    .verticalDivider {
-      margin: 0 1rem;
-      border-left: 1px solid #e8e8e8;
-    }
+  .verticalDivider {
+    margin: 0 1rem;
+    border-left: 1px solid #e8e8e8;
   }
 }

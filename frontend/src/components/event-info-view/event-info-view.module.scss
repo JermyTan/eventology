@@ -1,0 +1,17 @@
+@use "../../base";
+
+.eventInfoView {
+  .contentContainer {
+    background-color: #faf9fc;
+
+    .detailsContainer {
+      padding: 0;
+    }
+
+    .commentsContainer {
+      display: flex;
+      flex-direction: column;
+      height: 35rem;
+    }
+  }
+}

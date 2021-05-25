@@ -149,7 +149,9 @@ function ProfileEventSection({ userId }: Props) {
       placeholder
     >
       <Segment vertical>
-        <TabsSection {...tabsSectionProps} />
+        <Container>
+          <TabsSection {...tabsSectionProps} />
+        </Container>
       </Segment>
 
       <Segment vertical>

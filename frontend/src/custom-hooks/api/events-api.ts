@@ -8,6 +8,7 @@ import {
   EventCategoryData,
   EventCommentData,
   EventCommentDeleteData,
+  EventCommentGetQueryParams,
   EventCommentPostData,
   EventData,
   EventGetQueryParams,
@@ -302,6 +303,46 @@ export function useDeleteEventLikes() {
   );
 
   return { deleteEventLikes, isLoading: loading };
+}
+
+export function useGetEventComments() {
+  const [eventComments, setEventComments] = useState<EventCommentData[]>([]);
+
+  const [{ loading }, apiCall] = useAxiosWithTokenRefresh<EventCommentData[]>(
+    {
+      method: "get",
+    },
+    { manual: true },
+  );
+
+  const getEventComments = useCallback(
+    async (queryParams?: EventCommentGetQueryParams) => {
+      const url = stringifyUrl(
+        {
+          url: "/events/comments",
+          query: changeKeyCase(snakeCase, queryParams),
+        },
+        { skipNull: true, skipEmptyString: true },
+      );
+
+      try {
+        return await errorHandlerWrapper(async () => {
+          const { data: eventComments = [] } = await apiCall({ url });
+          console.log(`GET ${url} success:`, eventComments);
+          setEventComments(eventComments);
+          return eventComments;
+        }, `GET ${url} error`)();
+      } catch (error) {
+        resolveApiError(error);
+
+        setEventComments([]);
+        return [];
+      }
+    },
+    [apiCall],
+  );
+
+  return { eventComments, isLoading: loading, getEventComments };
 }
 
 export function useCreateEventComment() {

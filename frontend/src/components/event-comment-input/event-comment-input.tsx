@@ -3,6 +3,7 @@ import { Image, Input, InputOnChangeData } from "semantic-ui-react";
 import { useCallback, useState } from "react";
 import styles from "./event-comment-input.module.scss";
 import sendLogo from "../../assets/send-purple.svg";
+import { useCreateEventComment } from "../../custom-hooks/api/events-api";
 
 type Props = {
   onClickCancel: () => void;

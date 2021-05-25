@@ -1,31 +1,29 @@
 @use "../../base";
 
 .profileInfoSection {
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-    .avatar {
-      border: 4px solid #d3c1e5;
-    }
+  .avatar {
+    border: 4px solid #d3c1e5;
+  }
 
-    .name {
-      font-weight: normal;
-      color: #67616d;
-    }
+  .name {
+    font-weight: normal;
+    color: #67616d;
+  }
 
-    .emailContainer {
-      font-weight: normal;
-      margin-top: 0;
+  .emailContainer {
+    font-weight: normal;
+    margin-top: 0;
 
-      .email {
-        color: base.$primary-color;
+    .email {
+      color: base.$primary-color;
 
-        &:hover {
-          color: #624085;
-        }
+      &:hover {
+        color: #624085;
       }
     }
   }
