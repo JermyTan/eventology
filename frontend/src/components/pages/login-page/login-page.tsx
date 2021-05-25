@@ -19,6 +19,7 @@ import { useCustomAuth } from "../../../custom-hooks/api/auth-api";
 import { resolveApiError } from "../../../utils/error-utils";
 import catLogo from "../../../assets/logo-cat-green.svg";
 import styles from "./login-page.module.scss";
+import FullPageContainer from "../../full-page-container";
 
 const schema = yup.object().shape({
   [EMAIL]: yup
@@ -80,7 +81,7 @@ function LoginPage() {
   }, []);
 
   return (
-    <div className={styles.loginPage}>
+    <FullPageContainer>
       <FormProvider {...methods}>
         <Form
           className={styles.formContainer}
@@ -137,7 +138,7 @@ function LoginPage() {
           </Button>
         </Form>
       </FormProvider>
-    </div>
+    </FullPageContainer>
   );
 }
 

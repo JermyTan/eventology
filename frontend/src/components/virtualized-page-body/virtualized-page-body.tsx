@@ -1,6 +1,6 @@
 import { ReactNode, useContext } from "react";
 import { PageBodyContext, PageBodyProvider } from "../../context-providers";
-import styles from "./virtualized-page-body.module.scss";
+import ScrollingPageBody from "../scrolling-page-body";
 
 type Props = {
   children: ReactNode;
@@ -10,9 +10,9 @@ const PageBody = ({ children }: Props) => {
   const { setPageBody } = useContext(PageBodyContext);
 
   return (
-    <div className={styles.virtualizedPageBody} ref={setPageBody}>
+    <ScrollingPageBody ref={setPageBody}>
       <div>{children}</div>
-    </div>
+    </ScrollingPageBody>
   );
 };
 

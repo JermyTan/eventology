@@ -4,7 +4,7 @@ import { SearchContext } from "../../../context-providers";
 import EventList from "../../event-list";
 import TopBar from "../../top-bar";
 import VirtualizedPageBody from "../../virtualized-page-body";
-import VirtualizedPageContainer from "../../virtualized-page-container";
+import FullPageContainer from "../../full-page-container";
 import SearchSidebar from "../../search-sidebar";
 import SearchTab from "../../search-tab";
 
@@ -16,7 +16,7 @@ function EventsPage() {
       <SearchSidebar />
 
       <Sidebar.Pusher dimmed={isSidebarOpened}>
-        <VirtualizedPageContainer>
+        <FullPageContainer>
           <TopBar
             leftTab={<SearchTab onTabClick={() => setSidebarOpened(true)} />}
           />
@@ -24,7 +24,7 @@ function EventsPage() {
           <VirtualizedPageBody>
             <EventList />;
           </VirtualizedPageBody>
-        </VirtualizedPageContainer>
+        </FullPageContainer>
       </Sidebar.Pusher>
     </Sidebar.Pushable>
   );

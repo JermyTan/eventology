@@ -1,20 +1,20 @@
-import VirtualizedPageContainer from "../../virtualized-page-container";
+import FullPageContainer from "../../full-page-container";
 import TopBar from "../../top-bar";
-import VirtualizedPageBody from "../../virtualized-page-body";
 import EventBody from "../../event-body/event-body";
 import BottomBar from "../../bottom-bar";
+import ScrollingPageBody from "../../scrolling-page-body";
 
 function EventsSingleViewPage() {
   return (
-    <VirtualizedPageContainer>
+    <FullPageContainer>
       <TopBar />
 
-      <VirtualizedPageBody>
+      <ScrollingPageBody>
         <EventBody />
-      </VirtualizedPageBody>
+      </ScrollingPageBody>
 
       <BottomBar />
-    </VirtualizedPageContainer>
+    </FullPageContainer>
   );
 }
 

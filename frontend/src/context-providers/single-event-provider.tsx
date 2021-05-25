@@ -28,9 +28,6 @@ type SingleEventContextType = {
   createEventLike: () => Promise<EventData | undefined>;
   deleteEventSignUp: () => Promise<EventData | undefined>;
   deleteEventLike: () => Promise<EventData | undefined>;
-  setEventList: Dispatch<
-    SetStateAction<ElementRef<typeof VirtualizedList> | null>
-  >;
   setCommentList: Dispatch<
     SetStateAction<ElementRef<typeof VirtualizedList> | null>
   >;
@@ -55,9 +52,6 @@ export const SingleEventContext = createContext<SingleEventContextType>({
   deleteEventLike: () => {
     throw new Error("deleteEventLike is not defined.");
   },
-  setEventList: () => {
-    throw new Error("setEventList is not defined.");
-  },
   setCommentList: () => {
     throw new Error("setCommentList is not defined.");
   },
@@ -70,8 +64,6 @@ type Props = {
 
 function SingleEventProvider({ eventId, children }: Props) {
   const [event, setEvent] = useState<EventData>();
-  const [eventList, setEventList] =
-    useState<ElementRef<typeof VirtualizedList> | null>(null);
   const [commentList, setCommentList] =
     useState<ElementRef<typeof VirtualizedList> | null>(null);
   const { getSingleEvent: _getSingleEvent } = useGetSingleEvent();
@@ -147,7 +139,6 @@ function SingleEventProvider({ eventId, children }: Props) {
         event,
         getSingleEvent,
         createEventComment,
-        setEventList,
         setCommentList,
         ...eventSignUpAndLikeMethods,
       }}

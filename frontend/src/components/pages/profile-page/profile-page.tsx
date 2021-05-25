@@ -7,7 +7,7 @@ import ProfileInfoSection from "../../profile-info-section";
 import ProfileEventSection from "../../profile-event-section";
 import TopBar from "../../top-bar";
 import VirtualizedPageBody from "../../virtualized-page-body";
-import VirtualizedPageContainer from "../../virtualized-page-container";
+import FullPageContainer from "../../full-page-container";
 import styles from "./profile-page.module.scss";
 
 function ProfilePage() {
@@ -19,7 +19,7 @@ function ProfilePage() {
   }, [getSingleUser, userId]);
 
   return (
-    <VirtualizedPageContainer>
+    <FullPageContainer>
       <TopBar />
 
       <VirtualizedPageBody>
@@ -46,7 +46,7 @@ function ProfilePage() {
           <ProfileEventSection userId={user?.id} />
         </PlaceholderWrapper>
       </VirtualizedPageBody>
-    </VirtualizedPageContainer>
+    </FullPageContainer>
   );
 }
 

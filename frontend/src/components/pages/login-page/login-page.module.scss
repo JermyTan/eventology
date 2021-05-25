@@ -1,74 +1,70 @@
 @use "../../../base";
 
-.loginPage {
-  height: 100vh;
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: base.$primary-color;
+  flex: 1;
 
-  .formContainer {
+  .contentContainer {
     display: flex;
     flex-direction: column;
-    background-color: base.$primary-color;
-    min-height: 100%;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
 
-    .contentContainer {
+    .viewContainer {
+      color: base.$secondary-color;
+      border-bottom: none;
+    }
+
+    .inputContainer {
       display: flex;
       flex-direction: column;
-      flex: 1;
-      align-items: center;
-      justify-content: center;
 
-      .viewContainer {
-        color: base.$secondary-color;
-        border-bottom: none;
-      }
+      .roundedInput {
+        color: white;
 
-      .inputContainer {
-        display: flex;
-        flex-direction: column;
+        > input {
+          border-radius: 2rem;
+          border-color: rgba(white, 0.7);
+          background-color: transparent;
 
-        .roundedInput {
-          color: white;
+          &:focus {
+            background-color: rgba(white, 0.2);
+          }
 
-          > input {
-            border-radius: 2rem;
-            border-color: rgba(white, 0.7);
-            background-color: transparent;
+          &:-webkit-autofill,
+          &:-webkit-autofill:hover {
+            -webkit-box-shadow: 0 0 0px 1000px base.$primary-color inset !important;
+          }
 
-            &:focus {
-              background-color: rgba(white, 0.2);
-            }
+          &:-webkit-autofill:focus {
+            -webkit-box-shadow: 0 0 0px 1000px rgba(base.$primary-color, 0.75)
+              inset !important;
+          }
 
-            &:-webkit-autofill,
-            &:-webkit-autofill:hover {
-              -webkit-box-shadow: 0 0 0px 1000px base.$primary-color inset !important;
-            }
-
-            &:-webkit-autofill:focus {
-              -webkit-box-shadow: 0 0 0px 1000px rgba(base.$primary-color, 0.75)
-                inset !important;
-            }
-
-            &::placeholder {
-              color: rgba(white, 0.5);
-            }
+          &::placeholder {
+            color: rgba(white, 0.5);
           }
         }
       }
     }
+  }
 
-    .button {
-      background-color: base.$secondary-color;
-      margin: 0;
-      border-radius: 0;
-      height: 5rem;
+  .button {
+    background-color: base.$secondary-color;
+    margin: 0;
+    border-radius: 0;
+    height: 5rem;
 
-      &:hover,
-      &:focus {
-        background-color: #bbd172;
-      }
+    &:hover,
+    &:focus {
+      background-color: #bbd172;
+    }
 
-      &:after {
-        border-color: black transparent transparent !important;
-      }
+    &:after {
+      border-color: black transparent transparent !important;
     }
   }
 }
