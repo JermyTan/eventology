@@ -14,20 +14,20 @@ import {
   useCreateEventSignUp,
   useDeleteEventLike,
   useDeleteEventSignUp,
-  useGetEventComments,
   useGetSingleEvent,
 } from "../custom-hooks/api/events-api";
 import VirtualizedList from "../components/virtualized-list";
-import { EventCommentData, EventData } from "../types/events";
+import { EventData } from "../types/events";
 
 type SingleEventContextType = {
   event?: EventData;
   getSingleEvent: () => Promise<EventData | undefined>;
-  createEventComment: (content: string) => Promise<EventCommentData[]>;
+  createEventComment: (content: string) => Promise<EventData | undefined>;
   createEventSignUp: () => Promise<EventData | undefined>;
   createEventLike: () => Promise<EventData | undefined>;
   deleteEventSignUp: () => Promise<EventData | undefined>;
   deleteEventLike: () => Promise<EventData | undefined>;
+  commentList: ElementRef<typeof VirtualizedList> | null;
   setCommentList: Dispatch<
     SetStateAction<ElementRef<typeof VirtualizedList> | null>
   >;
@@ -52,6 +52,7 @@ export const SingleEventContext = createContext<SingleEventContextType>({
   deleteEventLike: () => {
     throw new Error("deleteEventLike is not defined.");
   },
+  commentList: null,
   setCommentList: () => {
     throw new Error("setCommentList is not defined.");
   },
@@ -68,7 +69,6 @@ function SingleEventProvider({ eventId, children }: Props) {
     useState<ElementRef<typeof VirtualizedList> | null>(null);
   const { getSingleEvent: _getSingleEvent } = useGetSingleEvent();
   const { createEventComment: _createEventComment } = useCreateEventComment();
-  const { getEventComments } = useGetEventComments();
   const { createEventSignUp: _createEventSignUp } = useCreateEventSignUp();
   const { createEventLike: _createEventLike } = useCreateEventLike();
   const { deleteEventSignUp: _deleteEventSignUp } = useDeleteEventSignUp();
@@ -83,41 +83,35 @@ function SingleEventProvider({ eventId, children }: Props) {
   const createEventComment = useCallback(
     async (content: string) => {
       await _createEventComment({ eventId, content });
-      const updatedComments = await getEventComments({ eventId });
+      const updatedEvent = await getSingleEvent();
 
-      setEvent((event) =>
-        event ? { ...event, comments: updatedComments } : event,
-      );
+      commentList?.rerenderList();
 
-      return updatedComments;
+      return updatedEvent;
     },
-    [eventId, _createEventComment, getEventComments],
+    [eventId, _createEventComment, getSingleEvent, commentList],
   );
 
   const eventSignUpAndLikeMethods = useMemo(() => {
-    const createEventSignUp = async () => {
-      const { event: updatedEvent } = await _createEventSignUp({ eventId });
-      setEvent(updatedEvent);
-      return updatedEvent;
-    };
+    const updateEvent =
+      (
+        updateFunction: (data: { eventId: string | number }) => Promise<{
+          event?: EventData;
+        }>,
+      ) =>
+      async () => {
+        const { event: updatedEvent } = await updateFunction({ eventId });
 
-    const createEventLike = async () => {
-      const { event: updatedEvent } = await _createEventLike({ eventId });
-      setEvent(updatedEvent);
-      return updatedEvent;
-    };
+        setEvent(updatedEvent);
+        commentList?.rerenderList();
 
-    const deleteEventSignUp = async () => {
-      const { event: updatedEvent } = await _deleteEventSignUp({ eventId });
-      setEvent(updatedEvent);
-      return updatedEvent;
-    };
+        return updatedEvent;
+      };
 
-    const deleteEventLike = async () => {
-      const { event: updatedEvent } = await _deleteEventLike({ eventId });
-      setEvent(updatedEvent);
-      return updatedEvent;
-    };
+    const createEventSignUp = updateEvent(_createEventSignUp);
+    const createEventLike = updateEvent(_createEventLike);
+    const deleteEventSignUp = updateEvent(_deleteEventSignUp);
+    const deleteEventLike = updateEvent(_deleteEventLike);
 
     return {
       createEventSignUp,
@@ -131,6 +125,7 @@ function SingleEventProvider({ eventId, children }: Props) {
     _createEventLike,
     _deleteEventSignUp,
     _deleteEventLike,
+    commentList,
   ]);
 
   return (
@@ -139,6 +134,7 @@ function SingleEventProvider({ eventId, children }: Props) {
         event,
         getSingleEvent,
         createEventComment,
+        commentList,
         setCommentList,
         ...eventSignUpAndLikeMethods,
       }}

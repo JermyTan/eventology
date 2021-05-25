@@ -33,6 +33,7 @@ type Props = {
   loadNextPage?: (params: IndexRange) => Promise<unknown>;
   scrollElement?: Element;
   defaultRowHeight?: number;
+  optimizeRerender?: boolean;
 };
 
 type VirtualizedListHandle = {
@@ -55,6 +56,7 @@ function VirtualizedList(
     loadNextPage = defaultLoadNextPage,
     scrollElement,
     defaultRowHeight = 200,
+    optimizeRerender = false,
   }: Props,
   ref: Ref<VirtualizedListHandle>,
 ) {
@@ -113,10 +115,10 @@ function VirtualizedList(
   );
 
   useEffect(() => {
-    console.log(previousRowCountRef.current, numItems);
     if (
       previousRowCountRef.current !== 0 &&
-      numItems >= previousRowCountRef.current
+      numItems >= previousRowCountRef.current &&
+      optimizeRerender
     ) {
       rerenderList(previousRowCountRef.current - 1);
     } else {
@@ -124,7 +126,7 @@ function VirtualizedList(
     }
 
     previousRowCountRef.current = rowCount;
-  }, [rowCount, numItems, rerenderList]);
+  }, [rowCount, numItems, optimizeRerender, rerenderList]);
 
   return (
     <InfiniteLoader

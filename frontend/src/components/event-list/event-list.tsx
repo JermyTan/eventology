@@ -61,7 +61,7 @@ function EventList() {
     // regular clean up to clear cache
     cacheSize.current += Math.abs(events.length - previousNumEvents);
 
-    if (cacheSize.current > 50) {
+    if (cacheSize.current > 20) {
       onChangeGenerator.cache.clear?.();
       cacheSize.current = 0;
     }
@@ -123,6 +123,7 @@ function EventList() {
             loadNextPage={getMoreEvents}
             scrollElement={pageBody ?? undefined}
             defaultRowHeight={350}
+            optimizeRerender
           />
         </PullToRefreshWrapper>
       </Container>

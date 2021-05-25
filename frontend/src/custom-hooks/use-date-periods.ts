@@ -9,7 +9,7 @@ import {
 } from "date-fns";
 import { useMemo } from "react";
 
-function useDatePeriods(currentDateTime: number) {
+function useDatePeriods({ currentDateTime }: { currentDateTime: number }) {
   return useMemo(() => {
     const today = `${startOfDay(currentDateTime).getTime()}-${endOfDay(
       currentDateTime,

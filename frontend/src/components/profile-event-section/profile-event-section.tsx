@@ -1,19 +1,23 @@
-import { useCallback, useContext, useEffect, useState } from "react";
-import { Container, Segment, Icon } from "semantic-ui-react";
+import {
+  ElementRef,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useHistory, useLocation } from "react-router-dom";
+import { Icon, Container, Segment } from "semantic-ui-react";
+
 import PlaceholderWrapper from "../placeholder-wrapper";
 import PullToRefreshWrapper from "../pull-to-refresh-wrapper";
 import NoEventBanner from "../no-event-banner";
 import EventSummaryCard from "../event-summary-card";
-import {
-  useGetEventLikes,
-  useGetEventSignUps,
-} from "../../custom-hooks/api/events-api";
-import { EventData } from "../../types/events";
 import TabsSection, { Tab } from "../tabs-section";
 import VirtualizedList from "../virtualized-list";
 import { PageBodyContext } from "../../context-providers";
 import { LIKES, GOING, PAST } from "../../constants";
+import useProfileEventsState from "../../custom-hooks/use-profile-events-state";
 
 type Props = {
   userId?: number;
@@ -21,33 +25,21 @@ type Props = {
 
 function ProfileEventSection({ userId }: Props) {
   const { pageBody } = useContext(PageBodyContext);
-  const { getEventSignUps } = useGetEventSignUps();
-  const { getEventLikes } = useGetEventLikes();
-  const [isLoading, setLoading] = useState(false);
-  const [likedEvents, setLikedEvents] = useState<EventData[]>([]);
-  const [goingEvents, setGoingEvents] = useState<EventData[]>([]);
-  const [pastEvents, setPastEvents] = useState<EventData[]>([]);
-  const { pathname } = useLocation();
+  const virtualizedListRef = useRef<ElementRef<typeof VirtualizedList>>(null);
   const history = useHistory();
+  const [isLoading, setLoading] = useState(false);
+  const { pathname } = useLocation();
   const currentTabCategory = pathname.match(/[^/]*$/)?.[0];
   const isLikesTabActive = currentTabCategory === LIKES;
   const isGoingTabActive = currentTabCategory === GOING;
   const isPastTabActive = currentTabCategory === PAST;
-  const showingEvents = (() => {
-    if (isLikesTabActive) {
-      return likedEvents;
-    }
-
-    if (isGoingTabActive) {
-      return goingEvents;
-    }
-
-    if (isPastTabActive) {
-      return pastEvents;
-    }
-
-    return [];
-  })();
+  const { getEvents, showingEvents, likedEvents, goingEvents, pastEvents } =
+    useProfileEventsState({
+      userId,
+      isLikesTabActive,
+      isGoingTabActive,
+      isPastTabActive,
+    });
 
   const tabsSectionProps = (() => {
     const tabs: Tab[] = [
@@ -90,41 +82,6 @@ function ProfileEventSection({ userId }: Props) {
     return { tabs, onTabClick };
   })();
 
-  const getEvents = useCallback(async () => {
-    const likedEventsPromise = (async () => {
-      const likedEvents = (
-        await getEventLikes({
-          userId,
-          eventDetails: true,
-        })
-      ).flatMap(({ event }) => (event ? [event] : []));
-
-      setLikedEvents(likedEvents);
-    })();
-
-    const goingAndPastEventsPromise = (async () => {
-      const signedUpEvents = (
-        await getEventSignUps({
-          userId,
-          eventDetails: true,
-        })
-      ).flatMap(({ event }) => (event ? [event] : []));
-
-      const currentDateTime = new Date().getTime();
-      const goingEvents = signedUpEvents.filter(
-        ({ endDateTime }) => endDateTime >= currentDateTime,
-      );
-      const pastEvents = signedUpEvents.filter(
-        ({ endDateTime }) => endDateTime < currentDateTime,
-      );
-
-      setGoingEvents(goingEvents);
-      setPastEvents(pastEvents);
-    })();
-
-    await Promise.allSettled([likedEventsPromise, goingAndPastEventsPromise]);
-  }, [userId, getEventSignUps, getEventLikes]);
-
   useEffect(() => {
     if (userId !== undefined) {
       (async () => {
@@ -134,6 +91,10 @@ function ProfileEventSection({ userId }: Props) {
       })();
     }
   }, [userId, getEvents]);
+
+  useEffect(() => {
+    virtualizedListRef.current?.rerenderList();
+  }, [showingEvents]);
 
   const eventSummaryCardRenderer = useCallback(
     (index: number) => (
@@ -158,6 +119,7 @@ function ProfileEventSection({ userId }: Props) {
         <Container>
           <PullToRefreshWrapper onRefresh={getEvents}>
             <VirtualizedList
+              ref={virtualizedListRef}
               itemRenderer={eventSummaryCardRenderer}
               noRowsRenderer={() => (
                 <PlaceholderWrapper

@@ -55,7 +55,9 @@ function SearchProvider({ children }: Props) {
   const {
     searchQuery: { category, startDateTime, endDateTime },
   } = useSearchQueryParams();
-  const datePeriods = useDatePeriods(startOfToday().getTime());
+  const datePeriods = useDatePeriods({
+    currentDateTime: startOfToday().getTime(),
+  });
   const {
     categories,
     isLoading: isLoadingCategories,
