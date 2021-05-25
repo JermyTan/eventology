@@ -1,5 +1,7 @@
 import {
+  Dispatch,
   ElementRef,
+  SetStateAction,
   useCallback,
   useContext,
   useEffect,
@@ -7,6 +9,7 @@ import {
   useState,
 } from "react";
 import classNames from "classnames";
+import memoize from "lodash.memoize";
 import { Container, Segment } from "semantic-ui-react";
 import PullToRefreshWrapper from "../pull-to-refresh-wrapper";
 import EventSummaryCard from "../event-summary-card";
@@ -16,8 +19,22 @@ import { PageBodyContext } from "../../context-providers";
 import { useGetEvents } from "../../custom-hooks/api/events-api";
 import { EventData } from "../../types/events";
 import VirtualizedList from "../virtualized-list";
-import styles from "./event-list.module.scss";
 import useSearchQueryParams from "../../custom-hooks/use-search-query-params";
+import styles from "./event-list.module.scss";
+import usePrevious from "../../custom-hooks/use-previous";
+
+const onChangeGenerator = memoize(
+  (setEvents: Dispatch<SetStateAction<EventData[]>>, index: number) =>
+    (changes: Partial<EventData>) =>
+      setEvents((events) => {
+        const updatedEvent = { ...events[index], ...changes };
+
+        const updatedEvents = [...events];
+        updatedEvents[index] = updatedEvent;
+
+        return updatedEvents;
+      }),
+);
 
 function EventList() {
   const { pageBody } = useContext(PageBodyContext);
@@ -25,6 +42,8 @@ function EventList() {
     searchQuery: { category, startDateTime, endDateTime },
   } = useSearchQueryParams();
   const [events, setEvents] = useState<EventData[]>([]);
+  const previousNumEvents = usePrevious(events.length);
+  const cacheSize = useRef(0);
   const { isLoading, getEvents } = useGetEvents();
   const virtualizedListRef = useRef<ElementRef<typeof VirtualizedList>>(null);
 
@@ -37,6 +56,16 @@ function EventList() {
       })();
     }
   }, [getEvents, category, startDateTime, endDateTime]);
+
+  useEffect(() => {
+    // regular clean up to clear cache
+    cacheSize.current += Math.abs(events.length - previousNumEvents);
+
+    if (cacheSize.current > 50) {
+      onChangeGenerator.cache.clear?.();
+      cacheSize.current = 0;
+    }
+  }, [previousNumEvents, events.length]);
 
   const refreshEvents = useCallback(async () => {
     setEvents((await getEvents()).reverse());
@@ -52,16 +81,7 @@ function EventList() {
     (index: number) => (
       <EventSummaryCard
         event={events[index]}
-        onChange={(changes: Partial<EventData>) =>
-          setEvents((events) => {
-            const updatedEvent = { ...events[index], ...changes };
-
-            const updatedEvents = [...events];
-            updatedEvents[index] = updatedEvent;
-
-            return updatedEvents;
-          })
-        }
+        onChange={onChangeGenerator(setEvents, index)}
       />
     ),
     [events],

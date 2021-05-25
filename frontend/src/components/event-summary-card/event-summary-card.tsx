@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useState } from "react";
 import { Image, Label, Icon, Popup } from "semantic-ui-react";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
@@ -21,7 +21,7 @@ import styles from "./event-summary-card.module.scss";
 
 type Props = {
   event: EventData;
-  onChange?: (changes: Partial<EventData>) => void;
+  onChange?: (changes: Partial<EventData>) => Promise<void> | void;
 };
 
 function EventSummaryCard({
@@ -41,85 +41,80 @@ function EventSummaryCard({
   },
   onChange,
 }: Props) {
-  const { createEventSignUp, isLoading: isSigningUp } = useCreateEventSignUp();
-  const { createEventLike, isLoading: isLiking } = useCreateEventLike();
-  const { deleteEventSignUp, isLoading: isWithdrawing } =
-    useDeleteEventSignUp();
-  const { deleteEventLike, isLoading: isUnliking } = useDeleteEventLike();
+  const { createEventSignUp } = useCreateEventSignUp();
+  const [isSigningUp, setSigningUp] = useState(false);
+  const { createEventLike } = useCreateEventLike();
+  const [isLiking, setLiking] = useState(false);
+  const { deleteEventSignUp } = useDeleteEventSignUp();
+  const [isWithdrawing, setWithdrawing] = useState(false);
+  const { deleteEventLike } = useDeleteEventLike();
+  const [isUnliking, setUnliking] = useState(false);
   const history = useHistory();
 
-  const {
-    onCreateEventSignUp,
-    onCreateEventLike,
-    onDeleteEventSignUp,
-    onDeleteEventLike,
-  } = useMemo(() => {
-    const onCreateEventSignUp = async () => {
-      try {
-        const { event: updatedEvent } = await createEventSignUp({
-          eventId: id,
-        });
+  const onCreateEventSignUp = async () => {
+    try {
+      setSigningUp(true);
 
-        onChange?.({ ...updatedEvent });
+      const { event: updatedEvent } = await createEventSignUp({
+        eventId: id,
+      });
 
-        toast.success("You have joined for the event.");
-      } catch (error) {
-        resolveApiError(error);
-      }
-    };
+      await onChange?.({ ...updatedEvent });
 
-    const onCreateEventLike = async () => {
-      try {
-        const { event: updatedEvent } = await createEventLike({ eventId: id });
+      toast.success("You have joined for the event.");
+    } catch (error) {
+      resolveApiError(error);
+    } finally {
+      setSigningUp(false);
+    }
+  };
 
-        onChange?.({ ...updatedEvent });
+  const onCreateEventLike = async () => {
+    try {
+      setLiking(true);
+      const { event: updatedEvent } = await createEventLike({ eventId: id });
 
-        toast.success("You have liked the event.");
-      } catch (error) {
-        resolveApiError(error);
-      }
-    };
+      await onChange?.({ ...updatedEvent });
 
-    const onDeleteEventSignUp = async () => {
-      try {
-        const { event: updatedEvent } = await deleteEventSignUp({
-          eventId: id,
-        });
+      toast.success("You have liked the event.");
+    } catch (error) {
+      resolveApiError(error);
+    } finally {
+      setLiking(false);
+    }
+  };
 
-        onChange?.({ ...updatedEvent });
+  const onDeleteEventSignUp = async () => {
+    try {
+      setWithdrawing(true);
+      const { event: updatedEvent } = await deleteEventSignUp({
+        eventId: id,
+      });
 
-        toast.success("You have withdrawn from the event.");
-      } catch (error) {
-        resolveApiError(error);
-      }
-    };
+      await onChange?.({ ...updatedEvent });
 
-    const onDeleteEventLike = async () => {
-      try {
-        const { event: updatedEvent } = await deleteEventLike({ eventId: id });
+      toast.success("You have withdrawn from the event.");
+    } catch (error) {
+      resolveApiError(error);
+    } finally {
+      setWithdrawing(false);
+    }
+  };
 
-        onChange?.({ ...updatedEvent });
+  const onDeleteEventLike = async () => {
+    try {
+      setUnliking(true);
+      const { event: updatedEvent } = await deleteEventLike({ eventId: id });
 
-        toast.success("You have unliked the event.");
-      } catch (error) {
-        resolveApiError(error);
-      }
-    };
+      await onChange?.({ ...updatedEvent });
 
-    return {
-      onCreateEventSignUp,
-      onCreateEventLike,
-      onDeleteEventSignUp,
-      onDeleteEventLike,
-    };
-  }, [
-    id,
-    onChange,
-    createEventSignUp,
-    createEventLike,
-    deleteEventSignUp,
-    deleteEventLike,
-  ]);
+      toast.success("You have unliked the event.");
+    } catch (error) {
+      resolveApiError(error);
+    } finally {
+      setUnliking(false);
+    }
+  };
 
   const onUserClick = () =>
     history.push(PROFILE_MAIN_PATH.replace(`:${USER_ID}`, `${creator.id}`));
@@ -248,4 +243,4 @@ function EventSummaryCard({
   );
 }
 
-export default EventSummaryCard;
+export default memo(EventSummaryCard);

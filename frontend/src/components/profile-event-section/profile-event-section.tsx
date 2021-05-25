@@ -91,8 +91,6 @@ function ProfileEventSection({ userId }: Props) {
   })();
 
   const getEvents = useCallback(async () => {
-    setLoading(true);
-
     const likedEventsPromise = (async () => {
       const likedEvents = (
         await getEventLikes({
@@ -125,13 +123,15 @@ function ProfileEventSection({ userId }: Props) {
     })();
 
     await Promise.allSettled([likedEventsPromise, goingAndPastEventsPromise]);
-
-    setLoading(false);
   }, [userId, getEventSignUps, getEventLikes]);
 
   useEffect(() => {
     if (userId !== undefined) {
-      getEvents();
+      (async () => {
+        setLoading(true);
+        await getEvents();
+        setLoading(false);
+      })();
     }
   }, [userId, getEvents]);
 

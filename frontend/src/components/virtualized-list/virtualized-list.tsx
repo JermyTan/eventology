@@ -113,18 +113,14 @@ function VirtualizedList(
   );
 
   useEffect(() => {
-    if (numItems === 0) {
-      rerenderList();
-    }
-  }, [numItems, rerenderList]);
-
-  useEffect(() => {
+    console.log(previousRowCountRef.current, numItems);
     if (
       previousRowCountRef.current !== 0 &&
       numItems >= previousRowCountRef.current
     ) {
-      console.log(previousRowCountRef.current, numItems);
       rerenderList(previousRowCountRef.current - 1);
+    } else {
+      rerenderList();
     }
 
     previousRowCountRef.current = rowCount;
