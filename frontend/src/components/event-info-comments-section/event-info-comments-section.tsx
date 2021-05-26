@@ -1,12 +1,12 @@
 import { useCallback, useContext } from "react";
-import { Divider, Icon } from "semantic-ui-react";
+import { Divider } from "semantic-ui-react";
+import classNames from "classnames";
 import { EventCommentData } from "../../types/events";
 import VirtualizedList from "../virtualized-list";
 import { PageBodyContext } from "../page-body";
 import Comment from "../comment";
 import styles from "./event-info-comments-section.module.scss";
 import PlaceholderWrapper from "../placeholder-wrapper";
-import classNames from "classnames";
 
 type Props = {
   comments: EventCommentData[];

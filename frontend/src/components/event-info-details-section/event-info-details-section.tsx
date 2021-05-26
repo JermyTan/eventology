@@ -1,11 +1,13 @@
 import { memo } from "react";
-import { Segment } from "semantic-ui-react";
+import { Segment, Image } from "semantic-ui-react";
+import classNames from "classnames";
 import { DATE_FORMAT, TIME_FORMAT, TIME_PERIOD_FORMAT } from "../../constants";
 import LinkifyTextViewer from "../linkify-text-viewer";
 import { displayDateTime } from "../../utils/parser-utils";
 import styles from "./event-info-details-section.module.scss";
 
 type Props = {
+  images: string[];
   description: string;
   startDateTime: number;
   endDateTime: number;
@@ -13,6 +15,7 @@ type Props = {
 };
 
 function EventInfoDetailsSection({
+  images,
   description,
   startDateTime,
   endDateTime,
@@ -20,10 +23,26 @@ function EventInfoDetailsSection({
 }: Props) {
   return (
     <div className={styles.eventInfoDetailsSection}>
-      <Segment vertical>
-        <div className={styles.description}>
-          <LinkifyTextViewer>{description}</LinkifyTextViewer>
-        </div>
+      {images.length > 0 && (
+        <Segment
+          padded
+          className={classNames(styles.imagesSection, styles.important)}
+          vertical
+        >
+          {images.map((image, index) => (
+            <Image
+              key={`${index}-${image}`}
+              src={image}
+              size="medium"
+              rounded
+              bordered
+            />
+          ))}
+        </Segment>
+      )}
+
+      <Segment className={styles.description} vertical>
+        <LinkifyTextViewer>{description}</LinkifyTextViewer>
       </Segment>
 
       <Segment className={styles.dateTimeSection} vertical>

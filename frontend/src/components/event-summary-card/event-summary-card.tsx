@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import { Label, Icon, Popup } from "semantic-ui-react";
+import { Label, Icon, Popup, Image } from "semantic-ui-react";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
 import ProgressiveImage from "react-progressive-graceful-image";
@@ -176,94 +176,122 @@ function EventSummaryCard({
         )}
       </div>
 
-      <div className={styles.title}>
-        <h1>{title}</h1>
-      </div>
+      <div className={styles.contentContainer}>
+        <div className={styles.textContainer}>
+          <div className={styles.title}>
+            <h1>{title}</h1>
+          </div>
 
-      <div className={styles.dateTime}>
-        <Icon name="clock outline" />
-        {`${displayDateTime(startDateTime)} - ${displayDateTime(endDateTime)}`}
-      </div>
+          <div className={styles.dateTime}>
+            <Icon name="clock outline" />
+            {`${displayDateTime(startDateTime)} - ${displayDateTime(
+              endDateTime,
+            )}`}
+          </div>
 
-      <div className={styles.description}>
-        <LinkifyTextViewer>{description}</LinkifyTextViewer>
-      </div>
+          <div className={styles.description}>
+            <LinkifyTextViewer>{description}</LinkifyTextViewer>
+          </div>
 
-      <div className={styles.extra}>
-        <div className={styles.pointer}>
-          {hasSignedUp ? (
-            <Popup
-              content="Withdraw"
-              position="top center"
-              trigger={
-                <div onClick={onDeleteEventSignUp} className={styles.signedUp}>
-                  {isWithdrawing ? (
-                    <IconLoader className={styles.loader} />
-                  ) : (
-                    <Icon className={styles.icon} name="check" />
-                  )}
-                  I am going!
-                </div>
-              }
-            />
-          ) : (
-            <Popup
-              content="Join"
-              position="top center"
-              trigger={
-                <div
-                  onClick={onCreateEventSignUp}
-                  className={styles.notSignedUp}
-                >
-                  {isSigningUp ? (
-                    <IconLoader className={styles.loader} />
-                  ) : (
-                    <Icon name="check" />
-                  )}
-                  {signUpCount} Going
-                </div>
-              }
-            />
-          )}
+          <div className={styles.extra}>
+            <div className={styles.pointer}>
+              {hasSignedUp ? (
+                <Popup
+                  content="Withdraw"
+                  position="top center"
+                  trigger={
+                    <div
+                      onClick={onDeleteEventSignUp}
+                      className={styles.signedUp}
+                    >
+                      {isWithdrawing ? (
+                        <IconLoader className={styles.loader} />
+                      ) : (
+                        <Icon className={styles.icon} name="check" />
+                      )}
+                      I am going!
+                    </div>
+                  }
+                />
+              ) : (
+                <Popup
+                  content="Join"
+                  position="top center"
+                  trigger={
+                    <div
+                      onClick={onCreateEventSignUp}
+                      className={styles.notSignedUp}
+                    >
+                      {isSigningUp ? (
+                        <IconLoader className={styles.loader} />
+                      ) : (
+                        <Icon name="check" />
+                      )}
+                      {signUpCount} Going
+                    </div>
+                  }
+                />
+              )}
+            </div>
+
+            <div className={styles.pointer}>
+              {hasLiked ? (
+                <Popup
+                  content="Unlike"
+                  position="top center"
+                  trigger={
+                    <div onClick={onDeleteEventLike} className={styles.liked}>
+                      {isUnliking ? (
+                        <IconLoader className={styles.loader} />
+                      ) : (
+                        <Icon className={styles.icon} name="heart" />
+                      )}
+                      I like it
+                    </div>
+                  }
+                />
+              ) : (
+                <Popup
+                  content="Like"
+                  position="top center"
+                  trigger={
+                    <div
+                      onClick={onCreateEventLike}
+                      className={styles.notLiked}
+                    >
+                      {isLiking ? (
+                        <IconLoader className={styles.loader} />
+                      ) : (
+                        <Icon name="heart outline" />
+                      )}
+                      {likeCount} Likes
+                    </div>
+                  }
+                />
+              )}
+            </div>
+
+            <div onClick={onViewDetails}>
+              <Label
+                as="a"
+                circular
+                content="View details"
+                basic
+                color="blue"
+              />
+            </div>
+          </div>
         </div>
 
-        <div className={styles.pointer}>
-          {hasLiked ? (
-            <Popup
-              content="Unlike"
-              position="top center"
-              trigger={
-                <div onClick={onDeleteEventLike} className={styles.liked}>
-                  {isUnliking ? (
-                    <IconLoader className={styles.loader} />
-                  ) : (
-                    <Icon className={styles.icon} name="heart" />
-                  )}
-                  I like it
-                </div>
-              }
-            />
-          ) : (
-            <Popup
-              content="Like"
-              position="top center"
-              trigger={
-                <div onClick={onCreateEventLike} className={styles.notLiked}>
-                  {isLiking ? (
-                    <IconLoader className={styles.loader} />
-                  ) : (
-                    <Icon name="heart outline" />
-                  )}
-                  {likeCount} Likes
-                </div>
-              }
-            />
-          )}
-        </div>
-
-        <div onClick={onViewDetails}>
-          <Label as="a" circular content="View details" basic color="blue" />
-        </div>
+        {images.length > 0 && (
+          <div>
+            <Image rounded size="small" wrapped bordered>
+              <ProgressiveImage src={images[0]} placeholder={placeholderImage}>
+                {(src: string) => <img src={src} alt="" />}
+              </ProgressiveImage>
+            </Image>
+          </div>
+        )}
       </div>
     </div>
   );

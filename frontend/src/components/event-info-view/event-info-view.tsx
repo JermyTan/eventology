@@ -29,6 +29,7 @@ function EventInfoView({
     title,
     creator,
     createdAt,
+    images,
     description,
     startDateTime,
     endDateTime,
@@ -207,6 +208,7 @@ function EventInfoView({
           <Segment className={styles.detailsContainer} vertical>
             <Container>
               <EventInfoDetailsSection
+                images={images}
                 description={description}
                 startDateTime={startDateTime}
                 endDateTime={endDateTime}

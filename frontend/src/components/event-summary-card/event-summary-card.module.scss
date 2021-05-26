@@ -27,54 +27,64 @@
     }
   }
 
-  .title {
-    color: #453257;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-
-  .dateTime {
-    color: base.$primary-color;
-  }
-
-  .description {
-    color: #67616d;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-
-  .extra {
-    @include base.horizontal-space-margin-4;
+  .contentContainer {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    @include base.horizontal-space-margin-1;
 
-    .loader {
-      color: #453257;
-    }
+    .textContainer {
+      @include base.vertical-space-margin-2;
 
-    .signedUp {
-      color: #453257;
-
-      .icon {
-        color: #aecb4f;
+      .title {
+        color: #453257;
+        white-space: pre-wrap;
+        word-break: break-word;
       }
-    }
 
-    .notSignedUp {
-      color: #ac8ec9;
-    }
-
-    .liked {
-      color: #453257;
-
-      .icon {
-        color: #ff5c5c;
+      .dateTime {
+        color: base.$primary-color;
       }
-    }
 
-    .notLiked {
-      color: #ac8ec9;
+      .description {
+        color: #67616d;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .extra {
+        @include base.horizontal-space-margin-4;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .loader {
+          color: #453257;
+        }
+
+        .signedUp {
+          color: #453257;
+
+          .icon {
+            color: #aecb4f;
+          }
+        }
+
+        .notSignedUp {
+          color: #ac8ec9;
+        }
+
+        .liked {
+          color: #453257;
+
+          .icon {
+            color: #ff5c5c;
+          }
+        }
+
+        .notLiked {
+          color: #ac8ec9;
+        }
+      }
     }
   }
 }
