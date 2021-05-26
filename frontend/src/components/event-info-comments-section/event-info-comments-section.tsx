@@ -5,14 +5,12 @@ import VirtualizedList from "../virtualized-list";
 import { PageBodyContext } from "../page-body";
 import Comment from "../comment";
 import styles from "./event-info-comments-section.module.scss";
-import { SingleEventContext } from "../../context-providers";
 
 type Props = {
   comments: EventCommentData[];
 };
 
 function EventInfoCommentsSection({ comments }: Props) {
-  const { setCommentList } = useContext(SingleEventContext);
   const { pageBodyRef } = useContext(PageBodyContext);
 
   const commentRenderer = useCallback(
@@ -22,7 +20,6 @@ function EventInfoCommentsSection({ comments }: Props) {
 
   return (
     <VirtualizedList
-      ref={setCommentList}
       itemRenderer={commentRenderer}
       dividerRenderer={() => (
         <Divider className={styles.commentDivider} hidden />
@@ -30,6 +27,7 @@ function EventInfoCommentsSection({ comments }: Props) {
       numItems={comments.length}
       scrollElement={pageBodyRef.current ?? undefined}
       defaultRowHeight={100}
+      cachePreviousRowHeight
     />
   );
 }

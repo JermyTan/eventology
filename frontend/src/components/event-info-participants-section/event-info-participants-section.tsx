@@ -32,14 +32,14 @@ function EventInfoParticipantsSection({ signUps, likes }: Props) {
         </Grid.Column>
 
         <Grid.Column computer="14" tablet="13" mobile="12">
-          {signUps.map(({ user: { id, name } }) => (
+          {signUps.map(({ user: { id, name, profileImageUrl } }) => (
             <Popup
               key={id}
               content={name}
               trigger={
                 <Image
                   onClick={onUserClickGenerator(id)}
-                  src={defaultAvatarImage}
+                  src={profileImageUrl || defaultAvatarImage}
                   alt=""
                   avatar
                   bordered
@@ -68,14 +68,14 @@ function EventInfoParticipantsSection({ signUps, likes }: Props) {
         </Grid.Column>
 
         <Grid.Column computer="14" tablet="13" mobile="12">
-          {likes.map(({ user: { id, name } }) => (
+          {likes.map(({ user: { id, name, profileImageUrl } }) => (
             <Popup
               key={id}
               content={name}
               trigger={
                 <Image
                   onClick={onUserClickGenerator(id)}
-                  src={defaultAvatarImage}
+                  src={profileImageUrl || defaultAvatarImage}
                   alt=""
                   avatar
                   bordered

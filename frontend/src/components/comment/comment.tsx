@@ -1,12 +1,14 @@
+import { memo, useContext, useState } from "react";
 import classNames from "classnames";
 import { useHistory } from "react-router-dom";
-import { Image } from "semantic-ui-react";
-import { memo, useState } from "react";
+import ProgressiveImage from "react-progressive-graceful-image";
 import LinkifyTextViewer from "../linkify-text-viewer";
 import { displayDateTime } from "../../utils/parser-utils";
 import { RELATIVE, USER_ID } from "../../constants";
 import { PROFILE_MAIN_PATH } from "../../routes/paths";
 import { EventCommentData } from "../../types/events";
+import { SingleEventContext } from "../../context-providers";
+import placeholderImage from "../../assets/placeholder-image.gif";
 import defaultAvatarImage from "../../assets/avatar.png";
 import styles from "./comment.module.scss";
 
@@ -16,28 +18,48 @@ type Props = {
 
 function Comment({
   comment: {
-    user: { id: userId, name },
+    user: { id: userId, name, profileImageUrl },
     createdAt,
     content,
   },
 }: Props) {
+  const { setCommenting, setInputComment } = useContext(SingleEventContext);
   const history = useHistory();
   const [isHoveringReply, setHoveringReply] = useState(false);
 
   const onUserClick = () =>
     history.push(PROFILE_MAIN_PATH.replace(`:${USER_ID}`, `${userId}`));
 
+  const onReplyClick = () => {
+    setCommenting(true);
+    setInputComment((inputComment) => {
+      const replyName = `@${name}`;
+
+      return !inputComment || inputComment.slice(-1) === " "
+        ? `${inputComment}${replyName} `
+        : `${inputComment} ${replyName} `;
+    });
+  };
+
   return (
     <div className={styles.comment}>
-      <Image
-        onClick={onUserClick}
-        src={defaultAvatarImage}
-        alt=""
-        avatar
-        bordered
-        size="mini"
-        className={styles.pointer}
-      />
+      <ProgressiveImage
+        src={profileImageUrl || defaultAvatarImage}
+        placeholder={placeholderImage}
+      >
+        {(src: string) => (
+          // eslint-disable-next-line
+          <img
+            onClick={onUserClick}
+            className={classNames(
+              "ui mini avatar bordered image",
+              styles.pointer,
+            )}
+            src={src}
+            alt=""
+          />
+        )}
+      </ProgressiveImage>
 
       <div className={styles.textContainer}>
         <div className={styles.info}>
@@ -59,6 +81,7 @@ function Comment({
       </div>
 
       <div
+        onClick={onReplyClick}
         onMouseEnter={() => setHoveringReply(true)}
         onMouseLeave={() => setHoveringReply(false)}
         className={classNames(styles.replyIconContainer, styles.pointer)}

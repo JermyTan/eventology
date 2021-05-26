@@ -1,7 +1,8 @@
 import { memo, useState } from "react";
-import { Image, Label, Icon, Popup } from "semantic-ui-react";
+import { Label, Icon, Popup } from "semantic-ui-react";
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
+import ProgressiveImage from "react-progressive-graceful-image";
 import classNames from "classnames";
 import { EventData } from "../../types/events";
 import { displayDateTime } from "../../utils/parser-utils";
@@ -16,6 +17,7 @@ import IconLoader from "../icon-loader";
 import { resolveApiError } from "../../utils/error-utils";
 import { EVENTS_SINGLE_VIEW_PATH, PROFILE_MAIN_PATH } from "../../routes/paths";
 import { EVENT_ID, USER_ID } from "../../constants";
+import placeholderImage from "../../assets/placeholder-image.gif";
 import defaultAvatarImage from "../../assets/avatar.png";
 import styles from "./event-summary-card.module.scss";
 
@@ -52,6 +54,10 @@ function EventSummaryCard({
   const [isUnliking, setUnliking] = useState(false);
 
   const onCreateEventSignUp = async () => {
+    if (isSigningUp || isWithdrawing) {
+      return;
+    }
+
     try {
       setSigningUp(true);
 
@@ -70,6 +76,10 @@ function EventSummaryCard({
   };
 
   const onCreateEventLike = async () => {
+    if (isLiking || isUnliking) {
+      return;
+    }
+
     try {
       setLiking(true);
       const { event: updatedEvent } = await createEventLike({ eventId: id });
@@ -85,6 +95,10 @@ function EventSummaryCard({
   };
 
   const onDeleteEventSignUp = async () => {
+    if (isSigningUp || isWithdrawing) {
+      return;
+    }
+
     try {
       setWithdrawing(true);
       const { event: updatedEvent } = await deleteEventSignUp({
@@ -102,6 +116,10 @@ function EventSummaryCard({
   };
 
   const onDeleteEventLike = async () => {
+    if (isLiking || isUnliking) {
+      return;
+    }
+
     try {
       setUnliking(true);
       const { event: updatedEvent } = await deleteEventLike({ eventId: id });
@@ -126,15 +144,23 @@ function EventSummaryCard({
     <div className={styles.eventSummaryCard}>
       <div className={styles.meta}>
         <div className={styles.userInfo}>
-          <Image
-            onClick={onUserClick}
-            className={styles.pointer}
-            src={defaultAvatarImage}
-            alt=""
-            avatar
-            bordered
-            size="mini"
-          />
+          <ProgressiveImage
+            src={creator.profileImageUrl || defaultAvatarImage}
+            placeholder={placeholderImage}
+          >
+            {(src: string) => (
+              // eslint-disable-next-line
+              <img
+                onClick={onUserClick}
+                className={classNames(
+                  "ui mini avatar bordered image",
+                  styles.pointer,
+                )}
+                src={src}
+                alt=""
+              />
+            )}
+          </ProgressiveImage>
           <strong
             onClick={onUserClick}
             className={classNames(styles.name, styles.pointer)}

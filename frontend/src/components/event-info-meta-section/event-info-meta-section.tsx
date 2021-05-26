@@ -37,7 +37,7 @@ function EventInfoMetaSection({ category, title, creator, createdAt }: Props) {
       <div className={styles.userInfo}>
         <Image
           onClick={onUserClick}
-          src={defaultAvatarImage}
+          src={creator.profileImageUrl || defaultAvatarImage}
           alt=""
           avatar
           bordered

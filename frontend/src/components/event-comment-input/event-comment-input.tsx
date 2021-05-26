@@ -11,19 +11,19 @@ type Props = {
 };
 
 function EventCommentInput({ onClickCancel }: Props) {
-  const { createEventComment } = useContext(SingleEventContext);
-  const [comment, setComment] = useState("");
+  const { createEventComment, inputComment, setInputComment } =
+    useContext(SingleEventContext);
   const [isSending, setSending] = useState(false);
 
   const onSend = async () => {
-    if (!comment) {
+    if (!inputComment) {
       return;
     }
 
     setSending(true);
-    await createEventComment({ content: comment });
+    await createEventComment({ content: inputComment });
     setSending(false);
-    setComment("");
+    setInputComment("");
   };
 
   return (
@@ -39,8 +39,8 @@ function EventCommentInput({ onClickCancel }: Props) {
         <Input
           placeholder="Leave your comment here"
           className={styles.roundedInput}
-          onChange={(_, { value }) => setComment(value)}
-          value={comment}
+          onChange={(_, { value }) => setInputComment(value)}
+          value={inputComment}
         />
       </div>
 

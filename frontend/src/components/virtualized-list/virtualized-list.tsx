@@ -33,7 +33,7 @@ type Props = {
   loadNextPage?: (params: IndexRange) => Promise<unknown>;
   scrollElement?: Element;
   defaultRowHeight?: number;
-  optimizeRerender?: boolean;
+  cachePreviousRowHeight?: boolean;
 };
 
 type VirtualizedListHandle = {
@@ -56,7 +56,7 @@ function VirtualizedList(
     loadNextPage = defaultLoadNextPage,
     scrollElement,
     defaultRowHeight = 200,
-    optimizeRerender = false,
+    cachePreviousRowHeight = false,
   }: Props,
   ref: Ref<VirtualizedListHandle>,
 ) {
@@ -118,7 +118,7 @@ function VirtualizedList(
     if (
       previousRowCountRef.current !== 0 &&
       numItems >= previousRowCountRef.current &&
-      optimizeRerender
+      cachePreviousRowHeight
     ) {
       rerenderList(previousRowCountRef.current - 1);
     } else {
@@ -126,7 +126,7 @@ function VirtualizedList(
     }
 
     previousRowCountRef.current = rowCount;
-  }, [rowCount, numItems, optimizeRerender, rerenderList]);
+  }, [rowCount, numItems, cachePreviousRowHeight, rerenderList]);
 
   return (
     <InfiniteLoader

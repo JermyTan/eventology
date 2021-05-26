@@ -56,10 +56,9 @@ function LoginPage() {
   const onSubmit = useCallback(
     async (formData: LoginFormProps) => {
       try {
-        const { id, name, email, access, refresh } = await login(
-          deepTrim(formData),
-        );
-        updateUser({ id, name, email, access, refresh });
+        const { id, name, email, access, refresh, profileImageUrl } =
+          await login(deepTrim(formData));
+        updateUser({ id, name, email, access, refresh, profileImageUrl });
         toast.success("Signed in successfully.");
       } catch (error) {
         resolveApiError(error);

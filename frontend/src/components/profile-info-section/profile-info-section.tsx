@@ -5,12 +5,12 @@ import styles from "./profile-info-section.module.scss";
 
 type Props = UserData;
 
-function ProfileInfoSection({ name, email }: Props) {
+function ProfileInfoSection({ name, email, profileImageUrl }: Props) {
   return (
     <div className={styles.profileInfoSection}>
       <Image
         className={styles.avatar}
-        src={defaultAvatarImage}
+        src={profileImageUrl || defaultAvatarImage}
         alt=""
         size="small"
         avatar

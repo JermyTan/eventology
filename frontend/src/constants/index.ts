@@ -39,3 +39,4 @@ export const DATE_TIME_FORMAT = "d MMMM yyyy HH:mm";
 export const DATE_FORMAT = "d MMMM yyyy";
 export const TIME_FORMAT = "h:mm";
 export const TIME_PERIOD_FORMAT = "aaa";
+export const PROFILE_IMAGE_URL = "profileImageUrl";

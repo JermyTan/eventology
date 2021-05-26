@@ -3,10 +3,9 @@ import {
   ReactNode,
   useCallback,
   useState,
+  useMemo,
   Dispatch,
   SetStateAction,
-  ElementRef,
-  useMemo,
 } from "react";
 import {
   useCreateEventComment,
@@ -16,7 +15,6 @@ import {
   useDeleteEventSignUp,
   useGetSingleEvent,
 } from "../custom-hooks/api/events-api";
-import VirtualizedList from "../components/virtualized-list";
 import { EventData } from "../types/events";
 
 type SingleEventContextType = {
@@ -29,10 +27,10 @@ type SingleEventContextType = {
   createEventLike: () => Promise<EventData | undefined>;
   deleteEventSignUp: () => Promise<EventData | undefined>;
   deleteEventLike: () => Promise<EventData | undefined>;
-  commentList: ElementRef<typeof VirtualizedList> | null;
-  setCommentList: Dispatch<
-    SetStateAction<ElementRef<typeof VirtualizedList> | null>
-  >;
+  inputComment: string;
+  setInputComment: Dispatch<SetStateAction<string>>;
+  isCommenting: boolean;
+  setCommenting: (newValue: boolean) => void;
 };
 
 export const SingleEventContext = createContext<SingleEventContextType>({
@@ -54,9 +52,13 @@ export const SingleEventContext = createContext<SingleEventContextType>({
   deleteEventLike: () => {
     throw new Error("deleteEventLike is not defined.");
   },
-  commentList: null,
-  setCommentList: () => {
-    throw new Error("setCommentList is not defined.");
+  inputComment: "",
+  setInputComment: () => {
+    throw new Error("setInputComment is not defined.");
+  },
+  isCommenting: false,
+  setCommenting: () => {
+    throw new Error("setCommenting is not defined.");
   },
 });
 
@@ -67,14 +69,14 @@ type Props = {
 
 function SingleEventProvider({ eventId, children }: Props) {
   const [event, setEvent] = useState<EventData>();
-  const [commentList, setCommentList] =
-    useState<ElementRef<typeof VirtualizedList> | null>(null);
   const { getSingleEvent: _getSingleEvent } = useGetSingleEvent();
   const { createEventComment: _createEventComment } = useCreateEventComment();
   const { createEventSignUp: _createEventSignUp } = useCreateEventSignUp();
   const { createEventLike: _createEventLike } = useCreateEventLike();
   const { deleteEventSignUp: _deleteEventSignUp } = useDeleteEventSignUp();
   const { deleteEventLike: _deleteEventLike } = useDeleteEventLike();
+  const [inputComment, setInputComment] = useState("");
+  const [isCommenting, _setCommenting] = useState(false);
 
   const getSingleEvent = useCallback(async () => {
     const event = await _getSingleEvent(eventId);
@@ -88,8 +90,6 @@ function SingleEventProvider({ eventId, children }: Props) {
       async (data?: T) => {
         await updateFunction(data);
         const updatedEvent = await getSingleEvent();
-
-        commentList?.rerenderList();
 
         return updatedEvent;
       };
@@ -122,16 +122,25 @@ function SingleEventProvider({ eventId, children }: Props) {
     _deleteEventSignUp,
     _deleteEventLike,
     getSingleEvent,
-    commentList,
   ]);
+
+  const setCommenting = useCallback((newValue: boolean) => {
+    if (!newValue) {
+      setInputComment("");
+    }
+
+    _setCommenting(newValue);
+  }, []);
 
   return (
     <SingleEventContext.Provider
       value={{
         event,
         getSingleEvent,
-        commentList,
-        setCommentList,
+        inputComment,
+        setInputComment,
+        isCommenting,
+        setCommenting,
         ...eventModifiers,
       }}
     >

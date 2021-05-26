@@ -1,4 +1,11 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import {
+  memo,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Container, Ref, Segment } from "semantic-ui-react";
 import { capitalCase } from "change-case";
 import classNames from "classnames";
@@ -229,4 +236,4 @@ function EventInfoView({
   );
 }
 
-export default EventInfoView;
+export default memo(EventInfoView);

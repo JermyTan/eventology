@@ -10,7 +10,7 @@ import defaultAvatarImage from "../../assets/avatar.png";
 import styles from "./user-tab.module.scss";
 
 function UserTab() {
-  const { id, name, updateUser } = useContext(UserContext);
+  const { id, name, updateUser, profileImageUrl } = useContext(UserContext);
   const { pathname } = useLocation();
   const userProfilePath = PROFILE_MAIN_PATH.replace(`:${USER_ID}`, `${id}`);
 
@@ -28,7 +28,13 @@ function UserTab() {
       <Dropdown
         className={classNames({ active: pathname.startsWith(userProfilePath) })}
         trigger={
-          <Image src={defaultAvatarImage} alt="" avatar bordered size="mini" />
+          <Image
+            src={profileImageUrl || defaultAvatarImage}
+            alt=""
+            avatar
+            bordered
+            size="mini"
+          />
         }
         icon={null}
         floating

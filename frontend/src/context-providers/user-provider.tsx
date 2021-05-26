@@ -7,12 +7,20 @@ import {
 } from "react";
 import { useLocalStorage } from "@rehooks/local-storage";
 import isEqual from "lodash.isequal";
-import { ACCESS, EMAIL, ID, NAME, REFRESH } from "../constants";
+import {
+  ACCESS,
+  EMAIL,
+  ID,
+  NAME,
+  PROFILE_IMAGE_URL,
+  REFRESH,
+} from "../constants";
 
 export type User = {
   [ID]?: number;
   [NAME]?: string;
   [EMAIL]?: string;
+  [PROFILE_IMAGE_URL]?: string;
   [ACCESS]?: string;
   [REFRESH]?: string;
 };

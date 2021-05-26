@@ -123,7 +123,7 @@ function EventList() {
             loadNextPage={getMoreEvents}
             scrollElement={pageBodyRef.current ?? undefined}
             defaultRowHeight={350}
-            optimizeRerender
+            cachePreviousRowHeight
           />
         </PullToRefreshWrapper>
       </Container>
