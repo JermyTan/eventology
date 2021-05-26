@@ -164,8 +164,10 @@ class EventSignUpsView(APIView):
             deleted_event_sign_up = delete_event_sign_up(
                 event_id=event_id, user=requester
             )
+        except Event.DoesNotExist as e:
+            raise NotFound(detail="Event not found.", code="not_found")
         except EventSignUp.DoesNotExist as e:
-            raise NotFound(detail="Event has not been signed up.", code="not_found")
+            raise BadRequest(detail="Event has not been signed up.")
         except Exception as e:
             raise BadRequest(e)
 
@@ -236,8 +238,10 @@ class EventLikesView(APIView):
 
         try:
             deleted_event_like = delete_event_like(event_id=event_id, user=requester)
+        except Event.DoesNotExist as e:
+            raise NotFound(detail="Event not found.", code="not_found")
         except EventLike.DoesNotExist as e:
-            raise NotFound(detail="Event has not been liked.", code="not_found")
+            raise BadRequest(detail="Event has not been liked.")
         except Exception as e:
             raise BadRequest(e)
 

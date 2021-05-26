@@ -253,8 +253,10 @@ def create_event_comment(event_id: int, user: User, content: str) -> EventCommen
 
 
 def delete_event_sign_up(event_id: int, user: User) -> EventSignUp:
+    event = get_events(id=event_id).get()
+
     event_sign_up_to_be_deleted = get_event_sign_ups(
-        event_id=event_id, user=user
+        event=event, user=user
     ).select_related("event", "user")
 
     deleted_event_sign_up = event_sign_up_to_be_deleted.get()
@@ -265,9 +267,11 @@ def delete_event_sign_up(event_id: int, user: User) -> EventSignUp:
 
 
 def delete_event_like(event_id: int, user: User) -> EventLike:
-    event_like_to_be_deleted = get_event_likes(
-        event_id=event_id, user=user
-    ).select_related("event", "user")
+    event = get_events(id=event_id).get()
+
+    event_like_to_be_deleted = get_event_likes(event=event, user=user).select_related(
+        "event", "user"
+    )
 
     deleted_event_like = event_like_to_be_deleted.get()
 
