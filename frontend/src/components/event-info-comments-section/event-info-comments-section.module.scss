@@ -1,3 +1,19 @@
 .commentDivider {
   margin-top: 0;
 }
+
+.noCommentContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .icon {
+    color: #d3c1e5;
+  }
+
+  .text {
+    margin-top: 1rem;
+    color: #bababa;
+    font-weight: normal;
+  }
+}
