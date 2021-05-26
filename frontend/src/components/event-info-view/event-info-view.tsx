@@ -1,8 +1,7 @@
-import { useContext, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Container, Ref, Segment } from "semantic-ui-react";
 import { capitalCase } from "change-case";
 import classNames from "classnames";
-import { useInView } from "react-intersection-observer";
 import TabsSection, { Tab } from "../tabs-section";
 import PageBody, { PageBodyContext } from "../page-body";
 import EventInfoCommentsSection from "../event-info-comments-section";
@@ -32,26 +31,85 @@ function EventInfoView({
     comments = [],
   },
 }: Props) {
-  const { pageBody } = useContext(PageBodyContext);
+  const { pageBodyRef } = useContext(PageBodyContext);
+  const currentPageRef = useRef<HTMLDivElement>(null);
   const tabsSectionRef = useRef<HTMLDivElement>(null);
-  const {
-    ref: detailsSectionRef,
-    inView: isDetailsSectionInView,
-    entry: detailsSectionEntry,
-  } = useInView({
-    threshold: 0.5,
-    root: pageBody,
-  });
-  const {
-    ref: participantsSectionRef,
-    inView: isParticipantsSectionInView,
-    entry: participantsSectionEntry,
-  } = useInView({ threshold: 0.5, root: pageBody });
-  const {
-    ref: commentsSectionRef,
-    inView: isCommentsSectionInView,
-    entry: commentsSectionEntry,
-  } = useInView({ threshold: 0.5, root: pageBody });
+  const detailsSectionRef = useRef<HTMLDivElement>(null);
+  const participantsSectionRef = useRef<HTMLDivElement>(null);
+  const commentsSectionRef = useRef<HTMLDivElement>(null);
+
+  const [isDetailsSectionInView, setDetailsSectionInView] = useState(false);
+  const [isParticipantsSectionInView, setParticipantsSectionInView] =
+    useState(false);
+  const [isCommentsSectionInView, setCommentsSectionInView] = useState(false);
+
+  const getSectionsPositions = useCallback(() => {
+    const tabsSectionHeight = tabsSectionRef.current?.offsetHeight ?? 0;
+    const detailsSectionPosition =
+      (detailsSectionRef.current?.offsetTop ?? 0) - tabsSectionHeight;
+    const participantsSectionPosition =
+      (participantsSectionRef.current?.offsetTop ?? 0) - tabsSectionHeight;
+    const commentsSectionPosition =
+      (commentsSectionRef.current?.offsetTop ?? 0) - tabsSectionHeight;
+
+    return {
+      detailsSectionPosition,
+      participantsSectionPosition,
+      commentsSectionPosition,
+    };
+  }, []);
+
+  useEffect(() => {
+    const pageBody = pageBodyRef.current;
+
+    const onChange = () => {
+      if (!pageBody) {
+        return;
+      }
+
+      const {
+        detailsSectionPosition,
+        participantsSectionPosition,
+        commentsSectionPosition,
+      } = getSectionsPositions();
+
+      if (
+        pageBody.scrollTop <=
+        Math.max(
+          detailsSectionPosition,
+          participantsSectionPosition - pageBody.offsetHeight / 5,
+        )
+      ) {
+        setDetailsSectionInView(true);
+        setParticipantsSectionInView(false);
+        setCommentsSectionInView(false);
+      } else if (
+        pageBody.scrollTop <
+          (currentPageRef.current?.offsetHeight ?? 0) - pageBody.offsetHeight &&
+        pageBody.scrollTop <=
+          Math.max(
+            participantsSectionPosition,
+            commentsSectionPosition - pageBody.offsetHeight / 5,
+          )
+      ) {
+        setDetailsSectionInView(false);
+        setParticipantsSectionInView(true);
+        setCommentsSectionInView(false);
+      } else {
+        setDetailsSectionInView(false);
+        setParticipantsSectionInView(false);
+        setCommentsSectionInView(true);
+      }
+    };
+    onChange();
+    pageBody?.addEventListener("scroll", onChange);
+    window.addEventListener("resize", onChange);
+
+    return () => {
+      pageBody?.removeEventListener("scroll", onChange);
+      window.removeEventListener("resize", onChange);
+    };
+  }, [getSectionsPositions, pageBodyRef]);
 
   const tabsSectionProps = (() => {
     const tabs: Tab[] = [
@@ -88,36 +146,25 @@ function EventInfoView({
     ];
 
     const scrollToTop = (top: number) =>
-      pageBody?.scrollTo({ top, behavior: "smooth" });
+      pageBodyRef.current?.scrollTo({ top, behavior: "smooth" });
 
     const onTabClick = (key: string) => {
-      const tabsSectionHeight = tabsSectionRef.current?.offsetHeight;
+      const {
+        detailsSectionPosition,
+        participantsSectionPosition,
+        commentsSectionPosition,
+      } = getSectionsPositions();
 
-      if (tabsSectionHeight === undefined) {
-        return;
-      }
-
-      if (key === DETAILS && detailsSectionEntry?.target) {
-        scrollToTop(
-          (detailsSectionEntry.target as HTMLDivElement).offsetTop -
-            tabsSectionHeight,
-        );
-        return;
-      }
-
-      if (key === PARTICIPANTS && participantsSectionEntry?.target) {
-        scrollToTop(
-          (participantsSectionEntry.target as HTMLDivElement).offsetTop -
-            tabsSectionHeight,
-        );
-        return;
-      }
-
-      if (key === COMMENTS && commentsSectionEntry?.target) {
-        scrollToTop(
-          (commentsSectionEntry.target as HTMLDivElement).offsetTop -
-            tabsSectionHeight,
-        );
+      switch (key) {
+        case DETAILS:
+          scrollToTop(detailsSectionPosition);
+          break;
+        case PARTICIPANTS:
+          scrollToTop(participantsSectionPosition);
+          break;
+        case COMMENTS:
+          scrollToTop(commentsSectionPosition);
+          break;
       }
     };
 
@@ -125,7 +172,7 @@ function EventInfoView({
   })();
 
   return (
-    <div className={styles.eventInfoView}>
+    <div ref={currentPageRef} className={styles.eventInfoView}>
       <Segment vertical>
         <Container>
           <EventInfoMetaSection

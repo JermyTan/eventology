@@ -1,22 +1,12 @@
-import {
-  ReactNode,
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useState,
-} from "react";
+import { ReactNode, createContext, createRef, RefObject, useRef } from "react";
 import styles from "./page-body.module.scss";
 
 type PageBodyContextType = {
-  pageBody: HTMLDivElement | null;
-  setPageBody: Dispatch<SetStateAction<HTMLDivElement | null>>;
+  pageBodyRef: RefObject<HTMLDivElement>;
 };
 
 export const PageBodyContext = createContext<PageBodyContextType>({
-  pageBody: null,
-  setPageBody: () => {
-    throw new Error("setPageBody is not defined.");
-  },
+  pageBodyRef: createRef<HTMLDivElement>(),
 });
 
 type Props = {
@@ -24,12 +14,12 @@ type Props = {
 };
 
 function PageBody({ children }: Props) {
-  const [pageBody, setPageBody] = useState<HTMLDivElement | null>(null);
+  const pageBodyRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className={styles.pageBody} ref={setPageBody}>
+    <div className={styles.pageBody} ref={pageBodyRef}>
       <div className={styles.innerPageBody}>
-        <PageBodyContext.Provider value={{ pageBody, setPageBody }}>
+        <PageBodyContext.Provider value={{ pageBodyRef }}>
           {children}
         </PageBodyContext.Provider>
       </div>

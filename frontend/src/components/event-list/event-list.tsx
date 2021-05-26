@@ -20,11 +20,11 @@ import { useGetEvents } from "../../custom-hooks/api/events-api";
 import { EventData } from "../../types/events";
 import VirtualizedList from "../virtualized-list";
 import useSearchQueryParams from "../../custom-hooks/use-search-query-params";
-import styles from "./event-list.module.scss";
 import usePrevious from "../../custom-hooks/use-previous";
+import styles from "./event-list.module.scss";
 
 const onChangeGenerator = memoize(
-  (setEvents: Dispatch<SetStateAction<EventData[]>>, index: number) =>
+  (index: number, setEvents: Dispatch<SetStateAction<EventData[]>>) =>
     (changes: Partial<EventData>) =>
       setEvents((events) => {
         const updatedEvent = { ...events[index], ...changes };
@@ -37,7 +37,7 @@ const onChangeGenerator = memoize(
 );
 
 function EventList() {
-  const { pageBody } = useContext(PageBodyContext);
+  const { pageBodyRef } = useContext(PageBodyContext);
   const {
     searchQuery: { category, startDateTime, endDateTime },
   } = useSearchQueryParams();
@@ -81,7 +81,7 @@ function EventList() {
     (index: number) => (
       <EventSummaryCard
         event={events[index]}
-        onChange={onChangeGenerator(setEvents, index)}
+        onChange={onChangeGenerator(index, setEvents)}
       />
     ),
     [events],
@@ -121,7 +121,7 @@ function EventList() {
             isNextPageLoading={isLoading}
             numItems={events.length}
             loadNextPage={getMoreEvents}
-            scrollElement={pageBody ?? undefined}
+            scrollElement={pageBodyRef.current ?? undefined}
             defaultRowHeight={350}
             optimizeRerender
           />

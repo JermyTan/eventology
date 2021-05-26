@@ -13,7 +13,7 @@ type Props = {
 
 function EventInfoCommentsSection({ comments }: Props) {
   const { setCommentList } = useContext(SingleEventContext);
-  const { pageBody } = useContext(PageBodyContext);
+  const { pageBodyRef } = useContext(PageBodyContext);
 
   const commentRenderer = useCallback(
     (index: number) => <Comment comment={comments[index]} />,
@@ -28,7 +28,7 @@ function EventInfoCommentsSection({ comments }: Props) {
         <Divider className={styles.commentDivider} hidden />
       )}
       numItems={comments.length}
-      scrollElement={pageBody ?? undefined}
+      scrollElement={pageBodyRef.current ?? undefined}
       defaultRowHeight={100}
     />
   );

@@ -24,7 +24,7 @@ type Props = {
 };
 
 function ProfileEventSection({ userId }: Props) {
-  const { pageBody } = useContext(PageBodyContext);
+  const { pageBodyRef } = useContext(PageBodyContext);
   const virtualizedListRef = useRef<ElementRef<typeof VirtualizedList>>(null);
   const history = useHistory();
   const [isLoading, setLoading] = useState(false);
@@ -129,7 +129,7 @@ function ProfileEventSection({ userId }: Props) {
                 />
               )}
               numItems={showingEvents.length}
-              scrollElement={pageBody ?? undefined}
+              scrollElement={pageBodyRef.current ?? undefined}
               defaultRowHeight={350}
             />
           </PullToRefreshWrapper>
