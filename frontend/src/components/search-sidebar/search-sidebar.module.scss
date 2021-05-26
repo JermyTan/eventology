@@ -4,12 +4,12 @@
   display: flex;
   flex-direction: column;
 
-  .bodyContainer {
+  .bodyContainer.important {
     color: white;
-    background-color: #453257 !important;
+    background-color: #453257;
     flex: 1;
-    padding-left: 1em !important;
-    padding-right: 1em !important;
+    padding-left: 1em;
+    padding-right: 1em;
 
     .searchInputSection {
       display: flex;

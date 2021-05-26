@@ -3,7 +3,7 @@ import { Sidebar } from "semantic-ui-react";
 import { SearchContext } from "../../../context-providers";
 import EventList from "../../event-list";
 import TopBar from "../../top-bar";
-import VirtualizedPageBody from "../../virtualized-page-body";
+import PageBody from "../../page-body";
 import FullPageContainer from "../../full-page-container";
 import SearchSidebar from "../../search-sidebar";
 import SearchTab from "../../search-tab";
@@ -21,9 +21,9 @@ function EventsPage() {
             leftTab={<SearchTab onTabClick={() => setSidebarOpened(true)} />}
           />
 
-          <VirtualizedPageBody>
+          <PageBody>
             <EventList />;
-          </VirtualizedPageBody>
+          </PageBody>
         </FullPageContainer>
       </Sidebar.Pusher>
     </Sidebar.Pushable>

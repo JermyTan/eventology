@@ -4,11 +4,7 @@ import "react-virtualized/styles.css";
 import { toast, Zoom } from "react-toastify";
 import axios from "axios";
 import { configure } from "axios-hooks";
-import {
-  PageBodyProvider,
-  ResponsiveProvider,
-  UserProvider,
-} from "./context-providers";
+import { ResponsiveProvider, UserProvider } from "./context-providers";
 import Routes from "./routes";
 import styles from "./app.module.scss";
 
@@ -25,13 +21,11 @@ configure({ axios: axios.create({ baseURL: process.env.API_URL }) });
 
 function App() {
   return (
-    <PageBodyProvider>
-      <ResponsiveProvider>
-        <UserProvider>
-          <Routes />
-        </UserProvider>
-      </ResponsiveProvider>
-    </PageBodyProvider>
+    <ResponsiveProvider>
+      <UserProvider>
+        <Routes />
+      </UserProvider>
+    </ResponsiveProvider>
   );
 }
 

@@ -15,7 +15,7 @@ import NoEventBanner from "../no-event-banner";
 import EventSummaryCard from "../event-summary-card";
 import TabsSection, { Tab } from "../tabs-section";
 import VirtualizedList from "../virtualized-list";
-import { PageBodyContext } from "../../context-providers";
+import { PageBodyContext } from "../page-body";
 import { LIKES, GOING, PAST } from "../../constants";
 import useProfileEventsState from "../../custom-hooks/use-profile-events-state";
 

@@ -37,7 +37,10 @@ function SearchSidebar() {
       onHide={() => setSidebarOpened(false)}
       visible={isSidebarOpened}
     >
-      <Segment vertical className={styles.bodyContainer}>
+      <Segment
+        vertical
+        className={classNames(styles.bodyContainer, styles.important)}
+      >
         <div className={styles.searchInputSection}>
           <div className={styles.titleContainer}>
             <div className={styles.title}>

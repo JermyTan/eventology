@@ -1,10 +1,11 @@
 import {
+  ReactNode,
   createContext,
   Dispatch,
-  ReactNode,
   SetStateAction,
   useState,
 } from "react";
+import styles from "./page-body.module.scss";
 
 type PageBodyContextType = {
   pageBody: HTMLDivElement | null;
@@ -22,14 +23,18 @@ type Props = {
   children: ReactNode;
 };
 
-function PageBodyProvider({ children }: Props) {
+function PageBody({ children }: Props) {
   const [pageBody, setPageBody] = useState<HTMLDivElement | null>(null);
 
   return (
-    <PageBodyContext.Provider value={{ pageBody, setPageBody }}>
-      {children}
-    </PageBodyContext.Provider>
+    <div className={styles.pageBody} ref={setPageBody}>
+      <div className={styles.innerPageBody}>
+        <PageBodyContext.Provider value={{ pageBody, setPageBody }}>
+          {children}
+        </PageBodyContext.Provider>
+      </div>
+    </div>
   );
 }
 
-export default PageBodyProvider;
+export default PageBody;

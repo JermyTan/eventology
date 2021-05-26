@@ -6,7 +6,7 @@ import PlaceholderWrapper from "../../placeholder-wrapper";
 import ProfileInfoSection from "../../profile-info-section";
 import ProfileEventSection from "../../profile-event-section";
 import TopBar from "../../top-bar";
-import VirtualizedPageBody from "../../virtualized-page-body";
+import PageBody from "../../page-body";
 import FullPageContainer from "../../full-page-container";
 import styles from "./profile-page.module.scss";
 
@@ -22,7 +22,7 @@ function ProfilePage() {
     <FullPageContainer>
       <TopBar />
 
-      <VirtualizedPageBody>
+      <PageBody>
         <PlaceholderWrapper
           isLoading={isLoading}
           loadingMessage="Retrieving profile"
@@ -45,7 +45,7 @@ function ProfilePage() {
 
           <ProfileEventSection userId={user?.id} />
         </PlaceholderWrapper>
-      </VirtualizedPageBody>
+      </PageBody>
     </FullPageContainer>
   );
 }

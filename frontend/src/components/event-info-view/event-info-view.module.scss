@@ -1,6 +1,15 @@
 @use "../../base";
 
 .eventInfoView {
+  position: relative;
+
+  .tabsSection.important {
+    background-color: white;
+    z-index: 1;
+    position: sticky;
+    top: 0;
+  }
+
   .contentContainer {
     background-color: #faf9fc;
 

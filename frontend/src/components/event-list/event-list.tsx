@@ -15,7 +15,7 @@ import PullToRefreshWrapper from "../pull-to-refresh-wrapper";
 import EventSummaryCard from "../event-summary-card";
 import NoEventBanner from "../no-event-banner";
 import PlaceholderWrapper from "../placeholder-wrapper";
-import { PageBodyContext } from "../../context-providers";
+import { PageBodyContext } from "../page-body";
 import { useGetEvents } from "../../custom-hooks/api/events-api";
 import { EventData } from "../../types/events";
 import VirtualizedList from "../virtualized-list";

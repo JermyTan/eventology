@@ -3,7 +3,6 @@ import PlaceholderWrapper from "../placeholder-wrapper";
 import NoEventBanner from "../no-event-banner";
 import { SingleEventContext } from "../../context-providers";
 import EventInfoView from "../event-info-view";
-import PullToRefreshWrapper from "../pull-to-refresh-wrapper";
 
 function EventBody() {
   const { event, getSingleEvent } = useContext(SingleEventContext);
@@ -25,11 +24,7 @@ function EventBody() {
       showDefaultContent={!event}
       defaultContent={<NoEventBanner />}
     >
-      {event && (
-        <PullToRefreshWrapper onRefresh={getSingleEvent}>
-          <EventInfoView event={event} />
-        </PullToRefreshWrapper>
-      )}
+      {event && <EventInfoView event={event} />}
     </PlaceholderWrapper>
   );
 }
