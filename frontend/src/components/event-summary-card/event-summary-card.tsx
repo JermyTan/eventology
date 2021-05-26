@@ -12,7 +12,7 @@ import {
   useDeleteEventSignUp,
   useDeleteEventLike,
 } from "../../custom-hooks/api/events-api";
-import IconLoader from "../icon-loader/icon-loader";
+import IconLoader from "../icon-loader";
 import { resolveApiError } from "../../utils/error-utils";
 import { EVENTS_SINGLE_VIEW_PATH, PROFILE_MAIN_PATH } from "../../routes/paths";
 import { EVENT_ID, USER_ID } from "../../constants";
@@ -21,7 +21,7 @@ import styles from "./event-summary-card.module.scss";
 
 type Props = {
   event: EventData;
-  onChange?: (changes: Partial<EventData>) => Promise<void> | void;
+  onChange?: (changes: Partial<EventData>) => Promise<unknown> | unknown;
 };
 
 function EventSummaryCard({
@@ -41,15 +41,15 @@ function EventSummaryCard({
   },
   onChange,
 }: Props) {
-  const { createEventSignUp } = useCreateEventSignUp();
-  const [isSigningUp, setSigningUp] = useState(false);
-  const { createEventLike } = useCreateEventLike();
-  const [isLiking, setLiking] = useState(false);
-  const { deleteEventSignUp } = useDeleteEventSignUp();
-  const [isWithdrawing, setWithdrawing] = useState(false);
-  const { deleteEventLike } = useDeleteEventLike();
-  const [isUnliking, setUnliking] = useState(false);
   const history = useHistory();
+  const { createEventSignUp } = useCreateEventSignUp();
+  const { createEventLike } = useCreateEventLike();
+  const { deleteEventSignUp } = useDeleteEventSignUp();
+  const { deleteEventLike } = useDeleteEventLike();
+  const [isSigningUp, setSigningUp] = useState(false);
+  const [isLiking, setLiking] = useState(false);
+  const [isWithdrawing, setWithdrawing] = useState(false);
+  const [isUnliking, setUnliking] = useState(false);
 
   const onCreateEventSignUp = async () => {
     try {

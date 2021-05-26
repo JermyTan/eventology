@@ -1,10 +1,10 @@
 import classNames from "classnames";
 import { Image, Input } from "semantic-ui-react";
 import { useContext, useState } from "react";
+import { SingleEventContext } from "../../context-providers";
+import IconLoader from "../icon-loader";
 import styles from "./event-comment-input.module.scss";
 import sendLogo from "../../assets/send-purple.svg";
-import { SingleEventContext } from "../../context-providers";
-import IconLoader from "../icon-loader/icon-loader";
 
 type Props = {
   onClickCancel: () => void;
@@ -21,7 +21,7 @@ function EventCommentInput({ onClickCancel }: Props) {
     }
 
     setSending(true);
-    await createEventComment(comment);
+    await createEventComment({ content: comment });
     setSending(false);
     setComment("");
   };
@@ -29,8 +29,11 @@ function EventCommentInput({ onClickCancel }: Props) {
   return (
     <>
       <div className={styles.inputContainer}>
-        <div className={classNames(styles.iconContainer, styles.pointer)}>
-          <i onClick={onClickCancel} className="fal fa-times icon fitted big" />
+        <div
+          onClick={onClickCancel}
+          className={classNames(styles.iconContainer, styles.pointer)}
+        >
+          <i className="fal fa-times icon fitted big" />
         </div>
 
         <Input

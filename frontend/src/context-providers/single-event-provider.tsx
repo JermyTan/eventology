@@ -22,7 +22,9 @@ import { EventData } from "../types/events";
 type SingleEventContextType = {
   event?: EventData;
   getSingleEvent: () => Promise<EventData | undefined>;
-  createEventComment: (content: string) => Promise<EventData | undefined>;
+  createEventComment: (data: {
+    content: string;
+  }) => Promise<EventData | undefined>;
   createEventSignUp: () => Promise<EventData | undefined>;
   createEventLike: () => Promise<EventData | undefined>;
   deleteEventSignUp: () => Promise<EventData | undefined>;
@@ -80,40 +82,33 @@ function SingleEventProvider({ eventId, children }: Props) {
     return event;
   }, [eventId, _getSingleEvent]);
 
-  const createEventComment = useCallback(
-    async (content: string) => {
-      await _createEventComment({ eventId, content });
-      const updatedEvent = await getSingleEvent();
-
-      commentList?.rerenderList();
-
-      return updatedEvent;
-    },
-    [eventId, _createEventComment, getSingleEvent, commentList],
-  );
-
-  const eventSignUpAndLikeMethods = useMemo(() => {
+  const eventModifiers = useMemo(() => {
     const updateEvent =
-      (
-        updateFunction: (data: { eventId: string | number }) => Promise<{
-          event?: EventData;
-        }>,
-      ) =>
-      async () => {
-        const { event: updatedEvent } = await updateFunction({ eventId });
+      <T,>(updateFunction: (data?: T) => Promise<unknown>) =>
+      async (data?: T) => {
+        await updateFunction(data);
+        const updatedEvent = await getSingleEvent();
 
-        setEvent(updatedEvent);
         commentList?.rerenderList();
 
         return updatedEvent;
       };
 
-    const createEventSignUp = updateEvent(_createEventSignUp);
-    const createEventLike = updateEvent(_createEventLike);
-    const deleteEventSignUp = updateEvent(_deleteEventSignUp);
-    const deleteEventLike = updateEvent(_deleteEventLike);
+    const createEventComment = updateEvent(
+      ({ content }: { content: string } = { content: "" }) =>
+        _createEventComment({ eventId, content }),
+    );
+    const createEventSignUp = updateEvent(() =>
+      _createEventSignUp({ eventId }),
+    );
+    const createEventLike = updateEvent(() => _createEventLike({ eventId }));
+    const deleteEventSignUp = updateEvent(() =>
+      _deleteEventSignUp({ eventId }),
+    );
+    const deleteEventLike = updateEvent(() => _deleteEventLike({ eventId }));
 
     return {
+      createEventComment,
       createEventSignUp,
       createEventLike,
       deleteEventSignUp,
@@ -121,10 +116,12 @@ function SingleEventProvider({ eventId, children }: Props) {
     };
   }, [
     eventId,
+    _createEventComment,
     _createEventSignUp,
     _createEventLike,
     _deleteEventSignUp,
     _deleteEventLike,
+    getSingleEvent,
     commentList,
   ]);
 
@@ -133,10 +130,9 @@ function SingleEventProvider({ eventId, children }: Props) {
       value={{
         event,
         getSingleEvent,
-        createEventComment,
         commentList,
         setCommentList,
-        ...eventSignUpAndLikeMethods,
+        ...eventModifiers,
       }}
     >
       {children}

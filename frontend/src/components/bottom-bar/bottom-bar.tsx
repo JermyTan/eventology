@@ -1,21 +1,20 @@
 import { Transition } from "semantic-ui-react";
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import styles from "./bottom-bar.module.scss";
 import EventActionButtons from "../event-action-buttons";
 import EventCommentInput from "../event-comment-input";
+import { SingleEventContext } from "../../context-providers";
 
 function BottomBar() {
-  const [isMounted, setMounted] = useState(false);
+  const { event } = useContext(SingleEventContext);
   const [isCommenting, setCommenting] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-
-    return () => setMounted(false);
-  }, []);
-
   return (
-    <Transition unmountOnHide visible={isMounted} animation="slide up">
+    <Transition
+      unmountOnHide
+      visible={event !== undefined}
+      animation="slide up"
+    >
       <div className={styles.bottomBar}>
         <div className={styles.actionsContainer}>
           {isCommenting ? (
