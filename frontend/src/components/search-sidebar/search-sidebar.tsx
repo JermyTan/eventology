@@ -1,16 +1,24 @@
-import { useContext } from "react";
 import classNames from "classnames";
 import { Sidebar, Segment, Icon, Divider } from "semantic-ui-react";
+import isEqual from "lodash.isequal";
 import SearchDateSection from "../search-date-section";
 import styles from "./search-sidebar.module.scss";
-import { SearchContext } from "../../context-providers";
 import SearchCategorySection from "../search-category-section";
 import useSearchQueryParams from "../../custom-hooks/use-search-query-params";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setSidebarOpened } from "../../redux/slices/search-slice";
 
 function SearchSidebar() {
   const { setSearchQuery } = useSearchQueryParams();
-  const { isSidebarOpened, setSidebarOpened, selectedDate, selectedCategory } =
-    useContext(SearchContext);
+  const { isSidebarOpened, selectedDate, selectedCategory } = useAppSelector(
+    ({ search: { isSidebarOpened, selectedDate, selectedCategory } }) => ({
+      isSidebarOpened,
+      selectedDate,
+      selectedCategory,
+    }),
+    isEqual,
+  );
+  const dispatch = useAppDispatch();
 
   const isValidSearch =
     selectedDate !== undefined && selectedCategory !== undefined;
@@ -27,14 +35,14 @@ function SearchSidebar() {
       startDateTime,
       endDateTime,
     });
-    setSidebarOpened(false);
+    dispatch(setSidebarOpened(false));
   };
 
   return (
     <Sidebar
       className={styles.searchSidebar}
       animation="push"
-      onHide={() => setSidebarOpened(false)}
+      onHide={() => dispatch(setSidebarOpened(false))}
       visible={isSidebarOpened}
     >
       <Segment

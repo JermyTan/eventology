@@ -18,13 +18,13 @@ import {
   PROFILE_PAST_PATH,
   PROFILE_MAIN_PATH,
 } from "./paths";
-import { SearchProvider, SingleEventProvider } from "../context-providers";
+import { SingleEventProvider } from "../context-providers";
 import ScrollToTopWrapper from "../components/scroll-to-top-wrapper";
 import { useAppSelector } from "../redux/hooks";
 import { EVENT_ID, USER_ID } from "../constants";
 
 function routes() {
-  const access = useAppSelector((state) => state.user?.access);
+  const access = useAppSelector(({ user }) => user?.access);
 
   return (
     <Router>
@@ -41,9 +41,7 @@ function routes() {
             {!access && <Redirect to={LOGIN_PATH} />}
 
             <Route path={EVENTS_PATH} exact strict>
-              <SearchProvider>
-                <EventsPage />
-              </SearchProvider>
+              <EventsPage />
             </Route>
 
             <Route path={EVENTS_SINGLE_VIEW_PATH} exact strict>

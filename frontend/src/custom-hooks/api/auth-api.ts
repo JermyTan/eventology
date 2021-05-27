@@ -16,7 +16,7 @@ export function useAxiosWithTokenRefresh<T>(
   ResponseValues<T, Error>,
   (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<T>,
 ] {
-  const { access, refresh } = { ...useAppSelector((state) => state.user) };
+  const { access, refresh } = { ...useAppSelector(({ user }) => user) };
   const dispatch = useAppDispatch();
   const [responseValues, apiCall] = useAxios<T>(
     {

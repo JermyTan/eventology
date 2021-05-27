@@ -12,7 +12,7 @@ import { updateUser } from "../../redux/slices/user-slice";
 
 function UserTab() {
   const { id, name, profileImageUrl } = {
-    ...useAppSelector((state) => state.user),
+    ...useAppSelector(({ user }) => user),
   };
   const dispatch = useAppDispatch();
   const { pathname } = useLocation();

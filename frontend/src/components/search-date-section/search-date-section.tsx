@@ -1,29 +1,28 @@
-import { useCallback, MouseEvent, useContext } from "react";
+import { MouseEvent } from "react";
 import classNames from "classnames";
+import isEqual from "lodash.isequal";
 import { Label, LabelProps } from "semantic-ui-react";
 import styles from "./search-date-section.module.scss";
-import { SearchContext } from "../../context-providers";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setSelectedDate } from "../../redux/slices/search-slice";
 
 function SearchDateSection() {
   const {
     selectedDate,
-    setSelectedDate,
     datePeriods: { today, tomorrow, thisWeek, thisMonth },
-  } = useContext(SearchContext);
+  } = useAppSelector(
+    ({ search: { selectedDate, datePeriods } }) => ({
+      selectedDate,
+      datePeriods,
+    }),
+    isEqual,
+  );
+  const dispatch = useAppDispatch();
 
   const onLabelClick: (
     event: MouseEvent<HTMLElement, globalThis.MouseEvent>,
     data: LabelProps,
-  ) => void = useCallback(
-    (_, { value }) => {
-      setSelectedDate((selectedDate) =>
-        selectedDate === undefined || selectedDate !== value
-          ? value
-          : undefined,
-      );
-    },
-    [setSelectedDate],
-  );
+  ) => void = (_, { value }) => dispatch(setSelectedDate(value));
 
   return (
     <Label.Group className={styles.searchDateSection}>
