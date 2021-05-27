@@ -34,7 +34,7 @@ export type EventCategoryData = BaseData & {
 
 export type EventSignUpData = BaseData & {
   [USER]: UserData;
-  [EVENT_ID]?: number | string;
+  [EVENT_ID]?: number;
   [EVENT]?: EventData;
 };
 

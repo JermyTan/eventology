@@ -111,8 +111,8 @@ function EventInfoView({
       }
     };
     onChange();
-    pageBody?.addEventListener("scroll", onChange);
-    window.addEventListener("resize", onChange);
+    pageBody?.addEventListener("scroll", onChange, { passive: true });
+    window.addEventListener("resize", onChange, { passive: true });
 
     return () => {
       pageBody?.removeEventListener("scroll", onChange);
