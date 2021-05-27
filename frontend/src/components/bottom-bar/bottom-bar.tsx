@@ -1,12 +1,17 @@
 import { Transition } from "semantic-ui-react";
-import { useContext } from "react";
+import isEqual from "lodash.isequal";
 import styles from "./bottom-bar.module.scss";
 import EventActionButtons from "../event-action-buttons";
 import EventCommentInput from "../event-comment-input";
-import { SingleEventContext } from "../../context-providers";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setCommenting } from "../../redux/slices/single-event-slice";
 
 function BottomBar() {
-  const { event, isCommenting, setCommenting } = useContext(SingleEventContext);
+  const { event, isCommenting } = useAppSelector(
+    ({ singleEvent: { event, isCommenting } }) => ({ event, isCommenting }),
+    isEqual,
+  );
+  const dispatch = useAppDispatch();
 
   return (
     <Transition
@@ -17,9 +22,13 @@ function BottomBar() {
       <div className={styles.bottomBar}>
         <div className={styles.actionsContainer}>
           {isCommenting ? (
-            <EventCommentInput onClickCancel={() => setCommenting(false)} />
+            <EventCommentInput
+              onClickCancel={() => dispatch(setCommenting(false))}
+            />
           ) : (
-            <EventActionButtons onClickComment={() => setCommenting(true)} />
+            <EventActionButtons
+              onClickComment={() => dispatch(setCommenting(true))}
+            />
           )}
         </div>
       </div>

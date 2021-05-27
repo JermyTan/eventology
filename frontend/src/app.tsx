@@ -4,9 +4,12 @@ import "react-virtualized/styles.css";
 import { toast, Zoom } from "react-toastify";
 import axios from "axios";
 import { configure } from "axios-hooks";
-import { ResponsiveProvider, UserProvider } from "./context-providers";
-import Routes from "./routes";
+import { Provider } from "react-redux";
 import styles from "./app.module.scss";
+import { ResponsiveProvider } from "./context-providers";
+import store from "./redux/store";
+import Routes from "./routes";
+import LocalStorageUserManager from "./components/local-storage-user-manager";
 
 toast.configure({
   position: "bottom-center",
@@ -21,11 +24,12 @@ configure({ axios: axios.create({ baseURL: process.env.API_URL }) });
 
 function App() {
   return (
-    <ResponsiveProvider>
-      <UserProvider>
+    <Provider store={store}>
+      <ResponsiveProvider>
+        <LocalStorageUserManager />
         <Routes />
-      </UserProvider>
-    </ResponsiveProvider>
+      </ResponsiveProvider>
+    </Provider>
   );
 }
 

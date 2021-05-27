@@ -1,18 +1,34 @@
 import classNames from "classnames";
 import { Image, Input } from "semantic-ui-react";
-import { useContext, useState } from "react";
-import { SingleEventContext } from "../../context-providers";
+import { useState } from "react";
 import IconLoader from "../icon-loader";
 import styles from "./event-comment-input.module.scss";
 import sendLogo from "../../assets/send-purple.svg";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {
+  setEvent,
+  setInputComment,
+} from "../../redux/slices/single-event-slice";
+import {
+  useCreateEventComment,
+  useGetSingleEvent,
+} from "../../custom-hooks/api/events-api";
 
 type Props = {
   onClickCancel: () => void;
 };
 
 function EventCommentInput({ onClickCancel }: Props) {
-  const { createEventComment, inputComment, setInputComment } =
-    useContext(SingleEventContext);
+  const inputComment = useAppSelector(
+    ({ singleEvent }) => singleEvent.inputComment,
+  );
+  const eventId = useAppSelector(
+    ({ singleEvent }) => singleEvent.event?.id,
+  ) as number;
+  const dispatch = useAppDispatch();
+
+  const { getSingleEvent } = useGetSingleEvent();
+  const { createEventComment } = useCreateEventComment();
   const [isSending, setSending] = useState(false);
 
   const onSend = async () => {
@@ -21,9 +37,10 @@ function EventCommentInput({ onClickCancel }: Props) {
     }
 
     setSending(true);
-    await createEventComment({ content: inputComment });
+    await createEventComment({ eventId, content: inputComment });
+    dispatch(setEvent(await getSingleEvent(eventId)));
     setSending(false);
-    setInputComment("");
+    dispatch(setInputComment(""));
   };
 
   return (
@@ -39,7 +56,7 @@ function EventCommentInput({ onClickCancel }: Props) {
         <Input
           placeholder="Leave your comment here"
           className={styles.roundedInput}
-          onChange={(_, { value }) => setInputComment(value)}
+          onChange={(_, { value }) => dispatch(setInputComment(value))}
           value={inputComment}
         />
       </div>

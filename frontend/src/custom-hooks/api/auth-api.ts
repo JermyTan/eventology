@@ -1,12 +1,13 @@
-import { useCallback, useContext, useState, useMemo } from "react";
+import { useCallback, useState, useMemo } from "react";
 import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from "axios";
 import useAxios, { Options, RefetchOptions, ResponseValues } from "axios-hooks";
-import { UserContext } from "../../context-providers/user-provider";
 import { AuthenticationData, AuthenticationPostData } from "../../types/auth";
 import {
   errorHandlerWrapper,
   isForbiddenOrNotAuthenticated,
 } from "../../utils/error-utils";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { updateUser } from "../../redux/slices/user-slice";
 
 export function useAxiosWithTokenRefresh<T>(
   config: AxiosRequestConfig,
@@ -15,7 +16,8 @@ export function useAxiosWithTokenRefresh<T>(
   ResponseValues<T, Error>,
   (config?: AxiosRequestConfig, options?: RefetchOptions) => AxiosPromise<T>,
 ] {
-  const { access, refresh, updateUser } = useContext(UserContext);
+  const { access, refresh } = { ...useAppSelector(({ user }) => user) };
+  const dispatch = useAppDispatch();
   const [responseValues, apiCall] = useAxios<T>(
     {
       ...config,
@@ -68,14 +70,14 @@ export function useAxiosWithTokenRefresh<T>(
             options,
           );
 
-          updateUser(data);
+          dispatch(updateUser(data));
 
           return response;
         } catch (error) {
           console.log("Error after token refresh:", error, error?.response);
           if (isForbiddenOrNotAuthenticated(error)) {
             // kick user out
-            updateUser(null);
+            dispatch(updateUser(null));
             throw new Error(
               "Your current session has expired. Please log in again.",
             );
@@ -87,7 +89,7 @@ export function useAxiosWithTokenRefresh<T>(
         setLoading(false);
       }
     },
-    [apiCall, updateUser, tokenRefresh],
+    [apiCall, tokenRefresh, dispatch],
   );
 
   return [{ ...responseValues, loading: isLoading }, apiCallWithTokenRefresh];

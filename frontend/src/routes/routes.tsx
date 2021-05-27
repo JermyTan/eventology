@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -19,16 +18,12 @@ import {
   PROFILE_PAST_PATH,
   PROFILE_MAIN_PATH,
 } from "./paths";
-import {
-  SearchProvider,
-  SingleEventProvider,
-  UserContext,
-} from "../context-providers";
 import ScrollToTopWrapper from "../components/scroll-to-top-wrapper";
-import { EVENT_ID, USER_ID } from "../constants";
+import { useAppSelector } from "../redux/hooks";
+import { USER_ID } from "../constants";
 
 function routes() {
-  const { access } = useContext(UserContext);
+  const access = useAppSelector(({ user }) => user?.access);
 
   return (
     <Router>
@@ -45,23 +40,11 @@ function routes() {
             {!access && <Redirect to={LOGIN_PATH} />}
 
             <Route path={EVENTS_PATH} exact strict>
-              <SearchProvider>
-                <EventsPage />
-              </SearchProvider>
+              <EventsPage />
             </Route>
 
             <Route path={EVENTS_SINGLE_VIEW_PATH} exact strict>
-              {({ match }) => {
-                const {
-                  params: { eventId },
-                } = match as unknown as { params: { [EVENT_ID]: string } };
-
-                return (
-                  <SingleEventProvider eventId={eventId}>
-                    <EventsSingleViewPage />
-                  </SingleEventProvider>
-                );
-              }}
+              <EventsSingleViewPage />
             </Route>
 
             <Route path={[PROFILE_MAIN_PATH]} exact>
