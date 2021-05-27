@@ -1,10 +1,19 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import classNames from "classnames";
+import isEqual from "lodash.isequal";
 import { toast } from "react-toastify";
 import { Icon } from "semantic-ui-react";
 import IconLoader from "../icon-loader";
-import { SingleEventContext } from "../../context-providers";
 import { resolveApiError } from "../../utils/error-utils";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {
+  useCreateEventSignUp,
+  useCreateEventLike,
+  useDeleteEventSignUp,
+  useDeleteEventLike,
+  useGetSingleEvent,
+} from "../../custom-hooks/api/events-api";
+import { setEvent } from "../../redux/slices/single-event-slice";
 import styles from "./event-action-buttons.module.scss";
 
 type Props = {
@@ -13,16 +22,36 @@ type Props = {
 
 function EventActionButtons({ onClickComment }: Props) {
   const {
-    event: { hasLiked, hasSignedUp } = { hasLiked: false, hasSignedUp: false },
-    createEventSignUp,
-    createEventLike,
-    deleteEventSignUp,
-    deleteEventLike,
-  } = useContext(SingleEventContext);
+    id: eventId,
+    hasLiked,
+    hasSignedUp,
+  } = useAppSelector(
+    ({ singleEvent: { event: { id, hasSignedUp, hasLiked } = {} } }) => ({
+      id,
+      hasLiked,
+      hasSignedUp,
+    }),
+    isEqual,
+  ) as { id: number; hasLiked: boolean; hasSignedUp: boolean };
+  const dispatch = useAppDispatch();
+
+  const { getSingleEvent } = useGetSingleEvent();
+  const { createEventSignUp } = useCreateEventSignUp();
+  const { createEventLike } = useCreateEventLike();
+  const { deleteEventSignUp } = useDeleteEventSignUp();
+  const { deleteEventLike } = useDeleteEventLike();
   const [isSigningUp, setSigningUp] = useState(false);
   const [isLiking, setLiking] = useState(false);
   const [isWithdrawing, setWithdrawing] = useState(false);
   const [isUnliking, setUnliking] = useState(false);
+
+  const updateEvent = async (
+    updateFunction: (data: { eventId: number }) => Promise<unknown>,
+  ) => {
+    await updateFunction({ eventId });
+    const updatedEvent = await getSingleEvent(eventId);
+    dispatch(setEvent(updatedEvent));
+  };
 
   const onCreateEventSignUp = async () => {
     if (isSigningUp || isWithdrawing) {
@@ -32,7 +61,7 @@ function EventActionButtons({ onClickComment }: Props) {
     try {
       setSigningUp(true);
 
-      await createEventSignUp();
+      await updateEvent(createEventSignUp);
 
       toast.success("You have joined for the event.");
     } catch (error) {
@@ -50,7 +79,7 @@ function EventActionButtons({ onClickComment }: Props) {
     try {
       setLiking(true);
 
-      await createEventLike();
+      await updateEvent(createEventLike);
 
       toast.success("You have liked the event.");
     } catch (error) {
@@ -68,7 +97,7 @@ function EventActionButtons({ onClickComment }: Props) {
     try {
       setWithdrawing(true);
 
-      await deleteEventSignUp();
+      await updateEvent(deleteEventSignUp);
 
       toast.success("You have withdrawn from the event.");
     } catch (error) {
@@ -86,7 +115,7 @@ function EventActionButtons({ onClickComment }: Props) {
     try {
       setUnliking(true);
 
-      await deleteEventLike();
+      await updateEvent(deleteEventLike);
 
       toast.success("You have unliked the event.");
     } catch (error) {

@@ -1,4 +1,4 @@
-import { memo, useContext, useState } from "react";
+import { memo, useState } from "react";
 import classNames from "classnames";
 import { useHistory } from "react-router-dom";
 import ProgressiveImage from "react-progressive-graceful-image";
@@ -7,10 +7,11 @@ import { displayDateTime } from "../../utils/parser-utils";
 import { RELATIVE, USER_ID } from "../../constants";
 import { PROFILE_MAIN_PATH } from "../../routes/paths";
 import { EventCommentData } from "../../types/events";
-import { SingleEventContext } from "../../context-providers";
 import placeholderImage from "../../assets/placeholder-image.gif";
 import defaultAvatarImage from "../../assets/avatar.png";
 import styles from "./comment.module.scss";
+import { useAppDispatch } from "../../redux/hooks";
+import { setReplyComment } from "../../redux/slices/single-event-slice";
 
 type Props = {
   comment: EventCommentData;
@@ -23,23 +24,14 @@ function Comment({
     content,
   },
 }: Props) {
-  const { setCommenting, setInputComment } = useContext(SingleEventContext);
   const history = useHistory();
+  const dispatch = useAppDispatch();
   const [isHoveringReply, setHoveringReply] = useState(false);
 
   const onUserClick = () =>
     history.push(PROFILE_MAIN_PATH.replace(`:${USER_ID}`, `${userId}`));
 
-  const onReplyClick = () => {
-    setCommenting(true);
-    setInputComment((inputComment) => {
-      const replyName = `@${name}`;
-
-      return !inputComment || inputComment.slice(-1) === " "
-        ? `${inputComment}${replyName} `
-        : `${inputComment} ${replyName} `;
-    });
-  };
+  const onReplyClick = () => dispatch(setReplyComment({ name }));
 
   return (
     <div className={styles.comment}>

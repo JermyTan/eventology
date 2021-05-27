@@ -1,4 +1,6 @@
 import { Sidebar } from "semantic-ui-react";
+import { startOfToday } from "date-fns";
+import classNames from "classnames";
 import EventList from "../../event-list";
 import TopBar from "../../top-bar";
 import PageBody from "../../page-body";
@@ -15,7 +17,7 @@ import {
 import { useGetEventCategories } from "../../../custom-hooks/api/events-api";
 import useSearchQueryParams from "../../../custom-hooks/use-search-query-params";
 import { getDatePeriods } from "../../../utils/date-time-utils";
-import { startOfToday } from "date-fns";
+import styles from "./events-page.module.scss";
 
 function EventsPage() {
   const { getEventCategories } = useGetEventCategories();
@@ -49,10 +51,13 @@ function EventsPage() {
   };
 
   return (
-    <Sidebar.Pushable>
+    <Sidebar.Pushable className={styles.eventsPage}>
       <SearchSidebar />
 
-      <Sidebar.Pusher dimmed={isSidebarOpened}>
+      <Sidebar.Pusher
+        className={classNames(styles.pusherContainer, styles.important)}
+        dimmed={isSidebarOpened}
+      >
         <FullPageContainer>
           <TopBar leftTab={<SearchTab onTabClick={onClickSearchTab} />} />
 

@@ -1,20 +1,27 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import PlaceholderWrapper from "../placeholder-wrapper";
 import NoEventBanner from "../no-event-banner";
-import { SingleEventContext } from "../../context-providers";
 import EventInfoView from "../event-info-view";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { useGetSingleEvent } from "../../custom-hooks/api/events-api";
+import { setEvent } from "../../redux/slices/single-event-slice";
 
 function EventBody() {
-  const { event, getSingleEvent } = useContext(SingleEventContext);
-  const [isLoading, setLoading] = useState(false);
+  const event = useAppSelector(({ singleEvent }) => singleEvent.event);
+  const dispatch = useAppDispatch();
+  const { eventId } = useParams<{ eventId: string }>();
+  const { isLoading, getSingleEvent } = useGetSingleEvent();
 
   useEffect(() => {
     (async () => {
-      setLoading(true);
-      await getSingleEvent();
-      setLoading(false);
+      dispatch(setEvent(await getSingleEvent(eventId)));
     })();
-  }, [getSingleEvent]);
+
+    return () => {
+      dispatch(setEvent(undefined));
+    };
+  }, [eventId, getSingleEvent, dispatch]);
 
   return (
     <PlaceholderWrapper
