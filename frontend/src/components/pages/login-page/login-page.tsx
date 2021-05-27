@@ -41,6 +41,18 @@ const defaultFormProps: LoginFormProps = {
   [PASSWORD]: "",
 };
 
+const onError = (error: DeepMap<LoginFormProps, FieldError>) => {
+  const errorMsg = Object.values(error)
+    .flatMap((value) => (value?.message ? [value.message] : []))
+    .join("\n");
+
+  if (!errorMsg) {
+    return;
+  }
+
+  toast.error(errorMsg);
+};
+
 function LoginPage() {
   const methods = useForm<LoginFormProps>({
     resolver: yupResolver(schema),
@@ -70,18 +82,6 @@ function LoginPage() {
     },
     [login, dispatch],
   );
-
-  const onError = useCallback((error: DeepMap<LoginFormProps, FieldError>) => {
-    const errorMsg = Object.values(error)
-      .flatMap((value) => (value?.message ? [value.message] : []))
-      .join("\n");
-
-    if (!errorMsg) {
-      return;
-    }
-
-    toast.error(errorMsg);
-  }, []);
 
   return (
     <FullPageContainer>

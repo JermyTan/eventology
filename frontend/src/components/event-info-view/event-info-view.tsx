@@ -25,6 +25,7 @@ type Props = {
 
 function EventInfoView({
   event: {
+    id: eventId,
     category,
     title,
     creator,
@@ -228,7 +229,10 @@ function EventInfoView({
           <PageBody>
             <Segment vertical>
               <Container>
-                <EventInfoCommentsSection comments={comments} />
+                <EventInfoCommentsSection
+                  eventId={eventId}
+                  comments={comments}
+                />
               </Container>
             </Segment>
           </PageBody>

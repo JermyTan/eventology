@@ -23,6 +23,14 @@ type Props = {
   userId?: number;
 };
 
+const noRowsRenderer = () => (
+  <PlaceholderWrapper
+    placeholder
+    showDefaultContent
+    defaultContent={<NoEventBanner />}
+  />
+);
+
 function ProfileEventSection({ userId }: Props) {
   const { pageBodyRef } = useContext(PageBodyContext);
   const virtualizedListRef = useRef<ElementRef<typeof VirtualizedList>>(null);
@@ -121,13 +129,7 @@ function ProfileEventSection({ userId }: Props) {
             <VirtualizedList
               ref={virtualizedListRef}
               itemRenderer={eventSummaryCardRenderer}
-              noRowsRenderer={() => (
-                <PlaceholderWrapper
-                  placeholder
-                  showDefaultContent
-                  defaultContent={<NoEventBanner />}
-                />
-              )}
+              noRowsRenderer={noRowsRenderer}
               numItems={showingEvents.length}
               scrollElement={pageBodyRef.current ?? undefined}
               defaultRowHeight={350}

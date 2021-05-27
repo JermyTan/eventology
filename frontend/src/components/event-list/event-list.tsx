@@ -36,6 +36,14 @@ const onChangeGenerator = memoize(
       }),
 );
 
+const noRowsRenderer = () => (
+  <PlaceholderWrapper
+    placeholder
+    showDefaultContent
+    defaultContent={<NoEventBanner />}
+  />
+);
+
 function EventList() {
   const { pageBodyRef } = useContext(PageBodyContext);
   const {
@@ -110,13 +118,7 @@ function EventList() {
             ref={virtualizedListRef}
             itemRenderer={eventSummaryCardRenderer}
             loaderRenderer={loaderRenderer}
-            noRowsRenderer={() => (
-              <PlaceholderWrapper
-                placeholder
-                showDefaultContent
-                defaultContent={<NoEventBanner />}
-              />
-            )}
+            noRowsRenderer={noRowsRenderer}
             hasNextPage
             isNextPageLoading={isLoading}
             numItems={events.length}
