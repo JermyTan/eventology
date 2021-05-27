@@ -1,23 +1,27 @@
-import { useCallback, useContext } from "react";
 import classNames from "classnames";
 import { Dropdown, Menu, Image } from "semantic-ui-react";
 import { toast } from "react-toastify";
 import { Link, useLocation } from "react-router-dom";
-import { Media, UserContext } from "../../context-providers";
+import { Media } from "../../context-providers";
 import { PROFILE_MAIN_PATH } from "../../routes/paths";
 import { USER_ID } from "../../constants";
 import defaultAvatarImage from "../../assets/avatar.png";
 import styles from "./user-tab.module.scss";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { updateUser } from "../../redux/slices/user-slice";
 
 function UserTab() {
-  const { id, name, updateUser, profileImageUrl } = useContext(UserContext);
+  const { id, name, profileImageUrl } = {
+    ...useAppSelector(({ user }) => user),
+  };
+  const dispatch = useAppDispatch();
   const { pathname } = useLocation();
   const userProfilePath = PROFILE_MAIN_PATH.replace(`:${USER_ID}`, `${id}`);
 
-  const onSignOut = useCallback(() => {
-    updateUser(null);
+  const onSignOut = () => {
+    dispatch(updateUser(null));
     toast.success("Signed out successfully.");
-  }, [updateUser]);
+  };
 
   return (
     <Menu.Menu className={styles.userTab}>
