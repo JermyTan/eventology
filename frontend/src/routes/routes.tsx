@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -19,16 +18,13 @@ import {
   PROFILE_PAST_PATH,
   PROFILE_MAIN_PATH,
 } from "./paths";
-import {
-  SearchProvider,
-  SingleEventProvider,
-  UserContext,
-} from "../context-providers";
+import { SearchProvider, SingleEventProvider } from "../context-providers";
 import ScrollToTopWrapper from "../components/scroll-to-top-wrapper";
+import { useAppSelector } from "../redux/hooks";
 import { EVENT_ID, USER_ID } from "../constants";
 
 function routes() {
-  const { access } = useContext(UserContext);
+  const access = useAppSelector((state) => state.user?.access);
 
   return (
     <Router>

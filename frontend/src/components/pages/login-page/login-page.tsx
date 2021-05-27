@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { DeepMap, FieldError, FormProvider, useForm } from "react-hook-form";
@@ -14,12 +14,13 @@ import { toast } from "react-toastify";
 import FormField from "../../form-field";
 import { deepTrim } from "../../../utils/parser-utils";
 import { EMAIL, PASSWORD } from "../../../constants";
-import { UserContext } from "../../../context-providers";
 import { useCustomAuth } from "../../../custom-hooks/api/auth-api";
 import { resolveApiError } from "../../../utils/error-utils";
+import FullPageContainer from "../../full-page-container";
+import { useAppDispatch } from "../../../redux/hooks";
+import { updateUser } from "../../../redux/slices/user-slice";
 import catLogo from "../../../assets/logo-cat-green.svg";
 import styles from "./login-page.module.scss";
-import FullPageContainer from "../../full-page-container";
 
 const schema = yup.object().shape({
   [EMAIL]: yup
@@ -46,25 +47,28 @@ function LoginPage() {
     defaultValues: defaultFormProps,
   });
   const { handleSubmit } = methods;
-  const { updateUser } = useContext(UserContext);
+  const dispatch = useAppDispatch();
   const { login, isLoading } = useCustomAuth();
 
   useEffect(() => {
-    updateUser(null);
-  }, [updateUser]);
+    dispatch(updateUser(null));
+  }, [dispatch]);
 
   const onSubmit = useCallback(
     async (formData: LoginFormProps) => {
       try {
         const { id, name, email, access, refresh, profileImageUrl } =
           await login(deepTrim(formData));
-        updateUser({ id, name, email, access, refresh, profileImageUrl });
+
+        dispatch(
+          updateUser({ id, name, email, access, refresh, profileImageUrl }),
+        );
         toast.success("Signed in successfully.");
       } catch (error) {
         resolveApiError(error);
       }
     },
-    [login, updateUser],
+    [login, dispatch],
   );
 
   const onError = useCallback((error: DeepMap<LoginFormProps, FieldError>) => {
