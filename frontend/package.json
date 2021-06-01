@@ -9,7 +9,7 @@
     "build": "cross-env NODE_ENV=production webpack",
     "format": "prettier --write ./src",
     "lint": "tsc --noEmit && eslint --ext .js,.jsx,.ts,.tsx ./src",
-    "create": "node code-generator.js",
+    "generate-component": "node component-generator.js",
     "generate-data": "node data-generator.js"
   },
   "dependencies": {

@@ -37,8 +37,12 @@ To install all app dependencies.
 
 ## Create migration
 
-**`python eventology/manage.py makemigrations eventology`**
+This step is required whenever there is a change in the django models.
+
+**`python eventology/manage.py makemigrations`**
 
 ## Run migration
 
-**`python eventology/manage.py migrate eventology`**
+Once the migration code has been auto generated, the following command is executed to apply the migration.
+
+**`python eventology/manage.py migrate`**
