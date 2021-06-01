@@ -11,7 +11,7 @@
 - [x] **Must** create a git repo on gitlab
 - [x] Commit frequently
 - [x] Commit message should be meaningful
-- [ ] \(bonus) Set up gitlab CI checks for the linting, testing job
+- [x] \(bonus) Set up gitlab CI checks for the linting, testing job
 
 ## API Design
 
