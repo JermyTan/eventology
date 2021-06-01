@@ -8,7 +8,6 @@ import {
   useRef,
   useState,
 } from "react";
-import classNames from "classnames";
 import memoize from "lodash.memoize";
 import { Container, Segment } from "semantic-ui-react";
 import PullToRefreshWrapper from "../pull-to-refresh-wrapper";
@@ -20,8 +19,7 @@ import { useGetEvents } from "../../custom-hooks/api/events-api";
 import { EventData } from "../../types/events";
 import VirtualizedList from "../virtualized-list";
 import useSearchQueryParams from "../../custom-hooks/use-search-query-params";
-import usePrevious from "../../custom-hooks/use-previous";
-import styles from "./event-list.module.scss";
+import useFunctionCacheCleaner from "../../custom-hooks/use-function-cache-cleaner";
 
 const onChangeGenerator = memoize(
   (index: number, setEvents: Dispatch<SetStateAction<EventData[]>>) =>
@@ -44,46 +42,57 @@ const noRowsRenderer = () => (
   />
 );
 
+const loaderRenderer = () => <PlaceholderWrapper isLoading />;
+
+const LIMIT = 10;
+
 function EventList() {
   const { pageBodyRef } = useContext(PageBodyContext);
   const {
     searchQuery: { category, startDateTime, endDateTime },
   } = useSearchQueryParams();
   const [events, setEvents] = useState<EventData[]>([]);
-  const previousNumEvents = usePrevious(events.length);
-  const cacheSize = useRef(0);
-  const { isLoading, getEvents } = useGetEvents();
+  useFunctionCacheCleaner(onChangeGenerator, 20, events.length);
+  const { isLoading: isNextPageLoading, getEvents } = useGetEvents();
+  const [isLoading, setLoading] = useState(false);
+  const [hasNextPage, setHasNextPage] = useState(true);
+  const [offset, setOffset] = useState(0);
   const virtualizedListRef = useRef<ElementRef<typeof VirtualizedList>>(null);
 
-  useEffect(() => {
-    setEvents([]);
+  const getMoreEvents = async () => {
+    let moreEvents = await getEvents({ offset, limit: LIMIT });
+
+    if (moreEvents.length === 0) {
+      setOffset(0);
+      moreEvents = await getEvents({ offset: 0, limit: LIMIT });
+    }
+
+    setOffset((offset) => offset + LIMIT);
+    setEvents((events) => events.concat(moreEvents));
+  };
+
+  const refreshEvents = useCallback(async () => {
+    setOffset(0);
 
     if (category || startDateTime || endDateTime) {
-      (async () => {
-        setEvents(await getEvents({ category, startDateTime, endDateTime }));
-      })();
+      setHasNextPage(false);
+      setEvents(await getEvents({ category, startDateTime, endDateTime }));
+    } else {
+      setHasNextPage(true);
+      setEvents(await getEvents({ offset: 0, limit: LIMIT }));
+      setOffset((offset) => offset + LIMIT);
     }
+
+    virtualizedListRef.current?.rerenderList();
   }, [getEvents, category, startDateTime, endDateTime]);
 
   useEffect(() => {
-    // regular clean up to clear cache
-    cacheSize.current += Math.abs(events.length - previousNumEvents);
-
-    if (cacheSize.current > 20) {
-      onChangeGenerator.cache.clear?.();
-      cacheSize.current = 0;
-    }
-  }, [previousNumEvents, events.length]);
-
-  const refreshEvents = useCallback(async () => {
-    setEvents((await getEvents()).reverse());
-    virtualizedListRef.current?.rerenderList();
-  }, [getEvents]);
-
-  const getMoreEvents = useCallback(async () => {
-    const moreEvents = await getEvents();
-    setEvents((events) => events.concat(moreEvents));
-  }, [getEvents]);
+    (async () => {
+      setLoading(true);
+      await refreshEvents();
+      setLoading(false);
+    })();
+  }, [refreshEvents]);
 
   const eventSummaryCardRenderer = useCallback(
     (index: number) => (
@@ -95,41 +104,32 @@ function EventList() {
     [events],
   );
 
-  const loaderRenderer = useCallback(
-    () => (
-      <PlaceholderWrapper
-        className={classNames(
-          events.length === 0 && styles.loader,
-          events.length === 0 && styles.important,
-        )}
-        isLoading
-        loadingMessage={events.length === 0 ? "Retrieving events" : undefined}
-        placeholder={events.length === 0}
-      />
-    ),
-    [events.length],
-  );
-
   return (
-    <Segment className={styles.eventList} vertical>
-      <Container>
-        <PullToRefreshWrapper onRefresh={refreshEvents}>
-          <VirtualizedList
-            ref={virtualizedListRef}
-            itemRenderer={eventSummaryCardRenderer}
-            loaderRenderer={loaderRenderer}
-            noRowsRenderer={noRowsRenderer}
-            hasNextPage
-            isNextPageLoading={isLoading}
-            numItems={events.length}
-            loadNextPage={getMoreEvents}
-            scrollElement={pageBodyRef.current ?? undefined}
-            defaultRowHeight={350}
-            cachePreviousRowHeight
-          />
-        </PullToRefreshWrapper>
-      </Container>
-    </Segment>
+    <PlaceholderWrapper
+      isLoading={isLoading}
+      loadingMessage="Retrieving events"
+      placeholder
+    >
+      <Segment vertical>
+        <Container>
+          <PullToRefreshWrapper onRefresh={refreshEvents}>
+            <VirtualizedList
+              ref={virtualizedListRef}
+              itemRenderer={eventSummaryCardRenderer}
+              loaderRenderer={loaderRenderer}
+              noRowsRenderer={noRowsRenderer}
+              hasNextPage={hasNextPage}
+              isNextPageLoading={isNextPageLoading}
+              numItems={events.length}
+              loadNextPage={getMoreEvents}
+              scrollElement={pageBodyRef.current ?? undefined}
+              defaultRowHeight={350}
+              cachePreviousRowHeight
+            />
+          </PullToRefreshWrapper>
+        </Container>
+      </Segment>
+    </PlaceholderWrapper>
   );
 }
 

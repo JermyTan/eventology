@@ -38,6 +38,7 @@ type Props = {
 
 type VirtualizedListHandle = {
   rerenderList: (index?: number) => void;
+  resetLoadMoreRowsCache?: (autoReload?: boolean | undefined) => void;
 };
 
 const defaultLoadNextPage = () => new Promise<unknown>(() => {});
@@ -60,6 +61,7 @@ function VirtualizedList(
   }: Props,
   ref: Ref<VirtualizedListHandle>,
 ) {
+  const infiniteLoaderRef = useRef<InfiniteLoader>(null);
   const listRef = useRef<List>(null) as MutableRefObject<List | null>;
   const previousRowCountRef = useRef(0);
   const cellMeasurerCacheRef = useRef(
@@ -83,6 +85,7 @@ function VirtualizedList(
     ref,
     () => ({
       rerenderList,
+      resetLoadMoreRowsCache: infiniteLoaderRef.current?.resetLoadMoreRowsCache,
     }),
     [rerenderList],
   );
@@ -130,9 +133,10 @@ function VirtualizedList(
 
   return (
     <InfiniteLoader
+      ref={infiniteLoaderRef}
       rowCount={rowCount}
       isRowLoaded={isRowLoaded}
-      threshold={0}
+      threshold={5}
       loadMoreRows={loadMoreRows}
     >
       {({ onRowsRendered, registerChild }) => (
