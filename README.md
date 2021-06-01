@@ -2,6 +2,14 @@
 
 ## Setup
 
+Ensure [yarn](https://yarnpkg.com/) is installed on your local machine.
+
+Then execute:
+
+**`yarn install`**
+
+To install husky for pre-commit hook.
+
 Instructions to set up the app are located in the READMEs in the frontend and backend folder respectively.
 
 ## Development Guidelines
