@@ -1,0 +1,14 @@
+image: node:16.2.0
+
+cache:
+  paths:
+    - frontend/node_modules
+
+job:
+  before_script:
+    - cd frontend
+  script:
+    - yarn install
+    - yarn format
+    - yarn lint
+    - yarn build
