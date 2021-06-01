@@ -2,8 +2,8 @@
 
 ## Documentations
 
-[Tech Design Document](Tech Design Document.md)<br />
-[Technical Requirements](Technical Requirements.md)
+[Tech Design Document](https://docs.google.com/document/d/1eyitWxL6UhYikRIaoXtEcxMNTI5JWNBSTET7mtUXJxw/edit?usp=sharing)<br />
+[Technical Requirements](technical%20requirements.md)
 
 ## Setup
 
