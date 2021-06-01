@@ -1,5 +1,10 @@
 # Black Cat
 
+## Documentations
+
+[Tech Design Document](Tech Design Document.md)<br />
+[Technical Requirements](Technical Requirements.md)
+
 ## Setup
 
 Ensure [yarn](https://yarnpkg.com/) is installed on your local machine.
