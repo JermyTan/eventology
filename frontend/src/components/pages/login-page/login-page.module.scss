@@ -1,70 +1,102 @@
 @use "../../../base";
 
-.formContainer {
+.loginPage {
   display: flex;
   flex-direction: column;
-  background-color: base.$primary-color;
   flex: 1;
+  background-image: url("../../../assets/street-dance.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 
-  .contentContainer {
+  .formContainer {
     display: flex;
     flex-direction: column;
+    background-color: rgba(base.$primary-color, 0.7);
     flex: 1;
-    align-items: center;
-    justify-content: center;
 
-    .viewContainer {
-      color: base.$secondary-color;
-      border-bottom: none;
-    }
-
-    .inputContainer {
+    .contentContainer {
       display: flex;
       flex-direction: column;
+      flex: 1;
+      align-items: center;
+      justify-content: center;
 
-      .roundedInput {
-        color: white;
+      .viewContainer {
+        @include base.vertical-space-margin(1.5rem);
+        color: base.$secondary-color;
+        border-bottom: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 
-        > input {
-          border-radius: 2rem;
-          border-color: rgba(white, 0.7);
-          background-color: transparent;
+        .secondaryLogoContainer {
+          padding: 0.1rem;
+          border-radius: 500rem;
+          border: 1px solid rgba(base.$secondary-color, 0.5);
 
-          &:focus {
-            background-color: rgba(white, 0.2);
+          .primaryLogoContainer {
+            padding: 0.75rem;
+            border-radius: 500rem;
+            border: 2px solid base.$secondary-color;
+
+            .logo {
+              width: 3.5rem;
+              height: auto;
+            }
           }
+        }
+      }
 
-          &:-webkit-autofill,
-          &:-webkit-autofill:hover {
-            -webkit-box-shadow: 0 0 0px 1000px base.$primary-color inset !important;
-          }
+      .inputContainer {
+        display: flex;
+        flex-direction: column;
 
-          &:-webkit-autofill:focus {
-            -webkit-box-shadow: 0 0 0px 1000px rgba(base.$primary-color, 0.75)
-              inset !important;
-          }
+        .roundedInput {
+          color: white;
 
-          &::placeholder {
-            color: rgba(white, 0.5);
+          > input {
+            border-radius: 2rem;
+            border-color: rgba(white, 0.7);
+            background-color: transparent;
+
+            &:focus {
+              background-color: rgba(white, 0.2);
+            }
+
+            &:-webkit-autofill,
+            &:-webkit-autofill:hover {
+              -webkit-box-shadow: 0 0 0px 1000px rgba(base.$primary-color, 0.8)
+                inset !important;
+            }
+
+            &:-webkit-autofill:focus {
+              -webkit-box-shadow: 0 0 0px 1000px rgba(base.$primary-color, 0.65)
+                inset !important;
+            }
+
+            &::placeholder {
+              color: rgba(white, 0.5);
+            }
           }
         }
       }
     }
-  }
 
-  .button {
-    background-color: base.$secondary-color;
-    margin: 0;
-    border-radius: 0;
-    height: 5rem;
+    .button {
+      background-color: base.$secondary-color;
+      margin: 0;
+      border-radius: 0;
+      height: 5rem;
 
-    &:hover,
-    &:focus {
-      background-color: #bbd172;
-    }
+      &:hover,
+      &:focus {
+        background-color: #bbd172;
+      }
 
-    &:after {
-      border-color: black transparent transparent !important;
+      &:after {
+        border-color: black transparent transparent !important;
+      }
     }
   }
 }

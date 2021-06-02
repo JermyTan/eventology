@@ -170,9 +170,12 @@ function EventSummaryCard({
         </div>
 
         {category && (
-          <Label className={styles.category} basic circular>
-            {category}
-          </Label>
+          <Label
+            className={styles.category}
+            basic
+            circular
+            content={category}
+          />
         )}
       </div>
 

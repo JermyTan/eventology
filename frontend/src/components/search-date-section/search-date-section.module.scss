@@ -1,4 +1,8 @@
+@use "../../base";
+
 .searchDateSection {
+  @include base.vertical-space-margin(0.25rem);
+
   .label {
     color: white;
     background-color: transparent;
@@ -8,5 +12,48 @@
   .active {
     color: #453257;
     background-color: #e5f7a9;
+  }
+
+  .dateInputContainer {
+    position: relative;
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+
+    &:before {
+      position: absolute;
+      content: "";
+      width: 0.71428571em;
+      height: 0.71428571em;
+      transform: rotate(45deg);
+      top: -0.30714286em;
+      left: 1.45em;
+      right: auto;
+      bottom: auto;
+      background-color: white;
+    }
+
+    .dateInput {
+      padding: 0.5rem 0.25rem;
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      [type="date"]::-webkit-calendar-picker-indicator {
+        display: none;
+      }
+
+      :global(.icon) {
+        color: base.$secondary-color;
+      }
+
+      > input {
+        width: 0;
+        flex: 1;
+        color: base.$primary-color;
+        border: none;
+      }
+    }
   }
 }

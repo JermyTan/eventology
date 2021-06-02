@@ -18,6 +18,11 @@ declare module "*.png" {
   export default classes;
 }
 
+declare module "*.jpg" {
+  const classes: string;
+  export default classes;
+}
+
 declare module "*.gif" {
   const classes: string;
   export default classes;

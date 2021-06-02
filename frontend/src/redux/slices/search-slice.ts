@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { startOfToday } from "date-fns";
+import { DATE_PERIOD_SEPARATOR } from "../../constants";
 import { getDatePeriods } from "../../utils/date-time-utils";
 
 type SearchState = {
   isSidebarOpened: boolean;
-  selectedDate?: string;
-  selectedCategory?: string;
+  selectedDatePeriod: string;
+  selectedCategory: string;
   datePeriods: {
     today: string;
     tomorrow: string;
@@ -20,6 +21,8 @@ export const searchSlice = createSlice({
   name: "search",
   initialState: {
     isSidebarOpened: false,
+    selectedDatePeriod: DATE_PERIOD_SEPARATOR,
+    selectedCategory: "",
     datePeriods: getDatePeriods({ currentDateTime: startOfToday().getTime() }),
     categories: [],
     isLoadingCategories: false,
@@ -37,24 +40,17 @@ export const searchSlice = createSlice({
     ) => {
       state.isLoadingCategories = payload;
     },
-    setSelectedDate: (
+    setSelectedDatePeriod: (
       state,
-      { payload }: PayloadAction<SearchState["selectedDate"]>,
+      { payload }: PayloadAction<SearchState["selectedDatePeriod"]>,
     ) => {
-      state.selectedDate =
-        state.selectedDate === undefined || state.selectedDate !== payload
-          ? payload
-          : undefined;
+      state.selectedDatePeriod = payload;
     },
     setSelectedCategory: (
       state,
       { payload }: PayloadAction<SearchState["selectedCategory"]>,
     ) => {
-      state.selectedCategory =
-        state.selectedCategory === undefined ||
-        state.selectedCategory !== payload
-          ? payload
-          : undefined;
+      state.selectedCategory = payload;
     },
     loadCategories: (
       state,
@@ -78,14 +74,13 @@ export const searchSlice = createSlice({
         defaultCategory,
       )
         ? defaultCategory
-        : undefined;
+        : "";
     },
     loadDates: (
       state,
       {
         payload,
       }: PayloadAction<{
-        datePeriods: SearchState["datePeriods"];
         searchQuery: {
           category?: string | null;
           startDateTime?: string | null;
@@ -95,14 +90,9 @@ export const searchSlice = createSlice({
     ) => {
       const { startDateTime, endDateTime } = payload.searchQuery;
 
-      const defaultDatePeriod =
-        !startDateTime && !endDateTime ? "" : `${startDateTime}-${endDateTime}`;
-
-      state.selectedDate = ["", ...Object.values(payload.datePeriods)].includes(
-        defaultDatePeriod,
-      )
-        ? defaultDatePeriod
-        : undefined;
+      state.selectedDatePeriod = `${
+        startDateTime ?? ""
+      }${DATE_PERIOD_SEPARATOR}${endDateTime ?? ""}`;
     },
   },
 });
@@ -110,7 +100,7 @@ export const searchSlice = createSlice({
 export const {
   setSidebarOpened,
   setLoadingCategories,
-  setSelectedDate,
+  setSelectedDatePeriod,
   setSelectedCategory,
   loadDates,
   loadCategories,

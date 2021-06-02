@@ -85,62 +85,77 @@ function LoginPage() {
 
   return (
     <FullPageContainer>
-      <FormProvider {...methods}>
-        <Form
-          className={styles.formContainer}
-          onSubmit={handleSubmit(onSubmit, onError)}
-        >
-          <Container className={styles.contentContainer}>
-            <Segment vertical padded="very">
-              <Segment
-                vertical
-                padded="very"
-                textAlign="center"
-                className={styles.viewContainer}
-              >
-                <h4>FIND THE MOST LOVED ACTIVITIES</h4>
-                <h1>BLACK CAT</h1>
-                <Image src={catLogo} alt="" size="tiny" wrapped />
-              </Segment>
-
-              <Segment vertical padded="very" className={styles.inputContainer}>
-                <FormField
-                  className={styles.roundedInput}
-                  type="email"
-                  inputName={EMAIL}
-                  placeholder="Email"
-                  required
-                  icon={<Icon name="user circle" />}
-                  iconPosition="left"
-                  showError={false}
-                  disabled={isLoading}
-                />
-
-                <FormField
-                  className={styles.roundedInput}
-                  type="password"
-                  inputName={PASSWORD}
-                  placeholder="Password"
-                  required
-                  icon={<Icon name="lock" />}
-                  iconPosition="left"
-                  showError={false}
-                  disabled={isLoading}
-                />
-              </Segment>
-            </Segment>
-          </Container>
-
-          <Button
-            type="submit"
-            fluid
-            className={styles.button}
-            loading={isLoading}
+      <div className={styles.loginPage}>
+        <FormProvider {...methods}>
+          <Form
+            className={styles.formContainer}
+            onSubmit={handleSubmit(onSubmit, onError)}
           >
-            <h3>SIGN IN</h3>
-          </Button>
-        </Form>
-      </FormProvider>
+            <Container className={styles.contentContainer}>
+              <Segment vertical padded="very">
+                <Segment
+                  vertical
+                  padded="very"
+                  textAlign="center"
+                  className={styles.viewContainer}
+                >
+                  <h4>FIND THE MOST LOVED ACTIVITIES</h4>
+                  <h1>BLACK CAT</h1>
+                  <div className={styles.secondaryLogoContainer}>
+                    <div className={styles.primaryLogoContainer}>
+                      <Image
+                        src={catLogo}
+                        alt=""
+                        className={styles.logo}
+                        wrapped
+                      />
+                    </div>
+                  </div>
+                </Segment>
+
+                <Segment
+                  vertical
+                  padded="very"
+                  className={styles.inputContainer}
+                >
+                  <FormField
+                    className={styles.roundedInput}
+                    type="email"
+                    inputName={EMAIL}
+                    placeholder="Email"
+                    required
+                    icon={<Icon name="user circle" />}
+                    iconPosition="left"
+                    showError={false}
+                    disabled={isLoading}
+                  />
+
+                  <FormField
+                    className={styles.roundedInput}
+                    type="password"
+                    inputName={PASSWORD}
+                    placeholder="Password"
+                    required
+                    icon={<Icon name="lock" />}
+                    iconPosition="left"
+                    showError={false}
+                    disabled={isLoading}
+                  />
+                </Segment>
+              </Segment>
+            </Container>
+
+            <Button
+              type="submit"
+              fluid
+              className={styles.button}
+              loading={isLoading}
+            >
+              <h3>SIGN IN</h3>
+            </Button>
+          </Form>
+        </FormProvider>
+      </div>
     </FullPageContainer>
   );
 }

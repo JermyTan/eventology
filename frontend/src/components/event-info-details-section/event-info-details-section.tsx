@@ -1,7 +1,11 @@
 import { memo } from "react";
 import { Segment, Image } from "semantic-ui-react";
 import classNames from "classnames";
-import { DATE_FORMAT, TIME_FORMAT, TIME_PERIOD_FORMAT } from "../../constants";
+import {
+  DATE_FORMAT_1,
+  TIME_FORMAT,
+  TIME_PERIOD_FORMAT,
+} from "../../constants";
 import LinkifyTextViewer from "../linkify-text-viewer";
 import { displayDateTime } from "../../utils/parser-utils";
 import styles from "./event-info-details-section.module.scss";
@@ -57,7 +61,7 @@ function EventInfoDetailsSection({
               <span className={styles.iconContainer}>
                 <i className="far fa-arrow-from-left icon" />
               </span>
-              {displayDateTime(startDateTime, DATE_FORMAT)}
+              {displayDateTime(startDateTime, DATE_FORMAT_1)}
             </h3>
 
             <div className={styles.timeContainer}>
@@ -76,7 +80,7 @@ function EventInfoDetailsSection({
               <span className={styles.iconContainer}>
                 <i className="far fa-arrow-from-right icon" />
               </span>
-              {displayDateTime(endDateTime, DATE_FORMAT)}
+              {displayDateTime(endDateTime, DATE_FORMAT_1)}
             </h3>
 
             <div className={styles.timeContainer}>

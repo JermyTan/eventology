@@ -5,7 +5,7 @@ import NoEventBanner from "../no-event-banner";
 import EventInfoView from "../event-info-view";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { useGetSingleEvent } from "../../custom-hooks/api/events-api";
-import { setEvent } from "../../redux/slices/single-event-slice";
+import { setCommenting, setEvent } from "../../redux/slices/single-event-slice";
 
 function EventBody() {
   const event = useAppSelector(({ singleEvent }) => singleEvent.event);
@@ -14,11 +14,14 @@ function EventBody() {
   const { isLoading, getSingleEvent } = useGetSingleEvent();
 
   useEffect(() => {
+    dispatch(setCommenting(false));
+
     (async () => {
       dispatch(setEvent(await getSingleEvent(eventId)));
     })();
 
     return () => {
+      dispatch(setCommenting(false));
       dispatch(setEvent(undefined));
     };
   }, [eventId, getSingleEvent, dispatch]);

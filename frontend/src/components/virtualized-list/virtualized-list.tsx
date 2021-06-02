@@ -26,24 +26,25 @@ type Props = {
   itemRenderer: (index: number) => ReactNode;
   loaderRenderer?: (index: number) => ReactNode;
   noRowsRenderer?: () => JSX.Element;
-  dividerRenderer?: (index: number) => JSX.Element;
+  dividerRenderer?: (index: number, isLastRow: boolean) => JSX.Element;
   hasNextPage?: boolean;
   isNextPageLoading?: boolean;
   numItems: number;
   loadNextPage?: (params: IndexRange) => Promise<unknown>;
-  scrollElement?: Element;
+  scrollElement?: HTMLElement;
   defaultRowHeight?: number;
   cachePreviousRowHeight?: boolean;
 };
 
 type VirtualizedListHandle = {
   rerenderList: (index?: number) => void;
-  resetLoadMoreRowsCache?: (autoReload?: boolean | undefined) => void;
 };
 
 const defaultLoadNextPage = () => new Promise<unknown>(() => {});
 const defaultLoaderRenderer = () => <PlaceholderWrapper isLoading />;
-const defaultDividerRenderer = () => <Divider />;
+const defaultDividerRenderer = (_: number, isLastRow: boolean) => (
+  <Divider hidden={isLastRow} />
+);
 
 function VirtualizedList(
   {
@@ -61,7 +62,6 @@ function VirtualizedList(
   }: Props,
   ref: Ref<VirtualizedListHandle>,
 ) {
-  const infiniteLoaderRef = useRef<InfiniteLoader>(null);
   const listRef = useRef<List>(null) as MutableRefObject<List | null>;
   const previousRowCountRef = useRef(0);
   const cellMeasurerCacheRef = useRef(
@@ -85,7 +85,6 @@ function VirtualizedList(
     ref,
     () => ({
       rerenderList,
-      resetLoadMoreRowsCache: infiniteLoaderRef.current?.resetLoadMoreRowsCache,
     }),
     [rerenderList],
   );
@@ -108,10 +107,18 @@ function VirtualizedList(
         columnIndex={0}
         rowIndex={index}
       >
-        <div style={style}>
-          {isRowLoaded({ index }) ? itemRenderer(index) : loaderRenderer(index)}
-          {index < rowCount - 1 && dividerRenderer(index)}
-        </div>
+        {({ registerChild }) => (
+          <div
+            ref={registerChild as (element: HTMLDivElement) => void}
+            style={style}
+          >
+            {isRowLoaded({ index })
+              ? itemRenderer(index)
+              : loaderRenderer(index)}
+
+            {dividerRenderer(index, index === rowCount - 1)}
+          </div>
+        )}
       </CellMeasurer>
     ),
     [rowCount, isRowLoaded, itemRenderer, loaderRenderer, dividerRenderer],
@@ -133,7 +140,6 @@ function VirtualizedList(
 
   return (
     <InfiniteLoader
-      ref={infiniteLoaderRef}
       rowCount={rowCount}
       isRowLoaded={isRowLoaded}
       threshold={5}
@@ -159,7 +165,7 @@ function VirtualizedList(
                   isScrolling={isScrolling}
                   onScroll={onChildScroll}
                   scrollTop={scrollTop}
-                  overscanRowCount={5}
+                  overscanRowCount={10}
                   onRowsRendered={onRowsRendered}
                   noRowsRenderer={noRowsRenderer}
                 />

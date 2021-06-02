@@ -1,0 +1,37 @@
+@use "../../base";
+
+.eventSearchResultSummary {
+  background-color: #faf9fc !important;
+
+  .contentContainer {
+    @include base.vertical-space-margin(0.75rem);
+
+    .headerContainer {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .title {
+        color: base.$primary-color;
+      }
+
+      .clearSearchButton {
+        cursor: pointer;
+        font-size: 0.75rem;
+        color: #67616d;
+        background-color: base.$secondary-color;
+
+        .textContainer {
+          display: flex;
+          height: 100%;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+    }
+
+    .description {
+      color: #67616d;
+    }
+  }
+}

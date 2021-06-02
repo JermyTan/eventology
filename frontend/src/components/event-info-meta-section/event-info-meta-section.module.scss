@@ -1,7 +1,7 @@
 @use "../../base";
 
 .eventInfoMetaSection.important {
-  @include base.vertical-space-margin-1;
+  @include base.vertical-space-margin(0.75rem);
 
   .pointer {
     cursor: pointer;
@@ -19,7 +19,7 @@
   }
 
   .userInfo {
-    @include base.horizontal-space-margin-1;
+    @include base.horizontal-space-margin(0.75rem);
     display: flex;
     flex-direction: row;
     align-items: center;

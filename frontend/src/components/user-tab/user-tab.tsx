@@ -2,7 +2,7 @@ import classNames from "classnames";
 import { Dropdown, Menu, Image } from "semantic-ui-react";
 import { toast } from "react-toastify";
 import { Link, useLocation } from "react-router-dom";
-import { Media } from "../../context-providers";
+import { Media } from "../../context-providers/responsive-provider";
 import { PROFILE_MAIN_PATH } from "../../routes/paths";
 import { USER_ID } from "../../constants";
 import defaultAvatarImage from "../../assets/avatar.png";

@@ -6,7 +6,7 @@ import axios from "axios";
 import { configure } from "axios-hooks";
 import { Provider } from "react-redux";
 import styles from "./app.module.scss";
-import { ResponsiveProvider } from "./context-providers";
+import ResponsiveProvider from "./context-providers/responsive-provider";
 import store from "./redux/store";
 import Routes from "./routes";
 import LocalStorageUserManager from "./components/local-storage-user-manager";

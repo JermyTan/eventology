@@ -1,7 +1,7 @@
 @use "../../base";
 
 .eventSummaryCard {
-  @include base.vertical-space-margin-2;
+  @include base.vertical-space-margin(1rem);
 
   .pointer {
     cursor: pointer;
@@ -14,7 +14,7 @@
     align-items: center;
 
     .userInfo {
-      @include base.horizontal-space-margin-1;
+      @include base.horizontal-space-margin(0.75rem);
 
       .name {
         color: #67616d;
@@ -30,10 +30,10 @@
   .contentContainer {
     display: flex;
     flex-direction: row;
-    @include base.horizontal-space-margin-1;
+    @include base.horizontal-space-margin(0.75rem);
 
     .textContainer {
-      @include base.vertical-space-margin-2;
+      @include base.vertical-space-margin(1rem);
 
       .title {
         color: #453257;
@@ -52,7 +52,7 @@
       }
 
       .extra {
-        @include base.horizontal-space-margin-4;
+        @include base.horizontal-space-margin(2rem);
         display: flex;
         flex-direction: row;
         align-items: center;

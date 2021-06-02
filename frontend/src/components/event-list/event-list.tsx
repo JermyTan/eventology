@@ -20,6 +20,7 @@ import { EventData } from "../../types/events";
 import VirtualizedList from "../virtualized-list";
 import useSearchQueryParams from "../../custom-hooks/use-search-query-params";
 import useFunctionCacheCleaner from "../../custom-hooks/use-function-cache-cleaner";
+import EventSearchResultSummary from "../event-search-result-summary";
 
 const onChangeGenerator = memoize(
   (index: number, setEvents: Dispatch<SetStateAction<EventData[]>>) =>
@@ -41,8 +42,6 @@ const noRowsRenderer = () => (
     defaultContent={<NoEventBanner />}
   />
 );
-
-const loaderRenderer = () => <PlaceholderWrapper isLoading />;
 
 const LIMIT = 10;
 
@@ -110,25 +109,27 @@ function EventList() {
       loadingMessage="Retrieving events"
       placeholder
     >
-      <Segment vertical>
-        <Container>
-          <PullToRefreshWrapper onRefresh={refreshEvents}>
-            <VirtualizedList
-              ref={virtualizedListRef}
-              itemRenderer={eventSummaryCardRenderer}
-              loaderRenderer={loaderRenderer}
-              noRowsRenderer={noRowsRenderer}
-              hasNextPage={hasNextPage}
-              isNextPageLoading={isNextPageLoading}
-              numItems={events.length}
-              loadNextPage={getMoreEvents}
-              scrollElement={pageBodyRef.current ?? undefined}
-              defaultRowHeight={350}
-              cachePreviousRowHeight
-            />
-          </PullToRefreshWrapper>
-        </Container>
-      </Segment>
+      <>
+        {!hasNextPage && <EventSearchResultSummary numEvents={events.length} />}
+        <Segment vertical>
+          <Container>
+            <PullToRefreshWrapper onRefresh={refreshEvents}>
+              <VirtualizedList
+                ref={virtualizedListRef}
+                itemRenderer={eventSummaryCardRenderer}
+                noRowsRenderer={noRowsRenderer}
+                hasNextPage={hasNextPage}
+                isNextPageLoading={isNextPageLoading}
+                numItems={events.length}
+                loadNextPage={getMoreEvents}
+                scrollElement={pageBodyRef.current ?? undefined}
+                defaultRowHeight={350}
+                cachePreviousRowHeight
+              />
+            </PullToRefreshWrapper>
+          </Container>
+        </Segment>
+      </>
     </PlaceholderWrapper>
   );
 }

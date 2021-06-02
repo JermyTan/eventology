@@ -25,9 +25,7 @@ function EventInfoMetaSection({ category, title, creator, createdAt }: Props) {
   return (
     <div className={classNames(styles.eventInfoMetaSection, styles.important)}>
       {category && (
-        <Label className={styles.category} basic circular>
-          {category}
-        </Label>
+        <Label className={styles.category} basic circular content={category} />
       )}
 
       <div className={styles.title}>

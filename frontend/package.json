@@ -1,7 +1,7 @@
 {
   "name": "eventology",
   "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
   "repository": "https://github.com/JermyTan/eventology.git",
   "license": "MIT",
   "scripts": {
@@ -10,7 +10,8 @@
     "format": "prettier --write ./src",
     "lint": "tsc --noEmit && eslint --ext .js,.jsx,.ts,.tsx ./src",
     "generate-component": "node component-generator.js",
-    "generate-data": "node data-generator.js"
+    "generate-data": "node data-generator.js",
+    "analyze": "source-map-explorer 'build/*.js'"
   },
   "dependencies": {
     "@artsy/fresnel": "^1.5.0",
@@ -35,11 +36,9 @@
     "react-progressive-graceful-image": "^0.6.13",
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
-    "react-show-more-text": "^1.4.6",
     "react-simple-pull-to-refresh": "^1.2.3",
     "react-toastify": "^7.0.4",
     "react-virtualized": "9.22.3",
-    "redux": "^4.1.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",
     "use-query-params": "^1.2.2",
@@ -92,6 +91,7 @@
     "react-refresh": "^0.10.0",
     "sass": "^1.34.0",
     "sass-loader": "^11.1.1",
+    "source-map-explorer": "^2.5.2",
     "style-loader": "^2.0.0",
     "ts-node": "^10.0.0",
     "type-fest": "^1.1.3",

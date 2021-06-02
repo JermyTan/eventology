@@ -93,7 +93,8 @@ const config: Configuration = {
   output: {
     publicPath: "/",
     path: path.join(__dirname, "build"),
-    filename: "bundle.js",
+    filename: "[name].bundle.js",
+    clean: true,
   },
   devServer: {
     contentBase: path.join(__dirname, "build"),
